@@ -1,0 +1,46 @@
+<view class='uploadlogo'>
+  <view class='uploadlogocolmn'>
+    <view class='uploadlogoline'>
+      <image style='width:100%;height:100%;' src='{{logo}}'></image>
+    </view>
+  </view>
+  <view class='verticalsolid'></view>
+  <view class='uploadlogocolmn' bindtap="updataLogo">
+    <view class='uploadlogolineimg'>
+      <image style='width:100%;height:100%;' src='/pages/img/uploadlogo.png'></image>
+      <text>上传LOGO</text>
+    </view>
+  </view>
+</view>
+<view class='shoptitle'>
+  <input value="{{shopName}}" maxlength="20" bindconfirm="releaseShopName" placeholder="设置店面名称，最大输入长度20" /> 
+</view>
+<view class='shoptitle'>
+  <input value="{{phone}}" maxlength="20" bindconfirm="releasePhone" placeholder="修改联系电话" /> 
+</view>
+<view class='shopaddress'>
+  <view style='width:100%;height:50rpx;'>{{provinceName}}{{cityName}}{{countyName}}{{shopAddress}}</view>
+  <view class='getaddressbutton'>
+    <button type="default" style='font-size: 30rpx;color:white;background-color: #CC0033' bindtap="getaddress"> 设置店面地址 </button>
+  </view>
+</view>
+<view class='swiper'>
+  <view class='swipertop'>
+    <swiper style='width:100%;height:100%;' indicator-dots="true" autoplay="true" interval="3000" duration="1000">
+      <block wx:for="{{list}}" wx:for-index="index">
+        <swiper-item>
+          <image src="{{item.uploadImgSrc}}" class="slide-image" mode="aspectFill" />
+        </swiper-item>
+      </block>
+    </swiper>
+  </view>
+  <view class='swiperbottom'>
+    <button type="default" style='width:49%;font-size: 30rpx;color:white;background-color: #CC0033' bindtap="updataSlideshow"> 上传轮播图片</button>
+    <button type="default" style='width:49%;font-size: 30rpx;color:white;background-color: #CC0033' bindtap="delSlideshow"> 删除轮播图 </button>
+  </view>
+</view>
+<view class='map'>
+  <map id="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" scale="16"  show-location bindtap="setMap" style="width: 99%; height: 100%;"></map>
+  <!--<button type="default" style='width:100%;font-size: 30rpx;color:white;background-color: #009933' bindtap="release"> 发布店面基本信息</button>-->
+  
+</view>

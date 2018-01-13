@@ -1,0 +1,11 @@
+<view class='redpackage'>
+ <view class='redpackagetitle'>
+ <text>填写红包充值金额</text>
+ </view>
+ <view class='redpackagetinput'>
+  <input type="number" placeholder="填写红包充值金额...." bindinput="bindMoney"  value="{{payMoney}}"/>
+ </view>
+ <view class='redpackagebutton'>
+ <button type="default" style='font-size: 30rpx;color:white;background-color: #CC0033' bindtap="redPackagePay"> 充值 </button>
+ </view>
+</view>

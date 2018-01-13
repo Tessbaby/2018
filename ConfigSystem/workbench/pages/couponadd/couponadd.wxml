@@ -1,0 +1,45 @@
+<view class='couponimg'>
+  <view class='couponimgline'>
+    <image style='width:100%;height:100%;' src='{{conponImgSrc}}'></image>
+  </view>
+  <view class='couponimgbutton'>
+    <button type="default" style='font-size: 30rpx;color:white;background-color: #CC0033' bindtap="updataImg"> 上传卡券活动图片 </button>
+  </view>
+</view>
+<view class='couponcontent'>
+  <view class='couponline'></view>
+  <view class='coupontitle'>
+    <input maxlength="100" bindinput="bindInput" placeholder="填写卡券使用细则......" value="{{couponRegulation}}" />
+  </view>
+  <view class='couponline'></view>
+  <view class='couponvaliditydata'>
+    <view class='couponvaliditydatacolmn'>
+      <picker mode="date" bindchange="bindStartDateChange">
+        <view class="picker">
+          开始时间: {{startDate}}
+        </view>
+      </picker>
+    </view>
+    <view class='couponvaliditydatacolmn2'>
+      <view class="picker">
+        -至-
+      </view>
+    </view>
+    <view class='couponvaliditydatacolmn'>
+      <picker mode="date" bindchange="bindEndDateChange">
+        <view class="picker">
+          结束时间: {{endDate}}
+        </view>
+      </picker>
+    </view>
+  </view>
+  <view class='iscoupon'>
+    <view class='iscouponswitch'>
+      <switch checked="true" bindchange="switch1Change" color='#CC0033' />
+      <text>是否发放卡券（默认为发放）</text>
+    </view>
+  </view>
+  <view class='couponbutton'>
+    <button type="default" style='font-size: 30rpx;color:white;background-color: #CC0033' bindtap="bindCouponRelease"> 发布卡券 </button>
+  </view>
+</view>

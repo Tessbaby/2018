@@ -1,0 +1,29 @@
+<view class='active'>
+  <view class='activebutton'>
+    <button type="default" style='font-size: 30rpx;color:white;background-color: #CC0033' bindtap="addActive"> 创建活动 </button>
+  </view>
+</view>
+<view wx:for="{{content}}" wx:key="unique">
+  <view class='activecontent'>
+    <view class='line'></view>
+    <view class='activeimg'>
+      <image style='width:100%;height:100%;' src='{{item.goodsImgUrls[0].url}}'></image>
+    </view>
+    <view class='activeline'>
+      <view class='activebuttonbutton'>
+        <button type="default" style='font-size: 30rpx;color:white;background-color: #CC0033' data-index="{{index}}" bindtap="editActive"> 修改活动 </button>
+      </view>
+      <block wx:if="{{item.isRedPackage==1}}">
+      <view class='acitvesegmentation'></view>
+      <view class='activebuttonbutton'>
+        <button type="default" style='font-size: 30rpx;color:white;background-color: #CC0033' data-index="{{index}}" bindtap="greateActive"> 生成红包 </button>
+      </view>
+      </block>
+      <view class='acitvesegmentation'></view>
+      <view class='activebuttonbutton'>
+        <button type="default" style='font-size: 30rpx;color:white;background-color: #CC0033' data-index="{{index}}" bindtap="delActive"> 删除活动 </button>
+      </view>
+
+    </view>
+  </view>
+</view>

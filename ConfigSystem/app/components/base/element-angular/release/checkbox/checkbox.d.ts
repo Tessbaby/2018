@@ -1,0 +1,31 @@
+import { EventEmitter, OnInit, ElementRef, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+import { ElCheckboxGroup } from './checkbox-group';
+import { ControlValueAccessor } from '@angular/forms';
+export declare class ElCheckbox implements OnInit, AfterViewInit, OnChanges, ControlValueAccessor {
+    private hostGroup;
+    private el;
+    content: any;
+    label: string;
+    model: any;
+    disabled: boolean;
+    indeterminate: boolean;
+    checked: boolean;
+    name: string;
+    trueLabel: string | number;
+    modelChange: EventEmitter<any>;
+    labels: any[];
+    parentIsGroup: boolean;
+    isFocus: boolean;
+    showLabel: boolean;
+    constructor(hostGroup: ElCheckboxGroup, el: ElementRef);
+    isChecked(): boolean;
+    changeHandle(t: boolean): void;
+    ngOnInit(): void;
+    ngOnChanges(changes: SimpleChanges): void;
+    ngAfterViewInit(): void;
+    writeValue(value: any): void;
+    registerOnChange(fn: Function): void;
+    registerOnTouched(fn: Function): void;
+    private controlChange;
+    private controlTouch;
+}

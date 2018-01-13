@@ -1,0 +1,77 @@
+<!--<ele-bread></ele-bread>-->
+<div class="con-main" ng-controller="ticketCenterCtrl">
+    <form action="">
+        <div class="form-group col-md-2">
+            <div class="input-group date">
+                <!--<input type="text" class="form-control" value="12-02-2012">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-th"></span>
+                </div>-->
+                <input type="text" class="form-control" uib-datepicker-popup readonly is-open="startPopupOpened" min-date="minStartDate" max-date="maxStartDate" datepicker-options="dateOptions" ng-required="true" close-text="关闭" current-text="今天"/>
+            </div>
+        </div>
+        <div class="form-group col-md-2">
+            <select name="brand" id="brand">
+                <option value="0">品牌</option>
+                <option value="0">请选择1</option>
+                <option value="0">请选择2</option>
+                <option value="0">请选择3</option>
+            </select>
+        </div>
+        <div class="form-group col-md-3">
+            <button class="btn btn-info" type="button" ng-click="searchTable()">查询</button>
+        </div>
+    </form>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th class="text-center">状态</th>
+            <th>品牌</th>
+            <th>用券规则</th>
+            <th>地址</th>
+            <th class="text-center">电话</th>
+            <th class="text-center">有效期</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr >
+            <td class="text-center"><i class="iconfont icon-smile"></i></td>
+            <td>品牌1</td>
+            <td>满100减50</td>
+            <td>地址111</td>
+            <td class="text-center">13274857584</td>
+            <td class="text-center">2017-07-01</td>
+            <td class="text-center">
+                <button class="btn btn-info" type="button"><i class="iconfont icon-wodexuncha"></i>审查</button>
+                <button class="btn btn-danger" type="button"><i class="iconfont icon-jinyong"></i>禁用</button>
+            </td>
+        </tr>
+        <tr >
+            <td class="text-center"><i class="iconfont icon-hand"></i></td>
+            <td>品牌1</td>
+            <td>满100减50</td>
+            <td>地址111</td>
+            <td class="text-center">13274857584</td>
+            <td class="text-center">2017-07-01</td>
+            <td class="text-center">
+                <button class="btn btn-info" type="button"><i class="iconfont icon-wodexuncha"></i>审查</button>
+                <button class="btn btn-success" type="button"><i class="iconfont icon-qiyong"></i>启用</button>
+            </td>
+        </tr>
+        <tr >
+            <td class="text-center"><i class="iconfont icon-smile"></i></td>
+            <td>品牌1</td>
+            <td>满100减50</td>
+            <td>地址111</td>
+            <td class="text-center">13274857584</td>
+            <td class="text-center">2017-07-01</td>
+            <td class="text-center">
+                <button class="btn btn-info" type="button"><i class="iconfont icon-wodexuncha"></i>审查</button>
+                <button class="btn btn-danger" type="button"><i class="iconfont icon-jinyong"></i>禁用</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <page-info></page-info>
+</div>

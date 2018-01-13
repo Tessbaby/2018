@@ -1,0 +1,108 @@
+<view class='main'>
+  <view class='mainline'>
+    <view class='maingridcolmn' bindtap='bindViewTapScanQRCode'>
+      <view class='maingridimg'>
+        <image style='width:100%;height:100%;' src='/pages/img/qc.png'></image>
+      </view>
+      <view class='maingridtext'>
+        <text>扫码</text>
+      </view>
+    </view>
+    <block wx:if="{{isManage}}">
+      <view class='maingridcolmn' bindtap='bindViewTapQRCodeAuthor'>
+        <view class='maingridimg'>
+          <image style='width:100%;height:100%;' src='/pages/img/2code.png'></image>
+        </view>
+        <view class='maingridtext'>
+          <text>二维码授权</text>
+        </view>
+      </view>
+    </block>
+    <block wx:if="{{fristAdmin}}">
+      <view class='maingridcolmn' bindtap='bindViewTapRegist'>
+        <view class='maingridimg'>
+          <image style='width:100%;height:100%;' src='/pages/img/admin.png'></image>
+        </view>
+        <view class='maingridtext'>
+          <text>绑定首任管理员</text>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>
+<view wx:if="{{isManage}}">
+  <view class='buttongrid'>
+    <view class='buttongridclomn' bindtap='bindViewTapshopset'>
+      <view class='buttongridline'>
+        <image style='width:100%;height:100%;' src='/pages/img/work_set.png'></image>
+      </view>
+      <text>店面设置</text>
+    </view>
+    <view class='buttongridclomn' bindtap='bindViewTapcoupon'>
+      <view class='buttongridline'>
+        <image style='width:100%;height:100%;' src='/pages/img/work_conpon.png'></image>
+      </view>
+      <text>卡券管理</text>
+    </view>
+    <view class='buttongridclomn' bindtap='bindViewTapActove'>
+      <view class='buttongridline'>
+        <image style='width:100%;height:100%;' src='/pages/img/set_active.png'></image>
+      </view>
+      <text>活动管理</text>
+    </view>
+  </view>
+  <view class='buttongrid'>
+    <view class='buttongridclomn' bindtap='bindViewTapAdmin'>
+      <view class='buttongridline'>
+        <image style='width:100%;height:100%;' src='/pages/img/set_admin.png'></image>
+      </view>
+      <text>员工撤销</text>
+    </view>
+    <!-- <view class='buttongridclomn' bindtap='bindViewTapRedPackage'>
+      <view class='buttongridline'>
+        <image style='width:100%;height:100%;' src='/pages/img/set_red.png'></image>
+      </view>
+      <text>红包充值</text>
+    </view>
+    <view class='buttongridclomn' bindtap='bindViewTapRedPackageList'>
+      <view class='buttongridline'>
+        <image style='width:100%;height:100%;' src='/pages/img/set_record.png'></image>
+      </view>
+      <text>红包流水</text>
+    </view>-->
+  </view>
+  <!--<view class='buttongrid'>
+    <view class='buttongridclomn' bindtap='bindViewTapActiveList'>
+      <view class='buttongridline'>
+        <image style='width:100%;height:100%;' src='/pages/img/set_record.png'></image>
+      </view>
+      <text>活动流水</text>
+    </view>
+    <view class='buttongridclomn' bindtap='bindViewTapCouponList'>
+      <view class='buttongridline'>
+        <image style='width:100%;height:100%;' src='/pages/img/set_record.png'></image>
+      </view>
+      <text>卡券流水</text>
+    </view>
+  </view>-->
+  <view class='line'></view>
+  <!--<view class='analyze'>
+    <view class='analyzecolmn'>
+      <view class='analyzeline'>
+        <image style='width:100%;height:100%;' src='/pages/img/analyzeve_red.png'></image>
+      </view>
+      <text>红包余额</text>
+      <text style='color:#FF6600'> 870 </text>
+      <text>元</text>
+    </view>
+    <view class='analyzevertical'></view>
+    <view class='analyzecolmn'>
+      <view class='analyzeline'>
+        <image style='width:100%;height:100%;' src='/pages/img/analyzeve_user.png'></image>
+      </view>
+      <text>总用户数</text>
+      <text style='color:#009933'> 870 </text>
+      <text>人</text>
+    </view>
+  </view>-->
+</view>

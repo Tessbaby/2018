@@ -1,0 +1,67 @@
+<view class='activeaddtitle'>
+  <view class='activeaddtitleinput'>
+    <input maxlength="100" placeholder="填写活动标题...." bindinput="bindTitile" value="{{title}}" />
+  </view>
+</view>
+<view class='activeaddimg'>
+  <view class='line'></view>
+  <view class='activeimgupload'>
+    <image style='width:100%;height:100%;' src='{{goodsImgUrls[0].url}}'></image>
+  </view>
+  <view class='activeimgbutton'>
+    <button type="default" style='font-size: 30rpx;color:white;background-color: #CC0033' bindtap="updataImg"> 上传活动图片 </button>
+  </view>
+</view>
+<view class='acitveisdelivery'>
+  <view class='line'></view>
+  <view class='acitveisdeliveryswitch'>
+    <switch checked='{{isCheckDelivery}}' bindchange="switch1Change" color='#CC0033' />
+    <text>是否外送(默认为不支持外送)）</text>
+  </view>
+</view>
+<block wx:if="{{isTrue}}">
+  <view class='activeset'>
+    <view class='line'></view>
+    <view class='activesetline'>
+      <view class='activesetcolmn'>
+        <block wx:if="{{isChecked}}">
+          <switch checked='true' bindchange="switchRedPackageChange" color='#CC0033' />
+        </block>
+        <text>是否发放红包</text>
+      </view>
+      <view class='activesetcolmn'>
+      </view>
+    </view>
+    <view class='activesetline'>
+      <view class='activesetcolmn1'>
+        <input type="number" placeholder="发放红包数量...." bindinput="bindNumber" value="{{redPackage.redPackageNumber}}" />
+      </view>
+      <view class='activesetnull'></view>
+      <view class='activesetcolmn1'>
+        <input type="number" placeholder="单个红包金额...." bindinput="bindMoney" value="{{redPackage.redPackageMoney}}" />
+      </view>
+    </view>
+  </view>
+</block>
+<view class='activeset'>
+  <view class='line'></view>
+  <view class='activesetline'>
+    <view class='activesetcolmn'>
+      <text>购买设置</text>
+    </view>
+    <view class='activesetcolmn'>
+    </view>
+  </view>
+  <view class='activesetline'>
+    <view class='activesetcolmn1'>
+      <input type="number" placeholder="单价...." bindinput="bindPrice" value="{{goodsPrice}}" />
+    </view>
+    <view class='activesetnull'></view>
+    <view class='activesetcolmn1'>
+      <input type="number" placeholder="库存...." bindinput="bindStore" value="{{storeNumber}}" />
+    </view>
+  </view>
+</view>
+<view class='activebutton'>
+  <button type="default" style='font-size: 30rpx;color:white;background-color: #CC0033' bindtap="activeRelease"> 发布活动 </button>
+</view>

@@ -1,0 +1,27 @@
+<view class='selectdate'>
+ <picker mode="date" bindchange="bindQueryDateChange">
+        <view class="picker">
+          查询时间: {{querydate}}
+        </view>
+      </picker>
+</view>
+<view class='redlist'>
+<view class='redlistcolmn'>昵称</view>
+<view class='redlistcolmn'>红包个数</view>
+<view class='redlistcolmn'>领取日期</view>
+</view>
+<view class='redlistline'>
+<view class='redlistcolmn'>阿水</view>
+<view class='redlistcolmn'>1</view>
+<view class='redlistcolmn'>2017-10-15</view>
+</view>
+<view class='redlistline'>
+<view class='redlistcolmn'>阿水</view>
+<view class='redlistcolmn'>1</view>
+<view class='redlistcolmn'>2017-10-15</view>
+</view>
+<view class='redlistline'>
+<view class='redlistcolmn'>阿水</view>
+<view class='redlistcolmn'>1</view>
+<view class='redlistcolmn'>2017-10-15</view>
+</view>

@@ -1,0 +1,91 @@
+
+<!--<ele-bread></ele-bread>-->
+<div class="con-main" ng-controller="waresPatrolCtrl">
+    <form action="">
+        <div class="form-group col-md-2">
+            <div class="input-group date" data-provide="datepicker">
+                <input type="text" class="form-control">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-th"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-2">
+            <select name="class" id="class">
+                <option value="0">分类</option>
+                <option value="0">请选择1</option>
+                <option value="0">请选择2</option>
+                <option value="0">请选择3</option>
+            </select>
+        </div>
+        <div class="form-group col-md-2">
+            <select name="brand" id="brand">
+                <option value="0">品牌</option>
+                <option value="0">请选择1</option>
+                <option value="0">请选择2</option>
+                <option value="0">请选择3</option>
+            </select>
+        </div>
+        <div class="form-group col-md-1 text-center">
+            <label for="isHot" class="checkbox" ng-click="isChecked(this)">
+                <!--<span class="checkbox-inner"></span>-->
+                <input type="checkbox" id="isHot" style="display: none">是否爆款
+            </label>
+        </div>
+        <div class="form-group col-md-3">
+            <button class="btn btn-info" type="button" ng-click="searchTable()">查询</button>
+        </div>
+    </form>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th class="text-center">状态</th>
+            <th>店铺名称</th>
+            <th>地址</th>
+            <th>商品名称</th>
+            <th class="text-center">创建日期</th>
+            <th class="text-center">爆款商品</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr >
+            <td class="text-center"><i class="iconfont icon-smile"></i></td>
+            <td>名称1</td>
+            <td>地址1</td>
+            <td>商品名称1</td>
+            <td class="text-center">2017-07-01</td>
+            <td class="text-center">否</td>
+            <td class="text-center">
+                <button class="btn btn-info" type="button"><i class="iconfont icon-wodexuncha"></i>巡查</button>
+                <button class="btn btn-danger" type="button"><i class="iconfont icon-xiajia"></i>下架</button>
+            </td>
+        </tr>
+        <tr >
+            <td class="text-center"><i class="iconfont icon-hand"></i></td>
+            <td>名称1</td>
+            <td>地址1</td>
+            <td>商品名称1</td>
+            <td class="text-center">2017-07-01</td>
+            <td class="text-center">是</td>
+            <td class="text-center">
+                <button class="btn btn-info" type="button"><i class="iconfont icon-wodexuncha"></i>巡查</button>
+                <button class="btn btn-success" type="button"><i class="iconfont icon-shangjia"></i>正常</button>
+            </td>
+        </tr>
+        <tr >
+            <td class="text-center"><i class="iconfont icon-smile"></i></td>
+            <td>名称1</td>
+            <td>地址1</td>
+            <td>商品名称1</td>
+            <td class="text-center">2017-07-01</td>
+            <td class="text-center">是</td>
+            <td class="text-center">
+                <button class="btn btn-info" type="button"><i class="iconfont icon-wodexuncha"></i>巡查</button>
+                <button class="btn btn-danger" type="button"><i class="iconfont icon-xiajia"></i>下架</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <page-info></page-info>
+</div>

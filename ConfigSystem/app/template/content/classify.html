@@ -1,0 +1,89 @@
+<!--<ele-bread></ele-bread>-->
+<div class="con-main" ng-controller="classifyCtrl">
+    <form action="">
+        <div class="form-group col-md-2 p-0">
+            <input type="text" class="w100 p-lr-md" placeholder="分类名称" ng-model="searchId" ng-change="allSelectFun.changeMainClassify()">
+            <ul class="dropdown-menu w100 down-list se_class">
+                <li ng-repeat="o in dummyData.selectSlide | filter: searchId"><a href="javascript:;" ng-click="allSelectFun.getMainClassify(o.id, o.name)">{{ o.name }}</a></li>
+            </ul>
+        </div>
+        <div class="form-group col-md-3">
+            <button class="btn btn-info" type="button" ng-click="searchTable()">查询</button>
+            <button class="btn btn-info" type="button" ng-click="editClassify()"><i class="iconfont icon-add"></i>添加</button>
+        </div>
+    </form>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th class="text-center">状态</th>
+            <th>分类</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr >
+            <td class="text-center"><i class="iconfont icon-smile"></i></td>
+            <td>博客上几</td>
+            <td class="text-center">
+                <button class="btn btn-info" type="button" ng-click="editClassify(1)"><i class="iconfont icon-bianji"></i>编辑</button>
+                <button class="btn btn-danger" type="button"><i class="iconfont icon-jinyong"></i>禁用</button>
+            </td>
+        </tr>
+        <tr>
+            <td class="text-center"><i class="iconfont icon-hand"></i></td>
+            <td>1520121231</td>
+            <td class="text-center">
+                <button class="btn btn-info" type="button"><i class="iconfont icon-bianji"></i>编辑</button>
+                <button class="btn btn-success" type="button"><i class="iconfont icon-qiyong"></i>启用</button>
+            </td>
+        </tr>
+        <tr>
+            <td class="text-center"><i class="iconfont icon-smile"></i></td>
+            <td>博客上几</td>
+            <td class="text-center">
+                <button class="btn btn-info" type="button"><i class="iconfont icon-bianji"></i>编辑</button>
+                <button class="btn btn-danger" type="button"><i class="iconfont icon-jinyong"></i>禁用</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <page-info></page-info>
+    <div style="height: 0; overflow: hidden">
+        <div id="editClassLayer">
+            <div class="edit">
+                <form action="">
+                    <div class="form-group row m-b-sm">
+                        <label for="pClass" class="col-md-4 col-lg-4 text-right">选择主分类</label>
+                        <div class="col-md-4 col-lg-4 p-0">
+                            <input type="text" id="pClass" placeholder="分类名称" class="w100 p-lr-md" ng-model="param.rootName" ng-change="allSelectFun.changeEditClassify()">
+                            <ul class="dropdown-menu w100 down-list ed_class">
+                                <li ng-repeat="o in dummyData.selectSlide | filter: param.rootName"><a href="javascript:;" ng-click="allSelectFun.getEditClassify(o.id, o.name)">{{ o.name }}</a></li>
+                            </ul>
+                        </div>
+                        <span class="col-md-4 col-lg-4">备注： 这里显示的是一级分类</span>
+                    </div>
+                    <div class="form-group row m-b-sm">
+                        <label for="cClass" class="col-md-4 col-lg-4 text-right">新增子分类</label>
+                        <input type="text" id="cClass" class="col-md-4 col-lg-4" placeholder="分类名称" ng-model="param.name">
+                    </div>
+                    <div class="form-group row m-b-sm">
+                        <label class="col-md-4 col-lg-4 text-right">上传图片</label>
+                        <div style="height: 200px; overflow: hidden" class="col-md-4 col-lg-4 border">
+                            <div ng-if="!showImg" href="" class="block add-img">
+                                <span class="block text-center">+</span>
+                                <input type="file" value="" id="fileName" class="class-img-input" onchange="angular.element(this).scope().fileChange()" ng-model="param.img">
+                            </div>
+                            <img ng-if="showImg" ng-src="{{ param.imgUrl }}" alt="">
+                        </div>
+                    </div>
+                    <div class="form-group row text-center">
+                        <button type="button" class="btn btn-info" ng-click="saveClassify()"><i class="iconfont icon-editsaved"></i>保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

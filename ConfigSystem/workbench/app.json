@@ -1,0 +1,37 @@
+{
+  "pages": [
+    "pages/active/active",
+    "pages/administration/administration",
+    "pages/coupon/coupon",
+    "pages/redpackagelist/redpackagelist",
+    "pages/redpackage/redpackage",
+    "pages/activeadd/activeadd",
+    
+    "pages/admimanage/adminmanage",
+    "pages/admin/admin",
+    
+   
+    "pages/shopset/shopset",
+    "pages/workbench/index",
+    
+    "pages/uploading/uploading",
+    
+    
+    
+    "pages/couponadd/couponadd",
+    
+    
+    
+    
+    
+    
+    "pages/activelist/activelist",
+    "pages/couponlist/couponlist",
+    "pages/QRCode/QRCode" 
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#333333",
+    "navigationBarTextStyle": "white"
+  }
+}

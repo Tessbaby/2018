@@ -1,0 +1,113 @@
+.activeaddtitle {
+  width: 90%;
+  height: 110rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30rpx;
+  font-size: 30rpx;
+  color: #333;
+  border: #ccc dashed 3rpx;
+}
+
+.activeaddtitleinput {
+  width: 95%;
+  height: 80rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15rpx;
+  border: #ccc solid 3rpx;
+}
+
+.line {
+  width: 100%;
+  height: 15rpx;
+}
+
+.activeaddimg {
+  width: 90%;
+  height: 425rpx;
+  margin-left: auto;
+  margin-right: auto;
+  border-left: #ccc dashed 3rpx;
+  border-right: #ccc dashed 3rpx;
+  border-bottom: #ccc dashed 3rpx;
+}
+
+.activeimgupload {
+  width: 95%;
+  height: 300rpx;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.activeimgbutton {
+  width: 95%;
+  height: 80rpx;
+  margin-top: 15rpx;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.acitveisdelivery {
+  width: 90%;
+  height: 110rpx;
+  margin-left: auto;
+  margin-right: auto;
+  border-left: #ccc dashed 3rpx;
+  border-right: #ccc dashed 3rpx;
+  border-bottom: #ccc dashed 3rpx;
+}
+
+.acitveisdeliveryswitch {
+  width: 95%;
+  height: 80rpx;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 30rpx;
+  color: #333;
+}
+
+.activeset {
+  width: 90%;
+  height: 190rpx;
+  margin-left: auto;
+  margin-right: auto;
+  border-left: #ccc dashed 3rpx;
+  border-right: #ccc dashed 3rpx;
+  border-bottom: #ccc dashed 3rpx;
+  font-size: 30rpx;
+  color: #333;
+}
+
+.activesetline {
+  display: flex;
+  width: 95%;
+  height: 100rpx;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.activesetcolmn {
+  width: 50%;
+  height: 100rpx;
+}
+
+.activesetnull {
+  width: 10%;
+  height: 50rpx;
+}
+
+.activesetcolmn1 {
+  display: flex;
+  width: 45%;
+  height: 50rpx;
+  border-bottom: #ccc solid 3rpx;
+}
+
+.activebutton {
+  width: 90%;
+  height: 80rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15rpx;
+}

@@ -1,0 +1,11 @@
+<view class="top">
+<view class="section">
+  <input bindinput="bindinput" placeholder="请复制小程序的appid到这里.."  />
+</view>
+<view  class="mybutton">
+ <button type="default" style='font-size: 30rpx;color:white;background-color: #CC0033'  bindtap="bindButton"> 绑定第一个管理员</button>
+ </view>
+ <view class="error">
+ {{error}}
+ </view>
+</view>

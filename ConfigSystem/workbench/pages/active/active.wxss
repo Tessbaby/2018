@@ -1,0 +1,56 @@
+.active {
+  width: 90%;
+  height: 100rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30rpx;
+  border: #ccc dashed 3rpx;
+}
+
+.activebutton {
+  width: 95%;
+  height: 80rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15rpx;
+}
+
+.activecontent {
+  width: 90%;
+  height: 420rpx;
+  margin-left: auto;
+  margin-right: auto;
+  border-left: #ccc dashed 3rpx;
+  border-right: #ccc dashed 3rpx;
+  border-bottom: #ccc dashed 3rpx;
+}
+.line{
+  width: 95%;
+  height: 15rpx;
+}
+.activeimg {
+  width: 95%;
+  height: 300rpx;
+
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.activeline {
+  display: flex;
+  width: 95%;
+  height: 80rpx;
+  margin-top: 15rpx;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+.activebuttonbutton{
+  width: 49%;
+  height: 80rpx;
+}
+.acitvesegmentation{
+  width: 2%;
+  height: 80rpx;
+}
+

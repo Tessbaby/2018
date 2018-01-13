@@ -1,0 +1,16 @@
+<view class='couponadd'>
+  <button type="default" style='font-size: 30rpx;color:white;background-color: #CC0033' bindtap="addCoupon"> 添加卡券 </button>
+</view>
+<view wx:for="{{content}}" wx:key="unique" > 
+<view class='couponlist'>
+  <view class='couponimg'>
+    <image style='width:100%;height:100%;' src='{{item.conponImgSrc}}'></image>
+  </view>
+  <view class='coupontext'>
+    <text>{{item.couponRegulation}}卡券开始时间：{{item.startDate}}卡券结束时间{{item.endDate}}</text>
+  </view>
+  <view class='couponbutton'>
+    <button type="default" style='font-size: 30rpx;color:white;background-color: #CC0033' data-index="{{index}}"  bindtap="delCoupon"> 取消卡券 </button>
+  </view>
+</view>
+</view>

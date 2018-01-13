@@ -1,0 +1,30 @@
+<nav ui-nav class="navi clearfix">
+    <ul class="nav" id="nav" ng-controller="navCtrl">
+        <li class="nav-msg text-center">
+            <a href=""><img src="../../components/Image/head.jpg" alt=""></a>
+            <a href=""><span>谈谈谈</span></a>
+        </li>
+        <li  ng-repeat="menu in navList " data-pId="{{menu.id}}">
+            <!-- 判断是否有子集：有 -->
+            <a href ng-if="menu.children.length != 0" class="auto">
+                <span class="pull-right text-muted">
+                    <i class="fa fa-caret-down text"></i>
+                </span>
+                <i ng-class="menu.icon"></i>
+                <span>{{menu.name}}</span>
+            </a>
+            <a ng-href="{{ menu.permission }}" ng-if="menu.children.length == 0" class="auto">
+                <i ng-class="menu.icon"></i>
+                <span>{{menu.name}}</span>
+            </a>
+            <ul ng-if="menu.children.length != 0" class="nav nav-sub dk">
+                <!-- 如果有permissions说明这个路径中有参数(解决有路径有参数时，active无效的问题) -->
+                <li ng-repeat="rm in menu.children">
+                    <a ng-href="{{rm.permission}}" data-id="{{rm.parentId}}">
+                        <span>{{rm.name}}</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</nav>

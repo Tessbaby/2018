@@ -1,0 +1,105 @@
+<!--<ele-bread></ele-bread>-->
+<div class="con-main" ng-controller="shopCtrl">
+    <form action="">
+        <div class="form-group col-md-2 p-0">
+            <input type="text" class="w100 p-lr-md" placeholder="店铺名称" ng-model="searchId" ng-change="allSelectFun.changeMainShop()">
+            <ul class="dropdown-menu w100 down-list se_shop">
+                <li ng-repeat="o in dummyData.selectSlide | filter: searchId"><a href="javascript:;" ng-click="allSelectFun.getMainShop(o.id, o.name)">{{ o.name }}</a></li>
+            </ul>
+        </div>
+        <div class="form-group col-sm-3">
+            <button class="btn btn-info" type="button" ng-click="searchTable()">查询</button>
+            <button class="btn btn-info" type="button" ng-click="editShop()"><i class="fa fa-check-square-o"></i>添加</button>
+        </div>
+    </form>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th class="text-center">状态</th>
+            <th>店铺名称</th>
+            <th>地址</th>
+            <th>电话</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr >
+            <td class="text-center"><i class="iconfont icon-smile"></i></td>
+            <td>博客上几</td>
+            <td>美泰B馆3层54号</td>
+            <td>1520121231</td>
+            <td class="text-center">
+                <button class="btn btn-info" type="button" ng-click="editShop(1)"><i class="iconfont icon-bianji"></i>编辑</button>
+                <button class="btn btn-danger" type="button"><i class="iconfont icon-jinyong"></i>禁用</button>
+            </td>
+        </tr>
+        <tr>
+            <td class="text-center"><i class="iconfont icon-hand"></i></td>
+            <td>博客上几</td>
+            <td>美泰B馆3层54号</td>
+            <td>1520121231</td>
+            <td class="text-center">
+                <button class="btn btn-info" type="button"><i class="iconfont icon-bianji"></i>编辑</button>
+                <button class="btn btn-success" type="button"><i class="iconfont icon-qiyong"></i>启用</button>
+            </td>
+        </tr>
+        <tr>
+            <td class="text-center"><i class="iconfont icon-smile"></i></td>
+            <td>博客上几</td>
+            <td>美泰B馆3层54号</td>
+            <td>1520121231</td>
+            <td class="text-center">
+                <button class="btn btn-info" type="button"><i class="iconfont icon-bianji"></i>编辑</button>
+                <button class="btn btn-danger" type="button"><i class="iconfont icon-jinyong"></i>禁用</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <page-info></page-info>
+    <div style="height: 0; overflow: hidden">
+        <div id="editShopLayer">
+            <div class="edit">
+                <form action="">
+                    <div class="form-group row m-b-sm">
+                        <label for="brand" class="col-md-4 col-lg-4 text-right">品牌</label>
+                        <!--<input type="text" id="brand" class="col-md-6 col-lg-6" placeholder="输入品牌">-->
+                        <div class="form-group col-md-6 col-lg-6 p-0">
+                            <input type="text" class="w100 p-lr-md" placeholder="品牌名称" ng-model="param.brandName" id="brand" ng-change="allSelectFun.changeEditShop()">
+                            <ul class="dropdown-menu w100 down-list ed_shop">
+                                <li ng-repeat="o in dummyData.selectSlide | filter: searchId"><a href="javascript:;" ng-click="allSelectFun.getEditShop(o.id, o.name)">{{ o.name }}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group row m-b-sm">
+                        <label for="phone" class="col-md-4 col-lg-4 text-right">电话</label>
+                        <input type="text" id="phone" class="col-md-6 col-lg-6" placeholder="输入电话号码">
+                    </div>
+                    <div class="form-group row m-b-sm">
+                        <label for="address" class="col-md-4 col-lg-4 text-right">地址</label>
+                        <input type="text" id="address" class="col-md-6 col-lg-6" placeholder="输入地址">
+                    </div>
+                    <div class="form-group row m-b-sm">
+                        <label for="pClass" class="col-md-4 col-lg-4 text-right">选择主分类</label>
+                        <select name="pClass" id="pClass" class="layer-select col-md-4 col-lg-4">
+                            <option value="0">请选择</option>
+                            <option value="1">请选择1</option>
+                            <option value="2">请选择2</option>
+                        </select>
+                        <span class="col-md-4 col-lg-4">备注： 这里显示的是一级分类</span>
+                    </div>
+                    <div class="form-group row m-b-sm">
+                        <label class="col-md-4 col-lg-4 text-right">添加logo</label>
+                        <div style="height: 200px;" class="col-md-6 col-lg-6 border"></div>
+                    </div>
+                    <div class="form-group row m-b-sm">
+                        <label class="col-md-4 col-lg-4 text-right">管理员授权二维码</label>
+                        <label><a href="javascript:;">下载二维码</a></label>
+                    </div>
+                    <div class="form-group row text-center">
+                        <button type="button" class="btn btn-info" ng-click="saveClassify()"><i class="iconfont icon-editsaved"></i>保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

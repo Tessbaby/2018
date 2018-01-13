@@ -1,0 +1,36 @@
+.redpackage {
+  width: 90%;
+  height: 400rpx;
+  margin-top: 20%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 30rpx;
+  color: #666;
+  border: #ccc dashed 3rpx;
+}
+
+.redpackagetitle {
+  width: 95%;
+  height: 50rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 70rpx;
+  text-align: center;
+}
+
+.redpackagetinput {
+  width: 95%;
+  height: 60rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 40rpx;
+  border: #999 solid 3rpx;
+}
+
+.redpackagebutton {
+  width: 95%;
+  height: 80rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 40rpx;
+}

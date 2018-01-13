@@ -1,0 +1,101 @@
+.couponimg {
+  width: 90%;
+  height: 280rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 70rpx;
+  border: #ccc dashed 3rpx;
+}
+
+.couponimgline {
+  width: 95%;
+  height: 150rpx;
+  margin-top: 15rpx;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.couponimgbutton {
+  width: 95%;
+  height: 80rpx;
+  margin-top: 15rpx;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.couponcontent {
+  width: 90%;
+  height: 520rpx;
+  font-size: 30rpx;
+  margin-left: auto;
+  margin-right: auto;
+  border-left: #ccc dashed 3rpx;
+  border-right: #ccc dashed 3rpx;
+  border-bottom: #ccc dashed 3rpx;
+}
+
+.couponline {
+  width: 95%;
+  height: 15rpx;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.coupontitle {
+  width: 95%;
+  height: 150rpx;
+  margin-left: auto;
+  margin-right: auto;
+  border: #c03 solid 3rpx;
+}
+
+.couponvaliditydata {
+  display: flex;
+  width: 95%;
+  height: 100rpx;
+  margin-top: 15rpx;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.couponvaliditydatacolmn {
+  width: 40%;
+  height: 60rpx;
+  font-size: 25rpx;
+  color: #999;
+  border: #c03 solid 3rpx;
+}
+
+.couponvaliditydatacolmn2 {
+  width: 20%;
+  height: 60rpx;
+  font-size: 25rpx;
+  color: #999;
+}
+
+.picker {
+  margin-top: 10rpx;
+  text-align: center;
+}
+
+.iscoupon {
+  display: flex;
+  width: 95%;
+  height: 80rpx;
+  font-size: 25rpx;
+  color: #999;
+  margin-top: 30rpx;
+  margin-left: auto;
+  margin-right: auto;
+}
+.iscouponswitch{
+  width: 100%;
+  height: 80rpx;
+}
+.couponbutton{
+  width: 95%;
+  height: 80rpx;
+    margin-top: 15rpx;
+  margin-left: auto;
+  margin-right: auto;
+}

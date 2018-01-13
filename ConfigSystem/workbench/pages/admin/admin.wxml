@@ -1,0 +1,14 @@
+<view class='ico'>
+<view wx:for="{{arrayData}}" wx:key="unique" > 
+  <view class='icocolmn'  data-index="{{index}}" bindtap="delAdmin">
+    <view class='imagegrid'>
+      <view class='imgHeadDel'>
+        <image style='width:100%;height:100%;' src='/pages/img/del.png'></image>
+      </view>
+      <image class='imageHeadIco' src='{{item.avatarUrl}}'></image>
+    </view>
+    <text>{{item.nickName}}</text>
+  </view>
+  </view>
+  
+</view>

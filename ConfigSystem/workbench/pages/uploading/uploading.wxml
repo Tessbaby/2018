@@ -1,0 +1,218 @@
+<view class='outermost'>
+  <view class='temp'>
+    <!--导航条-->
+    <view class="navbar1">
+      <text wx:for="{{navbar1}}" data-idx="{{index}}" class="item {{currentTab1==index ? 'active1' : ''}}" wx:key="unique">{{item}}</text>
+    </view>
+    <!-- 基本信息 -->
+    <view hidden="{{currentTab1!==0}}">
+      <view class='box'>
+        <view class='commodity-name'>
+          <text class='name-tit tit'>商品名称</text>
+          <input type='text' class='txt' bindinput="CommodityNameInput" />
+        </view>
+        <view class='brand'>
+          <text class='name-tit tit'>品牌</text>
+          <text class='content'>美泰家世界</text>
+        </view>
+        <view class='classification'>
+          <text class='classification-tit'>分类</text>
+          <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+            <view class='kuang'>
+              <view class="picker">{{array[index]}}</view>
+            </view>
+          </picker>
+        </view>
+      </view>
+      <view class='upload' catchtap="chooseImageTap">
+        <view style="height:100%;width:100%;">
+          <image src='{{logo}}' style="width:100%;height:100%;" mode='aspectFill'></image>
+        </view>
+        <view class='add'>
+          <image src='../img/add.png' mode='scaleToFill' style='height:48rpx;width:48rpx;'></image>
+        </view>
+        <view class='upload-tit'>上传标题图片</view>
+      </view>
+
+
+      <view style='height:110rpx;width:100%;'></view>
+      <!-- bottom -->
+      <view class='btn'>
+        <view class='next' bindtap='toSetting'>下一步</view>
+        <view class='out' bindtap='toAdministration'>退出</view>
+      </view>
+    </view>
+    <!-- 参数设置 -->
+    <view hidden="{{currentTab1!==1}}" class='spec'>
+      <view class='box1'>
+        <!-- 加减 -->
+        <view class='num'>
+          <view class='txt-tit'>
+            <view class='number tit1'>数量</view>
+          </view>
+          <view class='arr-num'>
+            <view class='number-jian btn1' bindtap="bindMinus">-</view>
+            <view class='number-num btn1' bindchange="bindManual">{{num}}</view>
+            <view class='number-add btn1' bindtap="bindPlus">+</view>
+          </view>
+        </view>
+        <!-- 运费 -->
+        <view class='num'>
+          <view class='txt-tit freight'>
+            <view class='number tit1 freight'>运费</view>
+          </view>
+          <input class='pricetxt' />
+          <view class='xuan'>
+            <view class='arr-num'>
+              <view class="body-view">
+                <switch bindchange="switch1Change" color='#00CC66' />
+              </view>
+            </view>
+          </view>
+        </view>
+        <!-- 预定金 -->
+        <view class='num'>
+          <view class='txt-tit freight'>
+            <view class='number tit1 freight' id='gold'>预定金</view>
+          </view>
+          <view class='xuan'>
+            <view class='arr-num'>
+              <view class="body-view">
+                <switch bindchange="switch1Change" color='#00CC66' />
+              </view>
+            </view>
+          </view>
+        </view>
+        <!-- 爆款 -->
+        <view class='num'>
+          <view class='txt-tit freight'>
+            <view class='number tit1 freight' id='explosion'>爆款</view>
+          </view>
+          <view class='xuan'>
+            <view class='arr-num'>
+              <view class="body-view">
+                <switch bindchange="switch1Change" color='#00CC66' />
+              </view>
+            </view>
+          </view>
+        </view>
+        <!-- 价格 -->
+        <view class='num jiage'>
+          <view class='txt-tit'>
+            <view class='number tit1'>价格</view>
+          </view>
+          <view class='arr-num'>
+            <view class='xuan'>
+              <input class='price' bindinput="PriceInputBind" />
+            </view>
+          </view>
+        </view>
+        <!-- 创建规格 -->
+        <view class='num jiage'>
+          <view class='txt-tit'>
+            <view class='create'>创建规格</view>
+          </view>
+          <view class='arr-num'>
+            <!-- bindinput="createInputBind" -->
+            <input class='inp1' bindblur='createInputBind' data-index="{{index}}" />
+            <view class='specifications' bindtap='addSpaceList' data-index="{{index}}">+创建规格</view>
+          </view>
+        </view>
+        <!-- 规格1 -->
+        <block wx:for="{{specList}}" wx:for-index="father_index" wx:for-item="father_item">
+          <view class='num jiage size' data-index="{{father_index}}" id='{{father_item.id}}'>
+            <view class='txt-tit'>
+              <view class='create1'>规格{{father_item.id +1}}
+
+              </view>
+            </view>
+            <view class='arr-num' data-index="{{father_index}}">
+              <input class='default' data-index="{{father_index}}" placeholder='{{father_item.value}}：' />
+
+              <input class='inp2' bindblur='createConBind' />
+              <view class='specification1' data-index="{{father_index}}" bindtap='addSize'>+内容</view>
+              <image src='../img/reduce.png' class='reduceCon' data-index="{{father_index}}" bindtap='delSpeBind'></image>
+            </view>
+          </view>
+          <!-- 属性开始 -->
+          <block wx:for="{{specList[father_index].sizeList}}">
+            <view class='arraySize' data-index="{{index}}">
+              <view class='litteBox' data-index="{{index}}">
+                <view class='attribute'>{{item.sizeValue}}</view>
+                <image src='../img/reduce.png' class='reduce' bindtap='delConBind' data-index="{{father_index}}" data-id="{{index}}"></image>
+              </view>
+            </view>
+          </block>
+          <!-- 属性结束 -->
+        </block>
+      </view>
+      <view style='height:110rpx;width:100%;'></view>
+      <view class='btn'>
+        <view class='next' bindtap='toXin'>上一步</view>
+        <view class='out' bindtap='toXiang'>下一步</view>
+      </view>
+    </view>
+    <!-- 商品详情 -->
+    <view hidden="{{currentTab1!==2}}">
+      <view class='magtop'>
+        <view class="navbar">
+          <text wx:for="{{navbar}}" data-idx="{{index}}" class="item {{currentTab==index ? 'active' : ''}}" wx:key="unique" bindtap="navbarTap">{{item}}</text>
+        </view>
+        <!-- 图文详情 -->
+        <view hidden="{{currentTab!==0}}">
+          <view class='graphicBox'>
+            <block wx:for="{{toUpImg}}">
+              <view class='toUpImg'>
+                <image class='imgUp' data-index="{{index}}" mode='aspectFill' src='{{item.url}}'></image>
+                <image class='del' bindtap='delImg' data-index="{{index}}" src='../img/del.png'></image>
+              </view>
+            </block>
+
+            <view class='toUpImgBtn' bindtap='uploadImgs'>
+              <image src='../img/add.png'></image>
+              <text>上传图片</text>
+            </view>
+          </view>
+        </view>
+        <!-- 参数规格 -->
+        <view hidden="{{currentTab!==1}}" class='spec'>
+          <view class='parameterBox'></view>
+          <!-- 添加主题参数区 -->
+          <view class='specBtn'>
+            <button type="default" bindtap='addSubArr' class='addbtn1' style='font-size: 30rpx;color:white;background-color: #00CC66' data-index="{{index}}"> 添加主体参数 </button>
+          </view>
+          <block wx:for="{{subArr}}">
+            <view class='specList' data-id='{{item.id}}'>
+              <input bindblur='parmBlurBind' data-index="{{index}}" placeholder="参数名" class='specList-l' value='{{item.value}}' placeholder-class='specList-l1' />
+              <input bindblur='parmBlurBind2' data-index="{{index}}" placeholder="参数内容" class='specList-l' value='{{item.valueParameter}}' placeholder-class='specList-l1' />
+              <image bindtap='delBind' data-index="{{index}}" class='delSpecList' src='../img/del.png'></image>
+            </view>
+          </block>
+        </view>
+        <!-- 包装售后 -->
+        <view hidden="{{currentTab!==2}}">
+          <view class='packing'>
+            <view class='list'>
+              <text class='list-tit tit'>包装清单</text>
+              <textarea class='list-box ipt' maxlength="-1" bindinput="listInputBind" />
+            </view>
+            <view class='service'>
+              <text class='service-tit tit'>售后服务</text>
+              <textarea class='service-box' maxlength="-1" bindinput="serviceInputBind" />
+            </view>
+            <view class='clause'>
+              <text class='clause-tit tit'>特别声明</text>
+              <textarea class='clause-box' maxlength="-1" bindinput="clauseInputBind" />
+            </view>
+          </view>
+        </view>
+      </view>
+      <view style='height:110rpx;width:100%;'></view>
+      <view class='btn'>
+        <view class='next' bindtap='toSetting'>上一步</view>
+        <view class='out' bindtap='release'>发布</view>
+      </view>
+    </view>
+  </view>
+  <!-- outermost结束 -->
+</view>

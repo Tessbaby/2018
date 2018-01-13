@@ -1,0 +1,24 @@
+var shopEntity = {
+  "id": "",
+  "appId": "",
+  "cityName": "",
+  "classId": 0,
+  "countyName": "0",
+  "createTime": 0,
+  "disable": 0,
+  "latitude": "",
+  "logo": "",
+  "longitude": "",
+  "outTradeNo": null,
+  "phone": "",
+  "provinceName": "",
+  "shopAddress": "",
+  "shopName": "",
+  "timeStamp": 0,
+  "list": []
+}
+var imgList = {
+  "id": "",
+  "shopId": "",
+  "uploadImgSrc": ""
+}

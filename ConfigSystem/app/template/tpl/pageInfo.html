@@ -1,0 +1,22 @@
+<!-- 底部分页 -->
+<footer class="panel-footer footer text-right">
+    <div class="row">
+        <div class="col-sm-12">
+            <small class="inline">共1页1条记录 当前第1页</small>
+        </div>
+
+        <paging class="col-sm-6 text-right text-center-xs"
+                hide-if-empty=true
+                ul-class="pagination pagination-sm m-t-none m-b-none"
+                page="pageInfo.current"
+                page-size="pageInfo.size"
+                total="pageInfo.total"
+                show-prev-next="false"
+                scroll-top="false"
+                paging-action="pagination(page)">
+        </paging>
+    </div>
+</footer>
+
+<!-- 无数据提醒 -->
+<div class="m-md alert alert-warning text-center text-lg hide">暂无数据</div>

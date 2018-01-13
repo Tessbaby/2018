@@ -1,0 +1,96 @@
+.navbar{  
+  display: block;
+  width: 100%;
+  overflow: hidden;    
+  background: white;
+}  
+.navbar .item{  
+  position: relative;
+  font-size: 28rpx;
+  color: #AEAEAE;
+  /* flex: auto;   */width: 25%;
+  box-sizing: border-box;
+  float: left;
+  text-align: center;  
+  line-height: 80rpx; 
+  border-right: 2rpx solid #E4E4E4;
+  border-bottom: 2rpx solid #E4E4E4;
+}  
+.navbar .item.active{  
+  color: white;
+  background: #00cc66;
+}  
+.commodity-list{
+  padding: 20rpx;
+  padding-bottom: 0;
+  background: white;
+  overflow: hidden;
+}
+.commodityPic{
+  width: 208rpx;
+  height: 182rpx;
+  float: left;
+}
+.commodityPic image{
+  width: 100%;
+  height: 100%;
+}
+.commodityCon{
+  font-size: 28rpx;
+  color: #CCCCCC;
+  float: left;
+  margin-left: 20rpx;
+}
+.commodityCon text{
+  display: block;
+  margin-bottom: 30rpx;
+}
+
+.commodityBtn{
+  width: 100%;
+  overflow: hidden;
+}
+.commodityBtn button{
+  width: 49%;
+  float: left;
+}
+.search{
+   padding-top: 100rpx; 
+}
+.search wx-input{
+  background: #fff;
+  border: 1px solid #D7D7D7;
+  width: 60%;
+  height: 80rpx;
+  line-height: 80rpx;
+  margin: auto;
+  font-size: 28rpx;
+  text-align: center; 
+  margin-bottom: 20rpx;
+}
+.inp1{
+  color: #AEAEAE;
+  font-size: 28rpx;
+  text-align: center; 
+}
+.dateWrap{
+  background: #fff;
+  border: 1px solid #D7D7D7;
+  color: #AEAEAE;
+  width: 60%;
+  height: 80rpx;
+  line-height: 80rpx;
+  margin: auto;
+  font-size: 28rpx;
+  text-align: center; 
+  margin-bottom: 20rpx;
+}
+.sectionBtn{
+  font-size: 30rpx;
+  color:#00CC66 !important;
+  border:1px solid #00CC66; 
+  width: 60%;
+  height: 96rpx;
+  line-height: 96rpx;
+  background: white !important;
+}

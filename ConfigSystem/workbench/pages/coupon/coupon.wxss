@@ -1,0 +1,33 @@
+.couponadd {
+  width: 90%;
+  height: 80rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30rpx;
+  border-bottom: #ccc dashed 3rpx;
+}
+
+.couponlist {
+  width: 90%;
+  height: 400rpx;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 30rpx;
+  color: #666666;
+  border-left: #ccc dashed 3rpx;
+  border-right: #ccc dashed 3rpx;
+  border-bottom: #ccc dashed 3rpx;
+}
+.couponimg{
+  margin-top: 10rpx;
+  width: 100%;
+  height: 150rpx;
+}
+.coupontext{
+  width: 100%;
+  height: 170rpx;
+}
+.couponbutton{
+  width: 100%;
+  height: 80rpx;
+}
