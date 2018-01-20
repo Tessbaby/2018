@@ -1,58 +1,60 @@
 <!--<ele-bread></ele-bread>-->
-<div class="con-main" ng-controller="ticketCenterCtrl">
+<div class="con-main" ng-controller="orderCtrl">
     <form action="">
         <div class="form-group col-md-2">
             <div class="input-group date">
-                <input type="text" class="form-control" value="12-02-2012">
-                <div class="input-group-addon">
-                    <span class="glyphicon glyphicon-th"></span>
+                <div class="input-group">
+                    <input id="date" type="text" class="form-control" readonly uib-datepicker-popup="{{datePicker.format}}" ng-model="datePicker.date" is-open="datePicker.opened" ng-required="true" close-text="关闭" clear-text="清空" current-text="今天" alt-input-formats="datePicker.altInputFormats"/>
+                    <span class="input-group-btn">
+                       <button type="button" class="btn btn-default" ng-click="datePicker.openPicker()"><i class="glyphicon glyphicon-calendar"></i></button>
+                   </span>
                 </div>
             </div>
         </div>
-        <div class="form-group col-md-2">
-            <select name="brand" id="brand">
-                <option value="0">品牌</option>
-                <option value="0">请选择1</option>
-                <option value="0">请选择2</option>
-                <option value="0">请选择3</option>
-            </select>
+        <div class="form-group col-md-2 p-0">
+            <input type="text" class="w100 p-lr-md" placeholder="品牌名称" ng-model="search.brandName" id="brand" ng-change="allSelectFun.changeMainBrand(search.brandName)">
+            <ul class="dropdown-menu w100 down-list se_brand">
+                <li ng-repeat="o in brandData | filter: search.brandName"><a href="javascript:;" ng-click="allSelectFun.getMainBrand(o.id, o.name)">{{ o.name }}</a></li>
+            </ul>
         </div>
         <div class="form-group col-md-2">
-            <input type="text" class="form-control" placeholder="订单编号">
+            <input type="text" class="form-control" placeholder="订单编号" ng-model="search.ordercode">
         </div>
         <div class="form-group col-md-3">
-            <button class="btn btn-info" type="button" ng-click="searchTable()">查询</button>
+            <button class="btn btn-info" type="button" ng-click="search.searchFun()">查询</button>
         </div>
     </form>
     <table class="table table-striped">
         <thead>
         <tr>
             <th class="text-center">状态</th>
-            <th class="text-center">编号</th>
-            <th>品牌</th>
-            <th>地址</th>
+            <th class="text-center">订单编号</th>
+            <th>名称</th>
+            <th>创建时间</th>
             <th class="text-center">操作</th>
         </tr>
         </thead>
         <tbody>
-        <tr >
-            <td class="text-center"><i class="iconfont icon-smile"></i></td>
-            <td class="text-center">001</td>
-            <td>飒飒是</td>
-            <td>地址111</td>
+        <tr ng-repeat="item in table.tableList">
+            <td class="text-center">
+                <i ng-if="item.isUse == 0" class="iconfont icon-smile"></i>
+                <i ng-if="item.isUse != 0" class="iconfont icon-hand"></i>
+            </td>
+            <td ng-bind="item.outTradeNo" class="text-center"></td>
+            <td ng-bind="item.nickName"></td>
+            <td ng-bind="item.createTime"></td>
             <td class="text-center">
                 <button class="btn btn-info" type="button"><i class="iconfont icon-wodexuncha"></i>巡查</button>
-                <button class="btn btn-danger" type="button"><i class="iconfont icon-wancheng"></i>完成</button>
             </td>
         </tr>
-        <tr >
+        <!--<tr >
             <td class="text-center"><i class="iconfont icon-hand"></i></td>
             <td class="text-center">001</td>
             <td>飒飒是</td>
             <td>地址111</td>
             <td class="text-center">
                 <button class="btn btn-info" type="button"><i class="iconfont icon-wodexuncha"></i>巡查</button>
-                <button class="btn btn-success" type="button"><i class="iconfont icon-underway"></i>进行</button>
+                &lt;!&ndash;<button class="btn btn-success" type="button"><i class="iconfont icon-underway"></i>进行</button>&ndash;&gt;
             </td>
         </tr>
         <tr >
@@ -62,10 +64,13 @@
             <td>地址111</td>
             <td class="text-center">
                 <button class="btn btn-info" type="button"><i class="iconfont icon-wodexuncha"></i>巡查</button>
-                <button class="btn btn-danger" type="button"><i class="iconfont icon-wancheng"></i>完成</button>
+                &lt;!&ndash;<button class="btn btn-danger" type="button"><i class="iconfont icon-wancheng"></i>完成</button>&ndash;&gt;
             </td>
-        </tr>
+        </tr>-->
         </tbody>
     </table>
-    <page-info></page-info>
+    <!--<page-info></page-info>-->
+    <div class="pull-right">
+        <uib-pagination total-items="table.pageInfo.totalElements" ng-model="table.pageInfo.number" max-size="table.pageInfo.size" first-text="第一页" previous-text="上一页" next-text="下一页" last-text="最后页" boundary-links="true" boundary-link-numbers="true"></uib-pagination>
+    </div>
 </div>

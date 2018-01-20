@@ -2,13 +2,10 @@
 <div class="con-main" ng-controller="shopCtrl">
     <form action="">
         <div class="form-group col-md-2 p-0">
-            <input type="text" class="w100 p-lr-md" placeholder="店铺名称" ng-model="searchId" ng-change="allSelectFun.changeMainShop()">
-            <ul class="dropdown-menu w100 down-list se_shop">
-                <li ng-repeat="o in dummyData.selectSlide | filter: searchId"><a href="javascript:;" ng-click="allSelectFun.getMainShop(o.id, o.name)">{{ o.name }}</a></li>
-            </ul>
+            <input type="text" class="w100 p-lr-md" placeholder="店铺名称" ng-model="search.name">
         </div>
         <div class="form-group col-sm-3">
-            <button class="btn btn-info" type="button" ng-click="searchTable()">查询</button>
+            <button class="btn btn-info" type="button" ng-click="search.searchFun()">查询</button>
             <button class="btn btn-info" type="button" ng-click="editShop()"><i class="fa fa-check-square-o"></i>添加</button>
         </div>
     </form>
@@ -23,17 +20,21 @@
         </tr>
         </thead>
         <tbody>
-        <tr >
-            <td class="text-center"><i class="iconfont icon-smile"></i></td>
-            <td>博客上几</td>
-            <td>美泰B馆3层54号</td>
-            <td>1520121231</td>
+        <tr ng-repeat="item in table.tableList">
             <td class="text-center">
-                <button class="btn btn-info" type="button" ng-click="editShop(1)"><i class="iconfont icon-bianji"></i>编辑</button>
-                <button class="btn btn-danger" type="button"><i class="iconfont icon-jinyong"></i>禁用</button>
+                <i ng-if="item.disable == 0" class="iconfont icon-smile"></i>
+                <i ng-if="item.disable != 0" class="iconfont icon-jinyong"></i>
+            </td>
+            <td ng-bind="item.shopName"></td>
+            <td ng-bind="item.shopAddress"></td>
+            <td ng-bind="item.phone"></td>
+            <td class="text-center">
+                <button class="btn btn-info" type="button" ng-click="editShop(item.id)"><i class="iconfont icon-bianji"></i>编辑</button>
+                <button ng-if="item.disable == 0" class="btn btn-danger" type="button"><i class="iconfont icon-jinyong"></i>禁用</button>
+                <button ng-if="item.disable != 0" class="btn btn-success" type="button"><i class="iconfont icon-qiyong"></i>启用</button>
             </td>
         </tr>
-        <tr>
+        <!--<tr>
             <td class="text-center"><i class="iconfont icon-hand"></i></td>
             <td>博客上几</td>
             <td>美泰B馆3层54号</td>
@@ -52,10 +53,13 @@
                 <button class="btn btn-info" type="button"><i class="iconfont icon-bianji"></i>编辑</button>
                 <button class="btn btn-danger" type="button"><i class="iconfont icon-jinyong"></i>禁用</button>
             </td>
-        </tr>
+        </tr>-->
         </tbody>
     </table>
-    <page-info></page-info>
+    <div class="pull-right">
+        <uib-pagination ng-change="changePage()" total-items="table.pageInfo.totalElements" ng-model="table.pageInfo.number" max-size="table.pageInfo.size" first-text="第一页" previous-text="上一页" next-text="下一页" last-text="最后页" boundary-links="true" boundary-link-numbers="true"></uib-pagination>
+
+    </div>
     <div style="height: 0; overflow: hidden">
         <div id="editShopLayer">
             <div class="edit">
@@ -64,34 +68,35 @@
                         <label for="brand" class="col-md-4 col-lg-4 text-right">品牌</label>
                         <!--<input type="text" id="brand" class="col-md-6 col-lg-6" placeholder="输入品牌">-->
                         <div class="form-group col-md-6 col-lg-6 p-0">
-                            <input type="text" class="w100 p-lr-md" placeholder="品牌名称" ng-model="param.brandName" id="brand" ng-change="allSelectFun.changeEditShop()">
+                            <input type="text" class="w100 p-lr-md" placeholder="品牌名称" ng-model="param.brandName" id="brand" ng-change="allSelectFun.changeEditShop(param.brandName)">
                             <ul class="dropdown-menu w100 down-list ed_shop">
-                                <li ng-repeat="o in dummyData.selectSlide | filter: searchId"><a href="javascript:;" ng-click="allSelectFun.getEditShop(o.id, o.name)">{{ o.name }}</a></li>
+                                <li ng-repeat="o in brandData | filter: param.brandName"><a href="javascript:;" ng-click="allSelectFun.getEditShop(o.id, o.name)">{{ o.name }}</a></li>
                             </ul>
                         </div>
                     </div>
                     <div class="form-group row m-b-sm">
                         <label for="phone" class="col-md-4 col-lg-4 text-right">电话</label>
-                        <input type="text" id="phone" class="col-md-6 col-lg-6" placeholder="输入电话号码">
+                        <input type="text" id="phone" class="col-md-6 col-lg-6" placeholder="输入电话号码" ng-model="param.phone">
                     </div>
                     <div class="form-group row m-b-sm">
                         <label for="address" class="col-md-4 col-lg-4 text-right">地址</label>
-                        <input type="text" id="address" class="col-md-6 col-lg-6" placeholder="输入地址">
+                        <input type="text" id="address" class="col-md-6 col-lg-6" placeholder="输入地址" ng-model="param.shopAddress">
                     </div>
                     <div class="form-group row m-b-sm">
-                        <label for="pClass" class="col-md-4 col-lg-4 text-right">选择主分类</label>
-                        <select name="pClass" id="pClass" class="layer-select col-md-4 col-lg-4">
-                            <option value="0">请选择</option>
-                            <option value="1">请选择1</option>
-                            <option value="2">请选择2</option>
-                        </select>
+                        <label for="brand" class="col-md-4 col-lg-4 text-right">分类</label>
+                        <div class="form-group col-md-4 col-lg-4 p-0">
+                            <input type="text" class="w100 p-lr-md" placeholder="分类名称" ng-model="param.className" id="classify" ng-change="allSelectFun.changeEditShopClass(param.className)">
+                            <ul class="dropdown-menu w100 down-list ed_shop_class">
+                                <li ng-repeat="o in classData | filter: param.className"><a href="javascript:;" ng-click="allSelectFun.getEditShopClass(o.id, o.name)">{{ o.name }}</a></li>
+                            </ul>
+                        </div>
                         <span class="col-md-4 col-lg-4">备注： 这里显示的是一级分类</span>
                     </div>
                     <div class="form-group row m-b-sm">
                         <label class="col-md-4 col-lg-4 text-right">添加logo</label>
                         <div style="height: 200px;" class="col-md-6 col-lg-6 border"></div>
                     </div>
-                    <div class="form-group row m-b-sm">
+                    <div class="form-group row m-b-sm" ng-if="param.id">
                         <label class="col-md-4 col-lg-4 text-right">管理员授权二维码</label>
                         <label><a href="javascript:;">下载二维码</a></label>
                     </div>

@@ -2,8 +2,30 @@
 
 // Declare app level module which depends on views, and components
 var app = angular.module('myApp', ['ngRoute', 'ngCookies', 'ngWebSocket', 'ui.bootstrap'])
-    .config(['$locationProvider', '$routeProvider',
-        function($locationProvider, $routeProvider) {
+    .config(['$locationProvider', '$routeProvider', '$httpProvider',
+        function($locationProvider, $routeProvider, $httpProvider) {
+
+            $httpProvider.defaults.headers.post = {"content-type": "application/json"}
+
+            app.asyncjs = function (js) {
+                return ["$q", "$route", "$rootScope", function ($q, $route, $rootScope) {
+                    var deferred = $q.defer();
+                    var dependencies = js;
+                    if (Array.isArray(dependencies)) {
+                        for (var i = 0; i < dependencies.length; i++) {
+                            dependencies[i];
+                        }
+                    } else {
+                        dependencies
+                    }
+                    $script(dependencies, function () {
+                        $rootScope.$apply(function () {
+                            deferred.resolve();
+                        });
+                    });
+                    return deferred.promise;
+                }];
+            }
 
             $routeProvider.otherwise({redirectTo: '/login'})
                 .when('/login', {
@@ -45,27 +67,24 @@ var app = angular.module('myApp', ['ngRoute', 'ngCookies', 'ngWebSocket', 'ui.bo
     ]);
 
 /* 页面加载即调用 */
-app.run(['$rootScope', '$location', '$rootElement', function ($rootScope, $location, $rootElement) {
+app.run(['$rootScope', '$location', '$rootElement', '$http', function ($rootScope, $location, $rootElement, $http) {
 
-    /* 各种假数据 */
-    $rootScope.dummyData = {};
-    $rootScope.dummyData.selectSlide = [
-        {name: '大一数据对比改变', id: '1001'},
-        {name: 'fjfkjek', id: '1002'},
-        {name: '卡复活点', id: '1003'},
-        {name: '爱乱丢放', id: '1004'}
-    ];
-
-    /* 声明表格数据、分页 */
-    $rootScope.table = {};
-    $rootScope.table.dataList = [];
-    $rootScope.table.pageInfo = [];
+    $rootScope.headers = {
+        withCredentials: true,//跨域
+        headers: {
+            'content-type': 'application/json'
+        }//跨域
+    }
 
     /* 设置默认路径 */
     $rootScope.default = {};
     $rootScope.default.Img = '';
-    $rootScope.default.dPath = 'http://192.168.1.200:8060'; //设置接口域名端口
-    $rootScope.default.imgPath = 'http://192.168.1.15:8070/shop/manage/enity?openid=111'; // 设置获取图片url的路径http://192.168.1.200:9070/img
+    $rootScope.default.dPath = 'http://192.168.1.200:'; // 设置接口域名端口
+
+    $rootScope.default.imgPath = 'http://192.168.1.200:9070/img'; // 图片上传接口
+    $rootScope.default.ClassifyPath = $rootScope.default.dPath + '8060/goods/class/father/downlist'; // 获取一级分类下拉菜单接口
+    $rootScope.default.ClassifyPath3 = $rootScope.default.dPath + '8060/goods/class/back/goodsclass/downlist'; // 获取3级分类下拉菜单接口
+    $rootScope.default.brandPath = $rootScope.default.dPath + '8070/shop/brand/list'; // 获取品牌下拉菜单接口
 
     /* 菜单切换联动顶部菜单效果 */
     var _path;
@@ -95,7 +114,7 @@ app.run(['$rootScope', '$location', '$rootElement', function ($rootScope, $locat
             currentObj = newObj(_path)
             currentObj && _arr.push(currentObj);
         }
-        console.log(_arr)
+        //console.log(_arr)
         function newObj(a) {
             var newArr;
             angular.forEach($rootScope.navList, function (obj, index) {
@@ -116,20 +135,57 @@ app.run(['$rootScope', '$location', '$rootElement', function ($rootScope, $locat
     });
 
     /* 复选框点击效果 */
-    $rootScope.isChecked = function (event) {
+    /*$rootScope.isChecked = function (event) {
         var target = window.event;
         var _this = $(target.srcElement)
         if (_this[0].tagName == 'LABEL') {
             _this.toggleClass('checked');
         }
-    }
+    }*/
 
     /* 获取下拉框选项，可随时调用 */
     $rootScope.getCheckboxVal = function (value) {
         return value;
     }
-}])
 
+    function appendTransform(defaults,transform){
+        defaults:angular.isArray(defaults)?defaults:[defaults];
+        return defaults.concat(transform);
+    }
+
+    /* 获取表格数据 */
+    $rootScope.table = {};
+    $rootScope.searchTable = function (_url) {
+        $rootScope.table.tableList = [];
+        $rootScope.table.pageInfo = {};
+        $rootScope.table.pageInfo.number = 0;
+        var url = '';
+        url = $rootScope.default.dPath + _url;
+        $.ajax({
+            url: url,
+            method: 'get',
+            headers: {
+                "content-type": "application/json"
+            },
+            success: function (result) {
+                $rootScope.table.tableList = result.content ?  result.content : [];
+                $rootScope.table.pageInfo = {
+                    totalElements: result.totalElements,
+                    number: result.number + 1,
+                    size: result.size,
+                    totalPages: result.totalPages
+                };
+                $rootScope.$apply();
+                console.log($rootScope.table.tableList)
+            },
+            error: function (err) {
+                //layer.alert(err);
+            }
+        })
+    }
+
+
+}])
 /* 左侧菜单栏 */
 app.directive('uiNav', function() {
     return {
@@ -173,32 +229,33 @@ app.directive('eleBread', function ($rootScope, $location) {
 
     }
 });
+
 /* 分页 功能还不完善 */
-app.directive('pageInfo', function () {
-    return {
-        restrict: 'EA',
-        replace: true,
-        transclude: true,
-        template: '<div class="footer">'
-                    + '<nav aria-label="Page navigation">'
-                    + '<ul class="pagination pull-right">'
-                    + '<li>'
-                    + '<a href="#" aria-label="Previous">'
-                    + '<span aria-hidden="true">&laquo;</span>'
-                    + '</a>'
-                    + '</li>'
-                    + '<li class="active"><a href="#">1</a></li>'
-                    + '<li>'
-                    + '<a href="#" aria-label="Next">'
-                    + '<span aria-hidden="true">&raquo;</span>'
-                    + '</a>'
-                    + '</li>'
-                    + '</ul>'
-                    + '</nav>'
-                    + '</div>',
-        link: function () {}
-    }
-})
+/*app.directive('pageInfo', function () {
+ return {
+ restrict: 'EA',
+ replace: true,
+ transclude: true,
+ template: '<div class="footer">'
+ + '<nav aria-label="Page navigation">'
+ + '<ul class="pagination pull-right">'
+ + '<li>'
+ + '<a href="#" aria-label="Previous">'
+ + '<span aria-hidden="true">&laquo;</span>'
+ + '</a>'
+ + '</li>'
+ + '<li class="active"><a href="#">1</a></li>'
+ + '<li>'
+ + '<a href="#" aria-label="Next">'
+ + '<span aria-hidden="true">&raquo;</span>'
+ + '</a>'
+ + '</li>'
+ + '</ul>'
+ + '</nav>'
+ + '</div>',
+ link: function () {}
+ }
+ })*/
 
 /* 定义get或post请求函数 */
 app.factory('httpAjax', function ($rootScope, $cookies, $http, $q) {
@@ -232,26 +289,9 @@ app.factory('httpAjax', function ($rootScope, $cookies, $http, $q) {
             defer.reject(function () {
                 layer.alert('error');
             })
-        })
+        });
+        return defer.promise;
     }
-
-    // 获取表格数据
-    loadData.getTable = function (_url, _postData) {
-        // 调用之前先清空数据
-        $rootScope.dataList = [];
-        $rootScope.pageInfo = [];
-        $http({
-            url: _url,
-            method: 'GET',
-            data: _postData
-        }).success(function (result) {
-            $rootScope.dataList = result;
-            $rootScope.pageInfo = result.page;
-        }).error(function () {
-            layer.alert('error'); // 这里用来写error时的事件
-        })
-    }
-
     return loadData;
 
 })

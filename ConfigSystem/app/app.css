@@ -10,7 +10,9 @@ a:hover { text-decoration: none; }
 .valign { vertical-align: middle; }
 .talign { vertical-align: top; }
 .balign { vertical-align: bottom;  }
+.pos-relative { position: relative; }
 .p-0 { padding: 0; }
+.p-lr-xs { padding-left: 5px; padding-right: 5px; }
 .p-lr-md { padding-left: 15px; padding-right: 15px; }
 .m-b-xs { margin-bottom: 10px; }
 .m-b-sm { margin-bottom: 20px; }
@@ -311,4 +313,30 @@ a:hover { text-decoration: none; }
   line-height: 200px;
   height: 200px;
   opacity: 0;
+}
+.edit .del-ware {
+  position: absolute;
+  right: 0px;
+  top: -10px;
+  font-size: 18px;
+  line-height: 25px;
+  width: 25px;
+  color: #f1f1f1;
+  background-color: #000000;
+  opacity: .5;
+  border-radius: 12.5px;
+  font-style: normal;
+  cursor: pointer;
+}
+
+/* 引入样式重置 */
+.uib-datepicker-popup button, .input-group-btn button {
+  width: auto;
+  margin: 0;
+}
+.input-group-btn button {
+  height: 35px;
+}
+.uib-datepicker-popup table {
+  margin-top: 10px;
 }

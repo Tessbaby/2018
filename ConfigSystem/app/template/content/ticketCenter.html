@@ -3,23 +3,22 @@
     <form action="">
         <div class="form-group col-md-2">
             <div class="input-group date">
-                <!--<input type="text" class="form-control" value="12-02-2012">
-                <div class="input-group-addon">
-                    <span class="glyphicon glyphicon-th"></span>
-                </div>-->
-                <input type="text" class="form-control" uib-datepicker-popup readonly is-open="startPopupOpened" min-date="minStartDate" max-date="maxStartDate" datepicker-options="dateOptions" ng-required="true" close-text="关闭" current-text="今天"/>
+                <div class="input-group">
+                    <input id="date" type="text" class="form-control" readonly uib-datepicker-popup="{{datePicker.format}}" ng-model="datePicker.date" is-open="datePicker.opened" ng-required="true" close-text="关闭" clear-text="清空" current-text="今天" alt-input-formats="datePicker.altInputFormats" />
+                    <span class="input-group-btn">
+                       <button type="button" class="btn btn-default" ng-click="datePicker.openPicker()"><i class="glyphicon glyphicon-calendar"></i></button>
+                   </span>
+                </div>
             </div>
         </div>
-        <div class="form-group col-md-2">
-            <select name="brand" id="brand">
-                <option value="0">品牌</option>
-                <option value="0">请选择1</option>
-                <option value="0">请选择2</option>
-                <option value="0">请选择3</option>
-            </select>
+        <div class="form-group col-md-2 p-0">
+            <input type="text" class="w100 p-lr-md" placeholder="品牌名称" ng-model="search.brandName" id="brand" ng-change="allSelectFun.changeMainBrand(search.brandName)">
+            <ul class="dropdown-menu w100 down-list se_brand">
+                <li ng-repeat="o in brandData | filter: search.brandName"><a href="javascript:;" ng-click="allSelectFun.getMainBrand(o.id, o.name)">{{ o.name }}</a></li>
+            </ul>
         </div>
         <div class="form-group col-md-3">
-            <button class="btn btn-info" type="button" ng-click="searchTable()">查询</button>
+            <button class="btn btn-info" type="button" ng-click="search.searchFun()">查询</button>
         </div>
     </form>
     <table class="table table-striped">
@@ -28,50 +27,28 @@
             <th class="text-center">状态</th>
             <th>品牌</th>
             <th>用券规则</th>
-            <th>地址</th>
-            <th class="text-center">电话</th>
             <th class="text-center">有效期</th>
             <th class="text-center">操作</th>
         </tr>
         </thead>
         <tbody>
-        <tr >
-            <td class="text-center"><i class="iconfont icon-smile"></i></td>
-            <td>品牌1</td>
-            <td>满100减50</td>
-            <td>地址111</td>
-            <td class="text-center">13274857584</td>
-            <td class="text-center">2017-07-01</td>
+        <tr ng-repeat="item in table.tableList">
             <td class="text-center">
-                <button class="btn btn-info" type="button"><i class="iconfont icon-wodexuncha"></i>审查</button>
-                <button class="btn btn-danger" type="button"><i class="iconfont icon-jinyong"></i>禁用</button>
+                <i ng-if="item.isCoupon == 0" class="iconfont icon-smile"></i>
+                <i ng-if="item.isCoupon != 0" class="iconfont icon-hand"></i>
             </td>
-        </tr>
-        <tr >
-            <td class="text-center"><i class="iconfont icon-hand"></i></td>
-            <td>品牌1</td>
-            <td>满100减50</td>
-            <td>地址111</td>
-            <td class="text-center">13274857584</td>
-            <td class="text-center">2017-07-01</td>
+            <td ng-bind="item.shopName"></td>
+            <td ng-bind="item.couponRegulation"></td>
+            <td ng-bind="item.startDate + '-' + item.endDate" class="text-center"></td>
             <td class="text-center">
                 <button class="btn btn-info" type="button"><i class="iconfont icon-wodexuncha"></i>审查</button>
-                <button class="btn btn-success" type="button"><i class="iconfont icon-qiyong"></i>启用</button>
-            </td>
-        </tr>
-        <tr >
-            <td class="text-center"><i class="iconfont icon-smile"></i></td>
-            <td>品牌1</td>
-            <td>满100减50</td>
-            <td>地址111</td>
-            <td class="text-center">13274857584</td>
-            <td class="text-center">2017-07-01</td>
-            <td class="text-center">
-                <button class="btn btn-info" type="button"><i class="iconfont icon-wodexuncha"></i>审查</button>
-                <button class="btn btn-danger" type="button"><i class="iconfont icon-jinyong"></i>禁用</button>
+                <button ng-if="item.isCoupon == 0" class="btn btn-danger" type="button" ng-click="changeDisabled(item.id, 0)"><i class="iconfont icon-jinyong"></i>禁用</button>
+                <button ng-if="item.isCoupon != 0" class="btn btn-success" type="button" ng-click="changeDisabled(item.id, 1)"><i class="iconfont icon-qiyong"></i>启用</button>
             </td>
         </tr>
         </tbody>
     </table>
-    <page-info></page-info>
+    <div class="pull-right">
+        <uib-pagination total-items="table.pageInfo.totalElements" ng-model="table.pageInfo.number" max-size="table.pageInfo.size" first-text="第一页" previous-text="上一页" next-text="下一页" last-text="最后页" boundary-links="true" boundary-link-numbers="true"></uib-pagination>
+    </div>
 </div>
