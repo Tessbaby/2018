@@ -63,16 +63,61 @@ need
 // 1月20日 需要鹏哥修改
 
 1、商品巡查，查询商品列表 检索条件缺“是否爆款”字段 还用ishot done
-2、加查询所有轮播图的接口
+2、加查询所有轮播图的接口 done
 
 // 个人遗留问题
 
-1、分页
+1、分页问题 done
 2、图片上传
-3、日期验证 最大为今天
+3、日期验证 最大为今天 done
 4、手机号验证
-5、订单编号验证
 6、长连接
-7、权限没加
-8、登录、退出
+7、权限没加 done
+8、退出 done
 9、加默认图片
+
+// 1月21日 需要鹏哥修改
+1、默认图片
+
+// 1月22日 需要鹏哥加
+1、管理员禁用二维码
+
+// 1月23
+* 按需加载controller
+1、轮播图重新上传的接口
+2、订单去掉巡查，加上订单信息
+3、openId
+
+
+
+
+
+
+1、http://localhost:8066/auth/create/uuid通过该url生成一个唯一的序列，并在本地一直缓存该序列。
+
+2、https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx63d033e879c445f2&redirect_uri=http%3A%2F%2Frubusteam.xicp.io%2Fauth%2Fread%2Fwx%2Fopenid&response_type=code&scope=snsapi_base&state=123#wechat_redirect 将url生成的序列值写入到state参数的后面
+
+3、使用http://localhost:9070/qrcode连接生成二维码 会给你返回图片连接地址
+
+4、生成二维码的同时，打开一个长连接 并将该序列值一并提交到服务器 同时等待服务器的返回信息。当返回正确信息时，将返回用户的openid。当错误时，会返回error（非授权用户）
+   注意，服务器会将连接开启60秒。超时后自动断开连接
+
+5、在手机端添加一个成功的HTML页面
+
+验证--------------------------------
+
+http://localhost:8066/auth/check?sequence=123
+传入存储的序列码作为参数值 当返回true为持续登录，返回false为登录超时
+
+退出登录----------------------------
+
+http://localhost:8066/auth/exit?sequence=123
+只要点退出。就跳转到登录页面
+
+注册管理员--------------------------------
+1、生成如下连接的一张固定二维码
+https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx63d033e879c445f2&redirect_uri=http%3A%2F%2Frubusteam.xicp.io%2Fauth%2Fregister%2Fwx%2Fopenid&response_type=code&scope=snsapi_base&state=123#wechat_redirect
+2、在手机端添加一个成功的HTML页面
+
+
+支付完善

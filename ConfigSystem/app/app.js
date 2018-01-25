@@ -7,6 +7,8 @@ var app = angular.module('myApp', ['ngRoute', 'ngCookies', 'ngWebSocket', 'ui.bo
 
             $httpProvider.defaults.headers.post = {"content-type": "application/json"}
 
+
+
             app.asyncjs = function (js) {
                 return ["$q", "$route", "$rootScope", function ($q, $route, $rootScope) {
                     var deferred = $q.defer();
@@ -30,45 +32,49 @@ var app = angular.module('myApp', ['ngRoute', 'ngCookies', 'ngWebSocket', 'ui.bo
             $routeProvider.otherwise({redirectTo: '/login'})
                 .when('/login', {
                     templateUrl: 'template/content/login.html',
-                    controller: 'loginCtrl'
+                    //controller: 'loginCtrl'
                 })
                 .when('/index', {
                     templateUrl: 'template/content/main.html'
                 })
                 .when('/shop', {
                     templateUrl: 'template/content/shop.html',
-                    controller: 'shopCtrl'
+                    //controller: 'shopCtrl'
                 })
                 .when('/classify', {
                     templateUrl: 'template/content/classify.html',
-                    controller: 'classifyCtrl'
+                    //controller: 'classifyCtrl',
+                    /*resolve: {
+                        load: app.asyncjs('template/content/classController.js')
+                    }*/
                 })
                 .when('/waresPatrol', {
                     templateUrl: 'template/content/waresPatrol.html',
-                    controller: 'waresPatrolCtrl'
+                    //controller: 'waresPatrolCtrl'
                 })
                 .when('/ticketCenter', {
                     templateUrl: 'template/content/ticketCenter.html',
-                    controller: 'ticketCenterCtrl'
+                    //controller: 'ticketCenterCtrl'
                 })
                 .when('/banner', {
                     templateUrl: 'template/content/banner.html',
-                    controller: 'bannerCtrl'
+                    //controller: 'bannerCtrl'
                 })
                 .when('/order', {
                     templateUrl: 'template/content/order.html',
-                    controller: 'orderCtrl'
+                    //controller: 'orderCtrl'
                 })
                 .when('/manage', {
                     templateUrl: 'template/content/manage.html',
-                    controller: 'manageCtrl'
+                    //controller: 'manageCtrl'
                 });
         }
     ]);
 
 /* 页面加载即调用 */
-app.run(['$rootScope', '$location', '$rootElement', '$http', function ($rootScope, $location, $rootElement, $http) {
+app.run(['$rootScope', '$location', '$rootElement', '$http', '$cookies', function ($rootScope, $location, $rootElement, $http, $cookies) {
 
+    $rootScope.personalMsg = ''; // 用于存储用户信息
     $rootScope.headers = {
         withCredentials: true,//跨域
         headers: {
@@ -76,13 +82,70 @@ app.run(['$rootScope', '$location', '$rootElement', '$http', function ($rootScop
         }//跨域
     }
 
+    // 用于验证是否超时
+    $rootScope.wxConnect = '';
+    $rootScope.checkIn = function () {
+        var uuid = $cookies.get('uuid');
+        $.ajax({
+            url: $rootScope.default.dPath + '8066/auth/check?sequence=' + uuid,
+            method: 'get',
+            //data: $rootScope.wxConnect,
+            withCredentials: true,//跨域
+            headers: {
+                'content-type': 'application/json'
+            },
+            success: function (data) {
+                if(data == 'false') {
+                    layer.msg('登录超时！', {time: 3000, icon:2});
+                    /*setTimeout(function () {
+                        window.location = '#/login';
+                    }, 1000);*/
+                    //window.location = '#/login';
+                } else {
+                    // 判断是否有用户信息
+                    if ($rootScope.personalMsg == '') {
+                        var openId = $cookies.get('openId');
+                        $http.post($rootScope.default.dPath + '8062/admin/check?openid=' + openId, {})
+                            .success(function (data) {
+                                $rootScope.personalMsg = data;
+                            }).error(function (err) {
+                                layer.msg('获取用户信息失败', {time: 3000, icon:2});
+                            })
+                    }
+                }
+            },
+            error: function () {
+                window.location = '#/login';
+            }
+        })
+    }
+    $rootScope.logout = function () {
+        $.ajax({
+            url: $rootScope.default.dPath + '8066/auth/exit?sequence=123',
+            method: 'get',
+            headers: {
+                "content-type": "text/plain"
+            },
+            success:function (data) {
+                window.location = '#/login';
+            },
+            error: function (err) {
+                layer.alert('退出失败');
+            }
+        })
+    }
+
     /* 设置默认路径 */
     $rootScope.default = {};
     $rootScope.default.Img = '';
     $rootScope.default.dPath = 'http://192.168.1.200:'; // 设置接口域名端口
+    $rootScope.default.yPath = 'rubusteam.xicp.io'; // 设置域名 验证用
+    $rootScope.default.appid = 'wx63d033e879c445f2'; // 设置appid 验证用
+     $rootScope.default.ws = 'ws://192.168.1.200:8443/websockets' // 长链接
 
-    $rootScope.default.imgPath = 'http://192.168.1.200:9070/img'; // 图片上传接口
+    $rootScope.default.imgPath = $rootScope.default.dPath + '9070/img'; // 图片上传接口
     $rootScope.default.ClassifyPath = $rootScope.default.dPath + '8060/goods/class/father/downlist'; // 获取一级分类下拉菜单接口
+    $rootScope.default.ClassifyPath2 = $rootScope.default.dPath + '8060/goods/class/back/root/downlist' // 获取二级分类下拉菜单接口
     $rootScope.default.ClassifyPath3 = $rootScope.default.dPath + '8060/goods/class/back/goodsclass/downlist'; // 获取3级分类下拉菜单接口
     $rootScope.default.brandPath = $rootScope.default.dPath + '8070/shop/brand/list'; // 获取品牌下拉菜单接口
 
@@ -134,15 +197,6 @@ app.run(['$rootScope', '$location', '$rootElement', '$http', function ($rootScop
         }
     });
 
-    /* 复选框点击效果 */
-    /*$rootScope.isChecked = function (event) {
-        var target = window.event;
-        var _this = $(target.srcElement)
-        if (_this[0].tagName == 'LABEL') {
-            _this.toggleClass('checked');
-        }
-    }*/
-
     /* 获取下拉框选项，可随时调用 */
     $rootScope.getCheckboxVal = function (value) {
         return value;
@@ -156,6 +210,7 @@ app.run(['$rootScope', '$location', '$rootElement', '$http', function ($rootScop
     /* 获取表格数据 */
     $rootScope.table = {};
     $rootScope.searchTable = function (_url) {
+        layer.load(1, {shade: [0.2,'#000']}); // loading
         $rootScope.table.tableList = [];
         $rootScope.table.pageInfo = {};
         $rootScope.table.pageInfo.number = 0;
@@ -170,13 +225,12 @@ app.run(['$rootScope', '$location', '$rootElement', '$http', function ($rootScop
             success: function (result) {
                 $rootScope.table.tableList = result.content ?  result.content : [];
                 $rootScope.table.pageInfo = {
-                    totalElements: result.totalElements,
                     number: result.number + 1,
-                    size: result.size,
-                    totalPages: result.totalPages
+                    totalPages: args(result.totalPages)
                 };
                 $rootScope.$apply();
-                console.log($rootScope.table.tableList)
+                layer.closeAll();
+                //console.log($rootScope.table.tableList)
             },
             error: function (err) {
                 //layer.alert(err);
@@ -184,6 +238,26 @@ app.run(['$rootScope', '$location', '$rootElement', '$http', function ($rootScop
         })
     }
 
+    // 创建数组
+    function args(num) {
+        var arr = [];
+        for(var i = 1; i < num + 1; i++) {
+            arr.push(1);
+        }
+        return arr;
+    }
+
+    // 对比时间
+    $rootScope.compareDate = function (date) {
+        var today = Date.parse(new Date());
+        var _date = Date.parse(new Date(date));
+        if (today < _date) {
+            layer.msg('日期不能超过今天', {time: 3000, icon:0});
+            return '';
+        } else {
+            return date;
+        }
+    }
 
 }])
 /* 左侧菜单栏 */
@@ -210,52 +284,43 @@ app.directive('eleBread', function ($rootScope, $location) {
                     + '</ul>',
         link: function (scope, el, attr) {
             el.on('click', '.fa-close', function () {
-                var _this = $(this);
-                var dataId = _this.parent().parent().attr('data-id');
-                var thisArr = [];
+                if ($rootScope.breadList.list.length > 1) {
+                    var _this = $(this);
+                    var prevLi = _this.parent().parent().prev('li');
+                    var prevHref = '';
 
-                _this.parent().parent().prev().addClass('active');
-                _this.parent().parent().remove();
+                    var dataId = _this.parent().parent().attr('data-id');
+                    var thisArr = [];
 
-                angular.forEach($rootScope.breadList.list, function (o, index) {
-                    if (dataId != o.id) {
-                        thisArr.push(o);
-                    }
-                })
-                $rootScope.breadList.list = angular.copy(thisArr);
-                //console.log($rootScope.breadList.list)
+                    _this.parent().parent().prev().addClass('active');
+                    _this.parent().parent().remove();
+
+                    angular.forEach($rootScope.breadList.list, function (o, index) {
+                        if (dataId != o.id) {
+                            thisArr.push(o);
+                        }
+                    })
+                    $rootScope.breadList.list = angular.copy(thisArr);
+                }
+
             })
         }
 
     }
 });
-
-/* 分页 功能还不完善 */
-/*app.directive('pageInfo', function () {
- return {
- restrict: 'EA',
- replace: true,
- transclude: true,
- template: '<div class="footer">'
- + '<nav aria-label="Page navigation">'
- + '<ul class="pagination pull-right">'
- + '<li>'
- + '<a href="#" aria-label="Previous">'
- + '<span aria-hidden="true">&laquo;</span>'
- + '</a>'
- + '</li>'
- + '<li class="active"><a href="#">1</a></li>'
- + '<li>'
- + '<a href="#" aria-label="Next">'
- + '<span aria-hidden="true">&raquo;</span>'
- + '</a>'
- + '</li>'
- + '</ul>'
- + '</nav>'
- + '</div>',
- link: function () {}
- }
- })*/
+// 配合使用 循环结束后的监听
+app.directive('onFinishRenderFilters', function ($timeout) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attr) {
+            if (scope.$last === true) {
+                $timeout(function() {
+                    scope.$emit('ngRepeatFinished');
+                });
+            }
+        }
+    };
+});
 
 /* 定义get或post请求函数 */
 app.factory('httpAjax', function ($rootScope, $cookies, $http, $q) {
@@ -293,8 +358,8 @@ app.factory('httpAjax', function ($rootScope, $cookies, $http, $q) {
         return defer.promise;
     }
     return loadData;
-
 })
+
 
 
 

@@ -1,5 +1,5 @@
 <!--<ele-bread></ele-bread>-->
-<div class="con-main" ng-controller="classifyCtrl">
+<div class="con-main"  ng-controller="classifyCtrl">
     <form action="">
         <div class="form-group col-md-2 p-0">
             <input type="text" class="w100 p-lr-md" placeholder="分类名称" ng-model="search.name" ng-change="allSelectFun.changeMainClassify(search.name)">
@@ -36,17 +36,31 @@
         </tr>
         </tbody>
     </table>
-    <div class="pull-right">
-        <uib-pagination total-items="table.pageInfo.totalElements" ng-model="table.pageInfo.number" max-size="table.pageInfo.size" first-text="第一页" previous-text="上一页" next-text="下一页" last-text="最后页" boundary-links="true" boundary-link-numbers="true"></uib-pagination>
+    <div class="footer">
+        <nav aria-label="Page navigation">
+            <ul class="pagination pull-right">
+                <li>
+                    <a href="javascript:;" aria-label="Previous" ng-click="goPrePage()">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li ng-class="{true : 'active'}[table.pageInfo.number == $index + 1]" ng-repeat="i in table.pageInfo.totalPages track by $index"><a href="javascript:;" ng-click="goPage($index + 1)">{{ $index + 1 }}</a></li>
+                <li>
+                    <a href="javascript:;" aria-label="Next" ng-click="goNextPage()">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
     <div style="height: 0; overflow: hidden">
         <div id="editClassLayer">
             <div class="edit">
-                <form action="">
+                <form action="" id="editForm">
                     <div class="form-group row m-b-sm">
                         <label for="pClass" class="col-md-4 col-lg-4 text-right">选择分类</label>
                         <div class="col-md-4 col-lg-4 p-0">
-                            <input type="text" id="pClass" placeholder="分类名称" class="w100 p-lr-md" ng-model="param.classRootName" ng-change="allSelectFun.changeEditClassify(param.classRootName)">
+                            <input name="classRootName" type="text" id="pClass" placeholder="分类名称" class="w100 p-lr-md" ng-model="param.classRootName" ng-change="allSelectFun.changeEditClassify(param.classRootName)">
                             <ul class="dropdown-menu w100 down-list ed_class">
                                 <li ng-repeat="o in dummyData | filter: param.classRootName"><a href="javascript:;" ng-click="allSelectFun.getEditClassify(o.id, o.name)">{{ o.name }}</a></li>
                             </ul>
@@ -55,20 +69,23 @@
                     </div>
                     <div class="form-group row m-b-sm">
                         <label for="cClass" class="col-md-4 col-lg-4 text-right">新增子分类</label>
-                        <input type="text" id="cClass" class="col-md-4 col-lg-4" placeholder="分类名称" ng-model="param.name">
+                        <input type="text" id="cClass" class="col-md-4 col-lg-4" placeholder="分类名称" ng-model="param.name" name="name">
                     </div>
                     <div class="form-group row m-b-sm">
                         <label class="col-md-4 col-lg-4 text-right">上传图片</label>
-                        <div style="height: 200px; overflow: hidden" class="col-md-4 col-lg-4 border">
-                            <div ng-if="!showImg" href="" class="block add-img" id="addImg">
+                        <div class="col-md-4 col-lg-4 p-0" id="selectfiles">
+                            <div ng-if="!isShowImg" href="" class="block add-img border" id="addImg">
                                 <span class="block text-center">+</span>
-                                <input type="file" value="" id="fileName" class="class-img-input" onchange="angular.element(this).scope().fileChange('fileName')" ng-model="param.img">
                             </div>
-                            <img ng-if="showImg" ng-src="{{ imgName }}" alt="">
+
+                            <img ng-if="isShowImg" ng-src="{{param.img}}" alt="" style="height: 200px; width: 100%; margin-bottom: 10px;">
                         </div>
+                        <!--<div class="col-md-4 col-lg-4 upload_con">
+                            <button type="button" class="btn btn-info" id="selectfiles">选择图片</button>
+                        </div>-->
                     </div>
                     <div class="form-group row text-center">
-                        <button type="button" class="btn btn-info" ng-click="saveClassify()"><i class="iconfont icon-editsaved"></i>保存</button>
+                        <button class="btn btn-info"><i class="iconfont icon-editsaved"></i>保存</button>
                     </div>
                 </form>
             </div>

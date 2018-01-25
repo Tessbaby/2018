@@ -1,8 +1,8 @@
 <nav ui-nav class="navi clearfix">
     <ul class="nav" id="nav" ng-controller="navCtrl">
         <li class="nav-msg text-center">
-            <a href=""><img src="../../components/Image/head.jpg" alt=""></a>
-            <a href=""><span>谈谈谈</span></a>
+            <a href=""><img ng-src="{{ personalMsg.avatarUrl }}" alt=""></a>
+            <a href=""><span ng-bind="personalMsg.nickName"></span></a>
         </li>
         <li  ng-repeat="menu in navList " data-pId="{{menu.id}}">
             <!-- 判断是否有子集：有 -->
