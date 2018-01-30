@@ -107,7 +107,7 @@ a:hover { text-decoration: none; }
 .nav > li > .nav-sub a {
   padding-left: 30px;
 }
-#nav>li>a:focus, #nav>li>a:hover, #nav a.active {
+#nav>li>a:focus, #nav>li>a:hover, #nav a.active, .navi li.active > a {
   border-left: 3px solid #337ab7;
   padding-left: 12px;
   background-color: #dedede;

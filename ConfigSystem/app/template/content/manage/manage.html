@@ -1,0 +1,57 @@
+<!--<ele-bread></ele-bread>-->
+<div class="con-main" ng-controller="manageCtrl">
+    <form action="">
+        <!--<div class="form-group col-md-2">
+            <input type="text" class="form-control" placeholder="管理员编号">
+        </div>
+        <div class="form-group col-md-3">
+            <button class="btn btn-info" type="button" ng-click="searchTable()">查询</button>
+        </div>-->
+        <div class="form-group col-md-3 pull-right text-right">
+            <button class="btn btn-info" type="button" ng-click="showPromise()">授权二维码</button>
+            <!--<button class="btn btn-info" type="button">禁用二维码</button>-->
+        </div>
+    </form>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th class="text-center">状态</th>
+            <th class="text-center">管理员编号</th>
+            <th>管理员</th>
+            <th class="text-center">头像</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in tableList">
+            <td class="text-center">
+                <i class="iconfont icon-smile"></i>
+            </td>
+            <td ng-bind="item.openId" class="text-center"></td>
+            <td ng-bind="item.nickName"></td>
+            <td class="text-center"><img ng-src="{{ item.avatarUrl }}" alt="" class="admin-img"></td>
+            <td class="text-center">
+                <button class="btn btn-danger" type="button" ng-click="delManage(item.id)"><i class="iconfont icon-jinyong"></i>删除</button>
+            </td>
+        </tr>
+        <!--<tr >
+            <td class="text-center"><i class="iconfont icon-hand"></i></td>
+            <td class="text-center">001</td>
+            <td>飒飒是</td>
+            <td class="text-center"><img src="../../components/Image/head.jpg" alt="" class="admin-img"></td>
+            <td class="text-center">
+                <button class="btn btn-success" type="button"><i class="iconfont icon-qiyong"></i>启用</button>
+            </td>
+        </tr>
+        <tr >
+            <td class="text-center"><i class="iconfont icon-smile"></i></td>
+            <td class="text-center">001</td>
+            <td>飒飒是</td>
+            <td class="text-center"><img src="../../components/Image/head.jpg" alt="" class="admin-img"></td>
+            <td class="text-center">
+                <button class="btn btn-danger" type="button"><i class="iconfont icon-jinyong"></i>禁用</button>
+            </td>
+        </tr>-->
+        </tbody>
+    </table>
+</div>

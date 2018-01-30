@@ -1,0 +1,128 @@
+
+<div class="con-main" ng-controller="bannerCtrl">
+    <!--<button class="btn btn-info" type="button" id="reload3">重新上传</button>
+    <button class="btn btn-info" type="button" id="reload4">重新上传</button>
+    <button class="btn btn-info" type="button" id="reload5">重新上传</button>-->
+    <div class="row m-b-md">
+        <div class="col-md-6 col-lg-6 text-center" ng-repeat="item in tableList" on-finish-render-filters>
+            <div class="m-b-md" style="height: 300px;">
+                <img ng-src="{{ item.titleImg ? item.titleImg : '../../components/Image/head.jpg' }}" alt="" class="banner-img">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-info" type="button" id="{{ 'reload_' + item.id }}">重新上传</button>
+                <button class="btn btn-info" type="button" ng-click="editBanner(item.id, item.bennerRelease)">编辑活动</button>
+                <button ng-if="item.bennerRelease == 1" class="btn btn-success" type="button" disabled>已发布</button>
+                <button ng-if="item.bennerRelease == 0" class="btn btn-info" type="button" ng-click="releaseBanner(item.id)">发布</button>
+                <button class="btn btn-danger" type="button" ng-click="delBanner(item.id)">删除</button>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-6 text-center">
+            <a href="" class="block banner-add" ng-click="editBanner()" style="height: auto;">
+                <span class="block text-center">+</span>
+                <span class="block text-center">添加活动</span>
+                <small class="block text-center">上传图片要求：宽180 高72 图片小于500k</small>
+            </a>
+        </div>
+    </div>
+
+    <div style="height: 0; overflow: hidden">
+        <div id="editBannerLayer">
+            <div class="edit">
+                <div ng-show="!isNextStep" id="bannerStep1">
+                    <div class="banner-layer-step">
+                        <div class="text-center">
+                            <div>
+                                <span class="stepO-blue inline text-center">1</span>
+                                <span class="step-line inline valign"></span>
+                                <span class="stepO-grey inline text-center">2</span>
+                            </div>
+                            <div>
+                                <span class="step-text-blue">步骤1：上传宣传图</span>
+                                <span class="step-text-grey step-text-mleft">步骤2：选择活动商品</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="banner-upload m-t-md">
+                        <div class="banner-top inline">
+                            <div class="block banner-add p-t-0" id="selectfiles1">
+                                <div ng-if="!isShowTopImg" style="padding-top: 15%">
+                                    <span class="block text-center">+</span>
+                                    <span class="block text-center">添加活动</span>
+                                    <small class="block text-center">上传图片要求：宽180 高72 图片小于500k</small>
+                                </div>
+                                <img ng-show="isShowTopImg" ng-src="{{ img.topImg }}" alt="" style="width: 100%; height: 180px;">
+                            </div>
+                        </div>
+                        <div class="banner-bottom inline">
+                            <div href="" class="block banner-add p-t-0" id="selectfiles2">
+                                <div ng-if="!isShowBottomImg" style="padding-top: 15%">
+                                    <span class="block text-center">+</span>
+                                    <span class="block text-center">添加活动</span>
+                                    <small class="block text-center">上传图片要求：宽180 高72 图片小于500k</small>
+                                </div>
+                                <img ng-show="isShowBottomImg" ng-src="{{ img.bottomImg }}" alt="" style="width: 100%; height: 180px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group m-t-md text-center">
+                        <button class="btn btn-info" type="button" ng-click="goStep()">下一步</button>
+                        <button class="btn btn-info" type="button" ng-click="cancel()">取消</button>
+                    </div>
+                </div>
+                <div id="bannerStep2" ng-show="isNextStep">
+                    <div class="banner-layer-step">
+                        <div class="text-center">
+                            <div>
+                                <span class="stepO-blue inline text-center">1</span>
+                                <span class="step-line inline valign"></span>
+                                <span class="stepO-blue inline text-center">2</span>
+                            </div>
+                            <div>
+                                <span class="step-text-blue">步骤1：上传宣传图</span>
+                                <span class="step-text-blue step-text-mleft">步骤2：选择活动商品</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-t-md">
+                        <div class="form-group row m-b-sm">
+                            <label for="chooseWares" class="col-md-4 col-lg-4 text-right">输入商品编号</label>
+                            <input type="text" class="col-md-4 col-lg-4" id="chooseWares" ng-model="wareCode">
+                            <button class="btn btn-info" type="button" ng-click="getWare()">添加</button>
+                        </div>
+                    </div>
+                    <div class="m-t-md">
+                        <div class="row">
+                            <div class="col-md-3 col-lg-3 text-center pos-relative" ng-repeat="item in platformBennerGoodList">
+                                <img ng-src="{{ item.goodsImg.img }}" alt="" class="banner-step2-img">
+                                <span ng-bind="item.goodsImg.name" class="block"></span>
+                                <input type="text" ng-model="item.sort" placeholder="输入排序值">
+                                <i class="del-ware inline text-center" ng-click="delGoodItem(item)">X</i>
+                            </div>
+                            <!--<div class="col-md-3 col-lg-3 text-center">
+                                <img src="../../components/Image/head.jpg" alt="" class="banner-step2-img">
+                                <span class="block">高级壁纸</span>
+                                <input type="text">
+                            </div>
+                            <div class="col-md-3 col-lg-3 text-center">
+                                <img src="../../components/Image/head.jpg" alt="" class="banner-step2-img">
+                                <span class="block">高级壁纸</span>
+                                <input type="text">
+                            </div>
+                            <div class="col-md-3 col-lg-3 text-center">
+                                <img src="../../components/Image/head.jpg" alt="" class="banner-step2-img">
+                                <span class="block">高级壁纸</span>
+                                <input type="text">
+                            </div>-->
+                        </div>
+                    </div>
+                    <div class="form-group m-t-md text-center">
+                        <button class="btn btn-info" type="button" ng-click="goStep()">上一步</button>
+                        <button class="btn btn-info" type="button">预览</button>
+                        <button class="btn btn-info" type="button" ng-click="saveEdit()">完成</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

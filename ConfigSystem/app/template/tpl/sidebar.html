@@ -4,7 +4,7 @@
             <a href=""><img ng-src="{{ personalMsg.avatarUrl }}" alt=""></a>
             <a href=""><span ng-bind="personalMsg.nickName"></span></a>
         </li>
-        <li  ng-repeat="menu in navList " data-pId="{{menu.id}}">
+        <li  ng-repeat="menu in navList " data-pId="{{menu.id}}" ng-class="{true: 'active'}[menu.permission == permission]">
             <!-- 判断是否有子集：有 -->
             <a href ng-if="menu.children.length != 0" class="auto">
                 <span class="pull-right text-muted">

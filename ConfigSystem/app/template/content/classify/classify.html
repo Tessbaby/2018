@@ -1,0 +1,78 @@
+<div class="con-main"  ng-controller="classifyCtrl">
+    <form action="">
+        <div class="form-group col-md-2 p-0">
+            <input type="text" class="w100 p-lr-md" placeholder="分类名称" ng-model="search.name" ng-change="allSelectFun.changeMainClassify(search.name)" ng-focus="allSelectFun.changeMainClassify('')" ng-blur="allSelectFun.blurMainClassify()">
+            <ul class="dropdown-menu w100 down-list se_class">
+                <li ng-repeat="o in dummyData | filter: search.name"><a href="javascript:;" ng-mousedown="allSelectFun.getMainClassify(o.id, o.name)">{{ o.name }}</a></li>
+            </ul>
+        </div>
+        <div class="form-group col-md-3">
+            <button class="btn btn-info" type="button" ng-click="search.searchFun()">查询</button>
+            <button class="btn btn-info" type="button" ng-click="editClassify()"><i class="iconfont icon-add"></i>添加</button>
+        </div>
+    </form>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th class="text-center">状态</th>
+            <th>分类</th>
+            <th class="text-center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in table.tableList">
+            <td class="text-center">
+                <i ng-if="item.disable == 0" class="iconfont icon-smile"></i>
+                <i ng-if="item.disable != 0" class="iconfont icon-hand"></i>
+            </td>
+            <td ng-bind="item.classRootName"></td>
+            <td class="text-center">
+                <button class="btn btn-info" type="button" ng-click="editClassify(item)"><i class="iconfont icon-bianji"></i>编辑</button>
+                <!-- disable == 0 时是禁用状态 待启用 -->
+                <button ng-if="item.disable == 0" class="btn btn-danger" type="button" ng-click="changeDisabled(item.id, 0)"><i class="iconfont icon-jinyong"></i>禁用</button>
+                <button ng-if="item.disable != 0" class="btn btn-success" type="button" ng-click="changeDisabled(item.id, 1)"><i class="iconfont icon-qiyong"></i>启用</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <page-nations></page-nations>
+
+    <div style="height: 0; overflow: hidden">
+        <div id="editClassLayer">
+            <div class="edit">
+                <form action="" id="editForm">
+                    <div class="form-group row m-b-sm">
+                        <label for="pClass" class="col-md-4 col-lg-4 text-right">选择分类</label>
+                        <div class="col-md-4 col-lg-4 p-0">
+                            <input name="classRootName" type="text" id="pClass" placeholder="分类名称" class="w100 p-lr-md" ng-model="param.classRootName" ng-focus="allSelectFun.changeEditClassify('')" ng-change="allSelectFun.changeEditClassify(param.classRootName)"  ng-blur="allSelectFun.blurEditClassify()">
+                            <ul class="dropdown-menu w100 down-list ed_class">
+                                <li ng-repeat="o in dummyData | filter: param.classRootName"><a href="javascript:;" ng-mousedown="allSelectFun.getEditClassify(o.id, o.name)">{{ o.name }}</a></li>
+                            </ul>
+                        </div>
+                        <span class="col-md-4 col-lg-4">备注： 这里显示的是二级分类</span>
+                    </div>
+                    <div class="form-group row m-b-sm">
+                        <label for="cClass" class="col-md-4 col-lg-4 text-right">新增子分类</label>
+                        <input type="text" id="cClass" class="col-md-4 col-lg-4" placeholder="分类名称" ng-model="param.name" name="name">
+                    </div>
+                    <div class="form-group row m-b-sm">
+                        <label class="col-md-4 col-lg-4 text-right">上传图片</label>
+                        <div class="col-md-4 col-lg-4 p-0" id="selectfiles">
+                            <div ng-if="!isShowImg" href="" class="block add-img border" id="addImg">
+                                <span class="block text-center">+</span>
+                            </div>
+
+                            <img ng-if="isShowImg" ng-src="{{param.img}}" alt="" style="height: 200px; width: 100%; margin-bottom: 10px;">
+                        </div>
+                    </div>
+                    <div class="form-group row text-center">
+                        <button class="btn btn-info"><i class="iconfont icon-editsaved"></i>保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

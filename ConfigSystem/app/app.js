@@ -2,14 +2,20 @@
 
 // Declare app level module which depends on views, and components
 var app = angular.module('myApp', ['ngRoute', 'ngCookies', 'ngWebSocket', 'ui.bootstrap'])
-    .config(['$locationProvider', '$routeProvider', '$httpProvider',
-        function($locationProvider, $routeProvider, $httpProvider) {
+    .config(['$locationProvider', '$routeProvider', '$httpProvider', '$controllerProvider',
+        function($locationProvider, $routeProvider, $httpProvider, $controllerProvider) {
 
             $httpProvider.defaults.headers.post = {"content-type": "application/json"}
 
+            app.register = {
+                controller: $controllerProvider.register, // 注册controller
+                /*directive: $compileProvider.directive,
+                filter: $filterProvider.register,
+                factory: $provide.factory,
+                service: $provide.service*/
+            };
 
-
-            app.asyncjs = function (js) {
+            app.asyncjs = function (js) { // 加载js
                 return ["$q", "$route", "$rootScope", function ($q, $route, $rootScope) {
                     var deferred = $q.defer();
                     var dependencies = js;
@@ -31,42 +37,55 @@ var app = angular.module('myApp', ['ngRoute', 'ngCookies', 'ngWebSocket', 'ui.bo
 
             $routeProvider.otherwise({redirectTo: '/login'})
                 .when('/login', {
-                    templateUrl: 'template/content/login.html',
-                    //controller: 'loginCtrl'
+                    templateUrl: 'template/content/login/login.html',
+                    resolve: {
+                        load: app.asyncjs('template/content/login/loginController.js')
+                    }
                 })
                 .when('/index', {
                     templateUrl: 'template/content/main.html'
                 })
                 .when('/shop', {
-                    templateUrl: 'template/content/shop.html',
-                    //controller: 'shopCtrl'
+                    templateUrl: 'template/content/shop/shop.html',
+                    resolve: {
+                        load: app.asyncjs('template/content/shop/shopController.js')
+                    }
                 })
                 .when('/classify', {
-                    templateUrl: 'template/content/classify.html',
-                    //controller: 'classifyCtrl',
-                    /*resolve: {
-                        load: app.asyncjs('template/content/classController.js')
-                    }*/
+                    templateUrl: 'template/content/classify/classify.html',
+                    resolve: {
+                        load: app.asyncjs('template/content/classify/classifyController.js')
+                    }
                 })
                 .when('/waresPatrol', {
-                    templateUrl: 'template/content/waresPatrol.html',
-                    //controller: 'waresPatrolCtrl'
+                    templateUrl: 'template/content/waresPatrol/waresPatrol.html',
+                    resolve: {
+                        load: app.asyncjs('template/content/waresPatrol/waresPatrolController.js')
+                    }
                 })
                 .when('/ticketCenter', {
-                    templateUrl: 'template/content/ticketCenter.html',
-                    //controller: 'ticketCenterCtrl'
+                    templateUrl: 'template/content/ticketCenter/ticketCenter.html',
+                    resolve: {
+                        load: app.asyncjs('template/content/ticketCenter/ticketCenterController.js')
+                    }
                 })
                 .when('/banner', {
-                    templateUrl: 'template/content/banner.html',
-                    //controller: 'bannerCtrl'
+                    templateUrl: 'template/content/banner/banner.html',
+                    resolve: {
+                        load: app.asyncjs('template/content/banner/bannerController.js')
+                    }
                 })
                 .when('/order', {
-                    templateUrl: 'template/content/order.html',
-                    //controller: 'orderCtrl'
+                    templateUrl: 'template/content/order/order.html',
+                    resolve: {
+                        load: app.asyncjs('template/content/order/orderController.js')
+                    }
                 })
                 .when('/manage', {
-                    templateUrl: 'template/content/manage.html',
-                    //controller: 'manageCtrl'
+                    templateUrl: 'template/content/manage/manage.html',
+                    resolve: {
+                        load: app.asyncjs('template/content/manage/manageController.js')
+                    }
                 });
         }
     ]);
@@ -97,10 +116,9 @@ app.run(['$rootScope', '$location', '$rootElement', '$http', '$cookies', functio
             success: function (data) {
                 if(data == 'false') {
                     layer.msg('登录超时！', {time: 3000, icon:2});
-                    /*setTimeout(function () {
+                    setTimeout(function () {
                         window.location = '#/login';
-                    }, 1000);*/
-                    //window.location = '#/login';
+                    }, 1000);
                 } else {
                     // 判断是否有用户信息
                     if ($rootScope.personalMsg == '') {
@@ -120,8 +138,9 @@ app.run(['$rootScope', '$location', '$rootElement', '$http', '$cookies', functio
         })
     }
     $rootScope.logout = function () {
+        var uuid = $cookies.get('uuid');
         $.ajax({
-            url: $rootScope.default.dPath + '8066/auth/exit?sequence=123',
+            url: $rootScope.default.dPath + '8066/auth/exit?sequence=' + uuid,
             method: 'get',
             headers: {
                 "content-type": "text/plain"
@@ -260,6 +279,76 @@ app.run(['$rootScope', '$location', '$rootElement', '$http', '$cookies', functio
     }
 
 }])
+
+/* 左侧导航栏控制器 */
+app.controller('navCtrl', function ($scope, $http, $rootScope, $location) {
+    $rootScope.navList = [
+        //{
+        //    permission: '#/index',
+        //    name: '首页',
+        //    id: 1,
+        //    children: []
+        //},
+        {
+            permission: '#/classify',
+            name: '分类',
+            id: 2,
+            icon: 'iconfont icon-fenlei',
+            children: [
+                /*{permission: '#/classify', name: '分类1', id: 2, children: []}*/
+            ]
+        },
+        {
+            permission: '#/shop',
+            name: '店铺',
+            id: 3,
+            icon: 'iconfont icon-dianpu',
+            children: []
+        },
+        {
+            permission: '#/waresPatrol',
+            name: '商品巡查',
+            id: 4,
+            icon: 'iconfont icon-shangpin',
+            children: []
+        },
+        {
+            permission: '#/ticketCenter',
+            name: '卡券中心',
+            id: 5,
+            icon: 'iconfont icon-youhuiquan',
+            children: []
+        },
+        {
+            permission: '#/banner',
+            name: '活动banner',
+            id: 6,
+            icon: 'iconfont icon-tubiao-',
+            children: []
+        },
+        {
+            permission: '#/order',
+            name: '订单',
+            id: 7,
+            icon: 'iconfont icon-dingdan',
+            children: []
+        },
+        {
+            permission: '#/manage',
+            name: '管理员',
+            id: 8,
+            icon: 'iconfont icon-guanliyuan',
+            children: []
+        }
+    ];
+
+    $scope.permission = '#' + $location.$$path;
+    $('.drop').on('click', function () {
+        var target = event.target;
+        $(target).next().slideToggle();
+    })
+})
+
 /* 左侧菜单栏 */
 app.directive('uiNav', function() {
     return {
@@ -267,7 +356,9 @@ app.directive('uiNav', function() {
         link: function(scope, el, attr) {
             el.on('click', 'a', function(e) {
                 var _this = $(this);
+
                 _this.parent().siblings( ".active" ).toggleClass('active');
+                _this.parent().addClass('active');
                 _this.next().is('ul') &&  _this.parent().toggleClass('active') &&  e.preventDefault();
             });
         }
@@ -280,21 +371,33 @@ app.directive('eleBread', function ($rootScope, $location) {
         replace : true,
         transclude : true,
         template: '<div class=""><ul class="nav nav-tabs ele-bread">'
-                    + '<li ng-repeat="li in breadList.list" ng-class="{ active: breadList.current == li.permission }" data-id="{{ li.id }}"><a ng-href="{{ li.permission }}">{{ li.name }}<i class="fa fa-close"></i></a></li>'
-                    + '</ul>',
+                    /*+ '<li ng-repeat="li in breadList.list" ng-class="{ active: breadList.current == li.permission }" data-id="{{ li.id }}"><a ng-href="{{ li.permission }}">{{ li.name }}<i class="fa fa-close"></i></a></li>'*/
+        + '<li ng-repeat="li in breadList.list" ng-class="{ active: breadList.current == li.permission }" data-id="{{ li.id }}" style="position: relative;">'
+        + '<a href="javascript:;" ng-href="{{ li.permission }}" style="padding-right: 30px;">{{ li.name }}</a>'
+        + '<i class="fa fa-close" style="position: absolute; top: 20px; right: 10px; cursor: pointer"></i>'
+        + '</li>'
+        + '</ul>',
         link: function (scope, el, attr) {
             el.on('click', '.fa-close', function () {
                 if ($rootScope.breadList.list.length > 1) {
                     var _this = $(this);
-                    var prevLi = _this.parent().parent().prev('li');
+                    var prevLi = _this.parent().prev('li');
                     var prevHref = '';
-
-                    var dataId = _this.parent().parent().attr('data-id');
+                    var nextLi = _this.parent().next('li');
+                    var nextHref = '';
+                    var dataId = _this.parent().attr('data-id');
                     var thisArr = [];
 
-                    _this.parent().parent().prev().addClass('active');
-                    _this.parent().parent().remove();
-
+                    if (_this.parent().hasClass('active')) {
+                        if ($(prevLi).length > 0) {
+                            prevHref = $(prevLi).children('a').attr('href');
+                            window.location = prevHref;
+                        } else if ($(prevLi).length == 0 && $(nextLi).length > 0) {
+                            nextHref = $(nextLi).children('a').attr('href');
+                            window.location = nextHref;
+                        }
+                    }
+                    _this.parent().remove();
                     angular.forEach($rootScope.breadList.list, function (o, index) {
                         if (dataId != o.id) {
                             thisArr.push(o);
@@ -302,12 +405,37 @@ app.directive('eleBread', function ($rootScope, $location) {
                     })
                     $rootScope.breadList.list = angular.copy(thisArr);
                 }
-
-            })
+            });
         }
 
     }
 });
+/* 底部分页 */
+app.directive('pageNations', function () {
+    return {
+        restrict : 'E',
+        replace : true,
+        transclude : true,
+        template: '<div class="footer">'
+                    + '<nav aria-label="Page navigation">'
+                    + '<ul class="pagination pull-right">'
+                    + '<li>'
+                    + '<a href="javascript:;" aria-label="Previous" ng-click="goPrePage()">'
+                    + '<span aria-hidden="true">&laquo;</span>'
+                    + '</a>'
+                    + '</li>'
+                    + '<li ng-class="{true : ' + "'active'" + '}[table.pageInfo.number == $index + 1]" ng-repeat="i in table.pageInfo.totalPages track by $index"><a href="javascript:;" ng-click="goPage($index + 1)">{{ $index + 1 }}</a></li>'
+                    + '<li>'
+                    + '<a href="javascript:;" aria-label="Next" ng-click="goNextPage()">'
+                    + '<span aria-hidden="true">&raquo;</span>'
+                    + '</a>'
+                    + '</li>'
+                    + '</ul>'
+                    + '</nav>'
+                    + '</div>'
+    }
+})
+
 // 配合使用 循环结束后的监听
 app.directive('onFinishRenderFilters', function ($timeout) {
     return {
@@ -321,6 +449,7 @@ app.directive('onFinishRenderFilters', function ($timeout) {
         }
     };
 });
+
 
 /* 定义get或post请求函数 */
 app.factory('httpAjax', function ($rootScope, $cookies, $http, $q) {
