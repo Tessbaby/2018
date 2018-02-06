@@ -25,7 +25,7 @@ app.register.controller('ticketCenterCtrl', function ($rootScope, $scope, $http)
     $rootScope.searchTable('8093/coupon/back/query?date=&brandid=&page=0');
     /* 点击查询 */
     $scope.search.searchFun = function () {
-        var date = angular.element('#date')[0].value;
+        $scope.search.date = angular.element('#date')[0].value;
         //$scope.search.date = $rootScope.compareDate(date);
         $rootScope.table.pageInfo.number = $rootScope.table.pageInfo.number == 0 ? 0 : $rootScope.table.pageInfo.number - 1
         $scope.tableUrl = '8093/coupon/back/query?date=' + $scope.search.date + '&brandid=' + $scope.search.brandid + '&page=' + $rootScope.table.pageInfo.number;

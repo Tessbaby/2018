@@ -27,6 +27,7 @@
             <th class="text-center">状态</th>
             <th>品牌</th>
             <th>用券规则</th>
+            <th>卡券细则</th>
             <th class="text-center">有效期</th>
             <th class="text-center">操作</th>
         </tr>
@@ -38,7 +39,8 @@
                 <i ng-if="item.isCoupon != 0" class="iconfont icon-hand"></i>
             </td>
             <td ng-bind="item.shopName"></td>
-            <td ng-bind="item.couponRegulation"></td>
+            <td ng-bind="'买立减 ： ￥' + item.couponRegulation"></td>
+            <td ng-bind="item.specification"></td>
             <td class="text-center">{{ item.startDate | date: 'yyyy-MM-dd' }} - {{ item.endDate | date: 'yyyy-MM-dd' }}</td>
             <td class="text-center">
                 <button class="btn btn-info" type="button" ng-click="showCard(item.qrCode)"><i class="iconfont icon-wodexuncha"></i>审查</button>

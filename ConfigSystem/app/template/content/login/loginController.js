@@ -64,6 +64,13 @@ app.register.controller('loginCtrl', function ($scope, $rootScope, $cookies, $ht
                 layer.msg('登录成功', {time: 3000, icon:1})
                 setTimeout(function () {
                     window.location = '#/classify';
+                    $('#nav > li').removeClass('active')
+                    var as = $('#nav > li > a');
+                    angular.forEach(as, function (item, i) {
+                        if ($(item).attr('href') == '#/classify') {
+                            $(item).parent().addClass('active');
+                        }
+                    })
                 }, 1000);
             }
         };

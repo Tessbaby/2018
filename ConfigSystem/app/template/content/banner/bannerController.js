@@ -42,6 +42,7 @@ app.register.controller('bannerCtrl', function ($rootScope, $scope, $http) {
 
     // 编辑
     $scope.editBanner = function (id, release) {
+        $scope.wareCode = '';
         $scope.platformBennerId = ''; // 判断是编辑还是添加时用
         $scope.bennerRelease = 0;
         $scope.isNextStep = false;
@@ -58,6 +59,7 @@ app.register.controller('bannerCtrl', function ($rootScope, $scope, $http) {
                     $scope.img.titleImg = data.titleImg;
                     $scope.isShowTopImg = true;
                     $scope.isShowBottomImg = true;
+                    $scope.title = data.title
                 }).error(function (err) {
                 layer.msg('未获取到详情信息', {time: 3000, icon:2});
             })
@@ -68,6 +70,8 @@ app.register.controller('bannerCtrl', function ($rootScope, $scope, $http) {
             $scope.img.topImg = '';
             $scope.img.bottomImg = '';
             $scope.img.titleImg = '';
+            $scope.platformBennerGoodList = [];
+            $scope.title = '';
         }
         layer.open({
             type: 1,
@@ -135,6 +139,15 @@ app.register.controller('bannerCtrl', function ($rootScope, $scope, $http) {
 
     // 保存编辑
     $scope.saveEdit = function () {
+
+        if ($scope.title =='') {
+            layer.msg('请输入活动名称', {time: 3000, icon:0});
+            return;
+        } else if ($scope.title.length > 20) {
+            layer.msg('活动名称不能超过20字', {time: 3000, icon:0});
+            return;
+        }
+
         var url = '';
         url = $scope.platformBennerId ? $rootScope.default.dPath + '8061/benner/edit' : $rootScope.default.dPath + '8061/benner/add';
         var obj = {};
@@ -225,29 +238,46 @@ app.register.controller('bannerCtrl', function ($rootScope, $scope, $http) {
     });
     uploader.init();
     uploader.bind('FilesAdded',function(uploader, files){
-        var imgFileName = files[0].name;
-        var fileName = '';
-        $http.post($rootScope.default.imgPath, {}, $rootScope.headers)
-            .success(function (data) {
-                fileName = data.key + checkImgExtName(imgFileName);
-                $scope.curTopImg = data.url + '/' + fileName;
-                var _param = {
-                    'key': fileName,
-                    'OSSAccessKeyId': data.OSSAccessKeyId,
-                    'policy': data.policy,
-                    'Signature': data.Signature,
+
+        var reader = new FileReader();
+        reader.readAsDataURL(files[0].getNative());
+        reader.onload = (function (e) {
+            var image = new Image();
+            image.src = e.target.result;
+            image.onload = function () {
+                if (this.width == 414 && this.height == 220) {
+                    var imgFileName = files[0].name;
+                    var fileName = '';
+                    $scope.imgFileNameTop = imgFileName;
+                    $http.post($rootScope.default.imgPath, {}, $rootScope.headers)
+                        .success(function (data) {
+                            fileName = data.key + checkImgExtName(imgFileName);
+                            $scope.curTopImg = data.url + '/' + fileName;
+                            var _param = {
+                                'key': fileName,
+                                'OSSAccessKeyId': data.OSSAccessKeyId,
+                                'policy': data.policy,
+                                'Signature': data.Signature,
+                            }
+                            uploader.setOption({
+                                'url': data.url,
+                                'multipart_params': _param
+                            })
+                            uploader.start();
+                        }).error(function () {
+                            layer.msg('获取图片路径失败', {time: 3000, icon:2});
+                        })
+                    
+                } else {
+                    layer.msg('尺寸不符', {time: 3000, icon:2});
                 }
-                uploader.setOption({
-                    'url': data.url,
-                    'multipart_params': _param
-                })
-                uploader.start();
-            }).error(function () {
-            layer.msg('获取图片路径失败', {time: 3000, icon:2});
-        })
+
+            };
+        });
+
     });
     uploader.bind('FileUploaded', function (uploader,file,responseObject) {
-        if(responseObject.status == 204) {
+        if ($scope.imgFileNameTop == file.name && responseObject.status == 204) {
             $scope.isShowTopImg = true;
             $scope.img.topImg = $scope.curTopImg;
             $scope.$apply();
@@ -260,29 +290,46 @@ app.register.controller('bannerCtrl', function ($rootScope, $scope, $http) {
     });
     uploader2.init();
     uploader2.bind('FilesAdded',function(uploader, files){
-        var imgFileName = files[0].name;
-        var fileName = '';
-        $http.post($rootScope.default.imgPath, {}, $rootScope.headers)
-            .success(function (data) {
-                fileName = data.key + checkImgExtName(imgFileName);
-                $scope.curBottomImg = data.url + '/' + fileName;
-                var _param = {
-                    'key': fileName,
-                    'OSSAccessKeyId': data.OSSAccessKeyId,
-                    'policy': data.policy,
-                    'Signature': data.Signature,
+
+        var reader = new FileReader();
+        reader.readAsDataURL(files[0].getNative());
+        reader.onload = (function (e) {
+            var image = new Image();
+            image.src = e.target.result;
+            image.onload = function () {
+                if (this.width == 414 && this.height == 220) {
+                    
+                    var imgFileName = files[0].name;
+                    var fileName = '';
+                    $scope.imgFileNameBottom = imgFileName;
+                    $http.post($rootScope.default.imgPath, {}, $rootScope.headers)
+                        .success(function (data) {
+                            fileName = data.key + checkImgExtName(imgFileName);
+                            $scope.curBottomImg = data.url + '/' + fileName;
+                            var _param = {
+                                'key': fileName,
+                                'OSSAccessKeyId': data.OSSAccessKeyId,
+                                'policy': data.policy,
+                                'Signature': data.Signature,
+                            }
+                            uploader2.setOption({
+                                'url': data.url,
+                                'multipart_params': _param
+                            })
+                            uploader2.start();
+                        }).error(function () {
+                        layer.msg('获取图片路径失败', {time: 3000, icon:2});
+                    })
+                } else {
+                    layer.msg('尺寸不符', {time: 3000, icon:2});
                 }
-                uploader.setOption({
-                    'url': data.url,
-                    'multipart_params': _param
-                })
-                uploader.start();
-            }).error(function () {
-            layer.msg('获取图片路径失败', {time: 3000, icon:2});
-        })
+
+            };
+        });
+
     });
     uploader2.bind('FileUploaded', function (uploader,file,responseObject) {
-        if(responseObject.status == 204) {
+        if($scope.imgFileNameBottom == file.name && responseObject.status == 204) {
             $scope.isShowBottomImg = true;
             $scope.img.bottomImg = $scope.curBottomImg;
             $scope.$apply();
@@ -304,27 +351,43 @@ app.register.controller('bannerCtrl', function ($rootScope, $scope, $http) {
         });
         uploader3.init();
         uploader3.bind('FilesAdded',function(uploader, files){
-            layer.load(1, {shade: [0.2,'#000']}); // loading
-            var imgFileName = files[0].name;
-            var fileName = '';
-            $http.post($rootScope.default.imgPath, {}, $rootScope.headers)
-                .success(function (data) {
-                    fileName = data.key + checkImgExtName(imgFileName);
-                    $scope.reloadImg = data.url + '/' + fileName;
-                    var _param = {
-                        'key': fileName,
-                        'OSSAccessKeyId': data.OSSAccessKeyId,
-                        'policy': data.policy,
-                        'Signature': data.Signature,
+
+            var reader = new FileReader();
+            reader.readAsDataURL(files[0].getNative());
+            reader.onload = (function (e) {
+                var image = new Image();
+                image.src = e.target.result;
+                image.onload = function () {
+                    if (this.width == 414 && this.height == 220) {
+                        layer.load(1, {shade: [0.2,'#000']}); // loading
+                        var imgFileName = files[0].name;
+                        var fileName = '';
+                        $http.post($rootScope.default.imgPath, {}, $rootScope.headers)
+                            .success(function (data) {
+                                fileName = data.key + checkImgExtName(imgFileName);
+                                $scope.reloadImg = data.url + '/' + fileName;
+                                var _param = {
+                                    'key': fileName,
+                                    'OSSAccessKeyId': data.OSSAccessKeyId,
+                                    'policy': data.policy,
+                                    'Signature': data.Signature,
+                                }
+                                uploader3.setOption({
+                                    'url': data.url,
+                                    'multipart_params': _param
+                                })
+                                uploader3.start();
+                            }).error(function () {
+                            layer.msg('获取图片路径失败', {time: 3000, icon:2});
+                        })
+                        
+                    } else {
+                        layer.msg('尺寸不符', {time: 3000, icon:2});
                     }
-                    uploader.setOption({
-                        'url': data.url,
-                        'multipart_params': _param
-                    })
-                    uploader.start();
-                }).error(function () {
-                layer.msg('获取图片路径失败', {time: 3000, icon:2});
-            })
+
+                };
+            });
+
         });
         uploader3.bind('FileUploaded', function (uploader,file,responseObject) {
             if(responseObject.status == 204) {

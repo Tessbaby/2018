@@ -38,6 +38,7 @@
         <thead>
         <tr>
             <th class="text-center">状态</th>
+            <th>店铺名称</th>
             <th>商品编号</th>
             <th>商品名称</th>
             <th class="text-center">创建日期</th>
@@ -51,6 +52,7 @@
                 <i ng-if="item.disable == 0" class="iconfont icon-smile"></i>
                 <i ng-if="item.disable != 0" class="iconfont icon-hand"></i>
             </td>
+            <td ng-bind="item.brandName"></td>
             <td ng-bind="item.code"></td>
             <td ng-bind="item.title"></td>
             <td ng-bind="item.createTime | date: 'yyyy-MM-dd'" class="text-center"></td>

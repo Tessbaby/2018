@@ -28,11 +28,14 @@
         <thead>
         <tr>
             <th class="text-center">状态</th>
+            <th class="text-center">店铺名称</th>
             <th class="text-center">订单编号</th>
-            <th>名称</th>
-            <th>创建时间</th>
+            <th class="text-center">收货人</th>
+            <th class="text-center">创建时间</th>
             <th class="text-center">订单价格</th>
-            <th class="text-center">品牌</th>
+            <th class="text-center">购买数量</th>
+            <th class="text-center">实付金额</th>
+            <th class="text-center">成交类型</th>
         </tr>
         </thead>
         <tbody>
@@ -41,14 +44,17 @@
                 <i ng-if="item.isUse == 0" class="iconfont icon-smile"></i>
                 <i ng-if="item.isUse != 0" class="iconfont icon-hand"></i>
             </td>
+            <td ng-bind="item.goodsActivity.brandName" class="text-center"></td>
             <td ng-bind="item.outTradeNo" class="text-center"></td>
-            <td ng-bind="item.nickName"></td>
-            <td ng-bind="item.createTime | date: 'yyyy-MM-dd'"></td>
+            <td ng-bind="item.nickName" class="text-center"></td>
+            <td ng-bind="item.createTime | date: 'yyyy-MM-dd'" class="text-center"></td>
             <!--<td class="text-center">
                 <button class="btn btn-info" type="button" ng-click="showCard(item.qrCodeSrc)"><i class="iconfont icon-wodexuncha"></i>巡查</button>
             </td>-->
-            <td ng-bind="'￥' + item.goodsPrice"></td>
-            <td ng-bind="item.goodsActivity.brandName"></td>
+            <td ng-bind="'￥' + item.goodsPrice" class="text-center"></td>
+            <td ng-bind="item.payNumber" class="text-center"></td>
+            <td ng-bind="'￥' + item.payPrice" class="text-center"></td>
+            <td ng-bind="item.goodsActivity.isDeposit == 1 ? '预定金' : '已成交'" class="text-center"></td>
         </tr>
         </tbody>
     </table>

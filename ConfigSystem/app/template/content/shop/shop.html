@@ -76,17 +76,22 @@
                     </div>
                     <div class="form-group row m-b-sm">
                         <label class="col-md-4 col-lg-4 text-right">添加logo</label>
-                        <div class="col-md-4 col-lg-4 p-0" id="selectfiles">
+                        <!-- <div class="col-md-4 col-lg-4 p-0" id="selectfiles">
                             <div ng-if="!isShowImg" href="" class="block add-img border" id="addImg">
                                 <span class="block text-center">+</span>
                             </div>
                             <img ng-if="isShowImg" ng-src="{{param.logo}}" alt="" style="height: 190px; width: 100%; margin-bottom: 10px;">
+                        </div> -->
+                        <div class="col-md-4 col-lg-4 p-0" id="selectfiles">
+                            <div ng-if="!isShowImg" href="" class="block add-img border" id="addImg">
+                                <span class="block text-center">+</span>
+                                <span class="img-tip block text-center">图片大小为：71px * 35px</span>
+                            </div>
+                            <img ng-if="isShowImg" ng-src="{{param.logo}}" alt="" style="height: 140px; width: 284px; margin-bottom: 10px;">
                         </div>
-                        <!--<div class="col-md-4 col-lg-4 upload_con">
-                            <button type="button" class="btn btn-info" id="selectfiles">选择图片</button>
-                        </div>-->
+
                     </div>
-                    <<!--div class="form-group row m-b-sm" ng-if="param.id">
+                    <!--div class="form-group row m-b-sm" ng-if="param.id">
                         <label class="col-md-4 col-lg-4 text-right">管理员授权二维码</label>
                         <label><a ng-href="{{ downCode }}" target="_blank">下载二维码</a></label>
                     </div>-->

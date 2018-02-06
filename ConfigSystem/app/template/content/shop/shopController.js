@@ -158,6 +158,7 @@ app.register.controller('shopCtrl', function ($rootScope, $scope, httpAjax, $coo
                 if(data == 0) {
                     layer.msg(tip + '成功', {time: 3000, icon:1});
                     setTimeout(function () {
+                        $scope.search.name = '';
                         $scope.search.searchFun();
                     }, 1000);
                 } else {
@@ -176,28 +177,45 @@ app.register.controller('shopCtrl', function ($rootScope, $scope, httpAjax, $coo
     });
     uploader.init();
     uploader.bind('FilesAdded',function(uploader, files){
-        var imgFileName = files[0].name;
-        var fileName = '';
-        $http.post($rootScope.default.imgPath, {}, $rootScope.headers)
-            .success(function (data) {
-                fileName = data.key + checkImgExtName(imgFileName);
-                $scope.currentLogo = data.url + '/' + fileName;
-                var _param = {
-                    'key': fileName,
-                    //'Content-Disposition': 'attachment;filename=' + fileName,
-                    'OSSAccessKeyId': data.OSSAccessKeyId,
-                    'policy': data.policy,
-                    'Signature': data.Signature,
-                    //'Content-Disposition: form-data; name="file"; filename=': fileName
+        
+        var reader = new FileReader();
+        reader.readAsDataURL(files[0].getNative());
+        reader.onload = (function (e) {
+            var image = new Image();
+            image.src = e.target.result;
+            image.onload = function () {
+                if (this.width == 71 && this.height == 35) {
+
+                    var imgFileName = files[0].name;
+                    var fileName = '';
+                    $http.post($rootScope.default.imgPath, {}, $rootScope.headers)
+                        .success(function (data) {
+                            fileName = data.key + checkImgExtName(imgFileName);
+                            $scope.currentLogo = data.url + '/' + fileName;
+                            var _param = {
+                                'key': fileName,
+                                //'Content-Disposition': 'attachment;filename=' + fileName,
+                                'OSSAccessKeyId': data.OSSAccessKeyId,
+                                'policy': data.policy,
+                                'Signature': data.Signature,
+                                //'Content-Disposition: form-data; name="file"; filename=': fileName
+                            }
+                            uploader.setOption({
+                                'url': data.url,
+                                'multipart_params': _param
+                            })
+                            uploader.start();
+                        }).error(function () {
+                        layer.msg('获取图片路径失败', {time: 3000, icon:2});
+                    })
+
+                } else {
+                    layer.msg('尺寸不符', {time: 3000, icon:2});
                 }
-                uploader.setOption({
-                    'url': data.url,
-                    'multipart_params': _param
-                })
-                uploader.start();
-            }).error(function () {
-            layer.msg('获取图片路径失败', {time: 3000, icon:2});
-        })
+
+            };
+        });
+
     });
     uploader.bind('FileUploaded', function (uploader,file,responseObject) {
         if(responseObject.status == 204) {
@@ -258,6 +276,7 @@ app.register.controller('shopCtrl', function ($rootScope, $scope, httpAjax, $coo
                 if (data == 0) {
                     layer.msg('保存成功', {time: 3000, icon:1});
                     setTimeout(function () {
+                        $scope.search.name = '';
                         $scope.search.searchFun();
                     }, 1000);
                 } else {

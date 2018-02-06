@@ -1,7 +1,7 @@
 'use strict';
 
 // Declare app level module which depends on views, and components
-var app = angular.module('myApp', ['ngRoute', 'ngCookies', 'ngWebSocket', 'ui.bootstrap'])
+var app = angular.module('myApp', ['ngRoute', 'ngCookies'])
     .config(['$locationProvider', '$routeProvider', '$httpProvider', '$controllerProvider',
         function($locationProvider, $routeProvider, $httpProvider, $controllerProvider) {
 
@@ -94,7 +94,7 @@ var app = angular.module('myApp', ['ngRoute', 'ngCookies', 'ngWebSocket', 'ui.bo
 app.run(['$rootScope', '$location', '$rootElement', '$http', '$cookies', function ($rootScope, $location, $rootElement, $http, $cookies) {
 
     $rootScope.personalMsg = ''; // 用于存储用户信息
-    $rootScope.headers = {
+    $rootScope.headers = { // 设置headers
         withCredentials: true,//跨域
         headers: {
             'content-type': 'application/json'
@@ -156,7 +156,7 @@ app.run(['$rootScope', '$location', '$rootElement', '$http', '$cookies', functio
 
     /* 设置默认路径 */
     $rootScope.default = {};
-    $rootScope.default.Img = '';
+    $rootScope.default.Img = '/components/Image/default.png';
     $rootScope.default.dPath = 'http://192.168.1.200:'; // 设置接口域名端口
     $rootScope.default.yPath = 'rubusteam.xicp.io'; // 设置域名 验证用
     $rootScope.default.appid = 'wx63d033e879c445f2'; // 设置appid 验证用
@@ -374,11 +374,11 @@ app.directive('eleBread', function ($rootScope, $location) {
                     /*+ '<li ng-repeat="li in breadList.list" ng-class="{ active: breadList.current == li.permission }" data-id="{{ li.id }}"><a ng-href="{{ li.permission }}">{{ li.name }}<i class="fa fa-close"></i></a></li>'*/
         + '<li ng-repeat="li in breadList.list" ng-class="{ active: breadList.current == li.permission }" data-id="{{ li.id }}" style="position: relative;">'
         + '<a href="javascript:;" ng-href="{{ li.permission }}" style="padding-right: 30px;">{{ li.name }}</a>'
-        + '<i class="fa fa-close" style="position: absolute; top: 20px; right: 10px; cursor: pointer"></i>'
+        + '<i class="iconfont icon-close" style="position: absolute; top: 15px; right: 10px; cursor: pointer; font-size: 16px;"></i>'
         + '</li>'
         + '</ul>',
         link: function (scope, el, attr) {
-            el.on('click', '.fa-close', function () {
+            el.on('click', '.icon-close', function () {
                 if ($rootScope.breadList.list.length > 1) {
                     var _this = $(this);
                     var prevLi = _this.parent().prev('li');
@@ -388,12 +388,25 @@ app.directive('eleBread', function ($rootScope, $location) {
                     var dataId = _this.parent().attr('data-id');
                     var thisArr = [];
 
+                    var as = $('#nav > li > a');
+
                     if (_this.parent().hasClass('active')) {
+                        $('#nav > li').removeClass('active');
                         if ($(prevLi).length > 0) {
                             prevHref = $(prevLi).children('a').attr('href');
+                            angular.forEach(as, function (item, i) {
+                                if ($(item).attr('href') == prevHref) {
+                                    $(item).parent().addClass('active');
+                                }
+                            })
                             window.location = prevHref;
                         } else if ($(prevLi).length == 0 && $(nextLi).length > 0) {
                             nextHref = $(nextLi).children('a').attr('href');
+                            angular.forEach(as, function (item, i) {
+                                if ($(item).attr('href') == nextHref) {
+                                    $(item).parent().addClass('active');
+                                }
+                            })
                             window.location = nextHref;
                         }
                     }
@@ -404,6 +417,7 @@ app.directive('eleBread', function ($rootScope, $location) {
                         }
                     })
                     $rootScope.breadList.list = angular.copy(thisArr);
+
                 }
             });
         }

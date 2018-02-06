@@ -12,7 +12,7 @@ app.register.controller('waresPatrolCtrl', function ($rootScope, $scope, $http) 
         var _this = $(target.srcElement)
         if (_this[0].tagName == 'LABEL') {
             _this.toggleClass('checked');
-            $scope.search.isHot = $scope.search.isHot == 1 ? 0 : 1;
+            $scope.search.isHot = $scope.search.isHot == 1 ? '' : 1;
         }
     }
 
@@ -33,13 +33,13 @@ app.register.controller('waresPatrolCtrl', function ($rootScope, $scope, $http) 
     $scope.search.className = '';
     $scope.search.brandName = '';
     $scope.search.brandid = '';
-    $scope.search.isHot = 0;
+    $scope.search.isHot = '';
 
     // 获取表格
     $rootScope.searchTable('8096/goods/activity/back/activity/query?date=&goodsclassid=&brandid=&ishot=&page=0');
     /* 点击查询 */
     $scope.search.searchFun = function () {
-        var date = angular.element('#date')[0].value
+        $scope.search.date = angular.element('#date')[0].value
         //$scope.search.date = $rootScope.compareDate(date);
         $rootScope.table.pageInfo.number = $rootScope.table.pageInfo.number == 0 ? 0 : $rootScope.table.pageInfo.number - 1
         $scope.tableUrl = '8096/goods/activity/back/activity/query?date=' + $scope.search.date + '&goodsclassid=' + $scope.search.goodsclassid + '&brandid=' + $scope.search.brandid + '&ishot=' + $scope.search.isHot + '&page=' + $rootScope.table.pageInfo.number;

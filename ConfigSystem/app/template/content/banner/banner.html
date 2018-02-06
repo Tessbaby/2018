@@ -6,7 +6,7 @@
     <div class="row m-b-md">
         <div class="col-md-6 col-lg-6 text-center" ng-repeat="item in tableList" on-finish-render-filters>
             <div class="m-b-md" style="height: 300px;">
-                <img ng-src="{{ item.titleImg ? item.titleImg : '../../components/Image/head.jpg' }}" alt="" class="banner-img">
+                <img ng-src="{{ item.titleImg ? item.titleImg : default.Img }}" alt="" class="banner-img">
             </div>
             <div class="form-group">
                 <button class="btn btn-info" type="button" id="{{ 'reload_' + item.id }}">重新上传</button>
@@ -20,7 +20,7 @@
             <a href="" class="block banner-add" ng-click="editBanner()" style="height: auto;">
                 <span class="block text-center">+</span>
                 <span class="block text-center">添加活动</span>
-                <small class="block text-center">上传图片要求：宽180 高72 图片小于500k</small>
+                <small class="block text-center">上传图片要求：414px * 220px</small>
             </a>
         </div>
     </div>
@@ -48,7 +48,7 @@
                                 <div ng-if="!isShowTopImg" style="padding-top: 15%">
                                     <span class="block text-center">+</span>
                                     <span class="block text-center">添加活动</span>
-                                    <small class="block text-center">上传图片要求：宽180 高72 图片小于500k</small>
+                                    <small class="block text-center">上传图片要求：414px * 220px</small>
                                 </div>
                                 <img ng-show="isShowTopImg" ng-src="{{ img.topImg }}" alt="" style="width: 100%; height: 180px;">
                             </div>
@@ -58,7 +58,7 @@
                                 <div ng-if="!isShowBottomImg" style="padding-top: 15%">
                                     <span class="block text-center">+</span>
                                     <span class="block text-center">添加活动</span>
-                                    <small class="block text-center">上传图片要求：宽180 高72 图片小于500k</small>
+                                    <small class="block text-center">上传图片要求：414px * 220px</small>
                                 </div>
                                 <img ng-show="isShowBottomImg" ng-src="{{ img.bottomImg }}" alt="" style="width: 100%; height: 180px;">
                             </div>
@@ -85,14 +85,21 @@
                     </div>
                     <div class="m-t-md">
                         <div class="form-group row m-b-sm">
+                            <label for="chooseWares" class="col-md-4 col-lg-4 text-right">输入活动名称</label>
+                            <input type="text" class="col-md-4 col-lg-4" ng-model="title">
+                            <span class="col-md-4 col-lg-4">不能为空</span>
+                        </div>
+                    </div>
+                    <div class="m-t-md">
+                        <div class="form-group row m-b-sm">
                             <label for="chooseWares" class="col-md-4 col-lg-4 text-right">输入商品编号</label>
                             <input type="text" class="col-md-4 col-lg-4" id="chooseWares" ng-model="wareCode">
                             <button class="btn btn-info" type="button" ng-click="getWare()">添加</button>
                         </div>
                     </div>
                     <div class="m-t-md">
-                        <div class="row">
-                            <div class="col-md-3 col-lg-3 text-center pos-relative" ng-repeat="item in platformBennerGoodList">
+                        <div class="row" style="margin-right: 0px;">
+                            <div class="col-md-3 col-lg-3 text-center pos-relative m-b-sm" ng-repeat="item in platformBennerGoodList">
                                 <img ng-src="{{ item.goodsImg.img }}" alt="" class="banner-step2-img">
                                 <span ng-bind="item.goodsImg.name" class="block"></span>
                                 <input type="text" ng-model="item.sort" placeholder="输入排序值">

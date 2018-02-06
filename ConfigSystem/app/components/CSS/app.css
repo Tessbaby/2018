@@ -75,6 +75,7 @@ a:hover { text-decoration: none; }
 }
 .header .row div i {
   padding-right: 5px;
+  font-size: 16px;
 }
 
 
@@ -167,7 +168,7 @@ a:hover { text-decoration: none; }
   top: 0px;
   left: 0px;
   /*background-color: #fff;*/
-  background: #fff url('components/Image/bg_3.jpg') no-repeat;
+  background: #fff url('/components/Image/bg_3.jpg') no-repeat;
   background-size: 100% 47%;
 }
 .login .login-border {
@@ -355,6 +356,26 @@ a:hover { text-decoration: none; }
   border-radius: 12.5px;
   font-style: normal;
   cursor: pointer;
+}
+
+#editClassLayer .edit .add-img { /* 分类图片 */
+    width: 240px;
+    font-size: 50px;
+    height: 120px;
+    padding-top: 35px;
+}
+#editClassLayer .edit .add-img .img-tip {
+    font-size: 14px;
+    margin-top: 20px;
+}
+#editShopLayer .edit .add-img { /* 店铺logo */
+    width: 284px;
+    height: 140px;
+    padding-top: 45px;
+}
+#editShopLayer .edit .add-img .img-tip {
+    font-size: 14px;
+    margin-top: 20px;
 }
 
 /* 引入样式重置 */
