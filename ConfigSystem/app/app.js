@@ -1,7 +1,7 @@
 'use strict';
 
 // Declare app level module which depends on views, and components
-var app = angular.module('myApp', ['ngRoute', 'ngCookies'])
+var app = angular.module('myApp', ['ngRoute', 'ngCookies', 'ui.bootstrap'])
     .config(['$locationProvider', '$routeProvider', '$httpProvider', '$controllerProvider',
         function($locationProvider, $routeProvider, $httpProvider, $controllerProvider) {
 
@@ -114,7 +114,7 @@ app.run(['$rootScope', '$location', '$rootElement', '$http', '$cookies', functio
                 'content-type': 'application/json'
             },
             success: function (data) {
-                if(data == 'false') {
+                /*if(data == 'false') {
                     layer.msg('登录超时！', {time: 3000, icon:2});
                     setTimeout(function () {
                         window.location = '#/login';
@@ -130,7 +130,7 @@ app.run(['$rootScope', '$location', '$rootElement', '$http', '$cookies', functio
                                 layer.msg('获取用户信息失败', {time: 3000, icon:2});
                             })
                     }
-                }
+                }*/
             },
             error: function () {
                 window.location = '#/login';
@@ -229,7 +229,7 @@ app.run(['$rootScope', '$location', '$rootElement', '$http', '$cookies', functio
     /* 获取表格数据 */
     $rootScope.table = {};
     $rootScope.searchTable = function (_url) {
-        layer.load(1, {shade: [0.2,'#000']}); // loading
+        // layer.load(1, {shade: [0.2,'#000']}); // loading
         $rootScope.table.tableList = [];
         $rootScope.table.pageInfo = {};
         $rootScope.table.pageInfo.number = 0;
