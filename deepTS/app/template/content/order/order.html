@@ -1,0 +1,59 @@
+<!--<ele-bread></ele-bread>-->
+<div class="con-main" ng-controller="orderCtrl">
+    <form action="">
+        <div class="form-group col-md-2">
+            <div class="input-group date">
+                <div class="input-group">
+                    <input id="date" type="text" class="form-control" readonly uib-datepicker-popup="{{datePicker.format}}" ng-model="datePicker.date" is-open="datePicker.opened" ng-required="true" close-text="关闭" clear-text="清空" current-text="今天" alt-input-formats="datePicker.altInputFormats"/>
+                    <span class="input-group-btn">
+                     <button type="button" class="btn btn-default" ng-click="datePicker.openPicker()"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-2 p-0">
+            <input type="text" class="w100 p-lr-md" placeholder="品牌名称" ng-model="search.brandName" id="brand" ng-focus="allSelectFun.changeMainBrand('')" ng-blur="allSelectFun.blurMainBrand()" ng-change="allSelectFun.changeMainBrand(search.brandName)">
+            <ul class="dropdown-menu w100 down-list se_brand">
+                <li ng-repeat="o in brandData | filter: search.brandName"><a href="javascript:;" ng-mousedown="allSelectFun.getMainBrand(o.id, o.name)">{{ o.name }}</a></li>
+            </ul>
+        </div>
+        <div class="form-group col-md-2">
+            <input type="text" class="form-control" placeholder="订单编号" ng-model="search.ordercode">
+        </div>
+        <div class="form-group col-md-3">
+            <button class="btn btn-info" type="button" ng-click="search.searchFun()">查询</button>
+        </div>
+    </form>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="text-center">状态</th>
+                <th class="text-center">店铺名称</th>
+                <th class="text-center">订单编号</th>
+                <th class="text-center">收货人</th>
+                <th class="text-center">创建时间</th>
+                <th class="text-center">订单价格</th>
+                <th class="text-center">购买数量</th>
+                <th class="text-center">实付金额</th>
+                <th class="text-center">成交类型</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in table.tableList">
+                <td class="text-center">
+                    <i ng-if="item.isUse == 0" class="iconfont icon-smile"></i>
+                    <i ng-if="item.isUse != 0" class="iconfont icon-hand"></i>
+                </td>
+                <td ng-bind="item.goodsActivity.brandName" class="text-center"></td>
+                <td ng-bind="item.outTradeNo" class="text-center"></td>
+                <td ng-bind="item.nickName" class="text-center"></td>
+                <td ng-bind="item.createTime | date: 'yyyy-MM-dd'" class="text-center"></td>
+                <td ng-bind="'￥' + item.goodsPrice" class="text-center"></td>
+                <td ng-bind="item.payNumber" class="text-center"></td>
+                <td ng-bind="'￥' + item.payPrice" class="text-center"></td>
+                <td ng-bind="item.goodsActivity.isDeposit == 1 ? '预定金' : '已成交'" class="text-center"></td>
+            </tr>
+        </tbody>
+    </table>
+    <page-nations></page-nations>
+</div>

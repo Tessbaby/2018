@@ -1,0 +1,73 @@
+<div class="con-main" ng-controller="shopDetailCtrl" style="overflow-y: auto;">
+    <div id="editShopLayer">
+        <div class="edit">
+            <form action="" id="editForm">
+                <div class="form-group row m-b-sm">
+                    <label class="col-md-4 col-lg-4 text-right p-r-lg">添加logo</label>
+                    <div class="col-md-4 col-lg-4 p-0" id="selectfiles">
+                        <div ng-if="!isShowImg" href="" class="block shop-logo border" id="addImg">
+                            <span class="block text-center add">+</span>
+                            <span class="img-tip block text-center">图片大小为：100px * 100px</span>
+                        </div>
+                        <div ng-if="isShowImg" style="height: 250px; width: 250px;">
+                            <img ng-src="{{param.logo}}" alt="" class="border" style="height: 250px; width: 250px; margin-bottom: 10px;">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row m-b-sm">
+                    <label class="col-md-4 col-lg-4 text-right p-r-lg">添加店铺宣传图</label>
+                    <div class="col-md-4 col-lg-4 p-0" id="selectBannerImg">
+                        <div ng-if="!isShowBannerImg" href="" class="block shop-banner border" id="addImg">
+                            <span class="block text-center add">+</span>
+                            <span class="img-tip block text-center">图片大小为：450px * 300px</span>
+                        </div>
+                        <img ng-if="isShowBannerImg" ng-src="{{param.url}}" alt="" style="height: 200px; width: 300px; margin-bottom: 10px;">
+                    </div>
+                </div>
+                <div class="form-group row m-b-sm">
+                    <label for="shopName" class="col-md-4 col-lg-4 text-right p-r-lg">店铺名称</label>
+                    <input type="text" id="shopName" name="shopName" class="col-md-6 col-lg-6" placeholder="输入店铺名称" ng-model="param.shopName">
+                </div>
+                <div class="form-group row m-b-sm">
+                    <label for="className" class="col-md-4 col-lg-4 text-right p-r-lg">所属分类</label>
+                    <div class="form-group col-md-4 col-lg-4 p-0">
+                        <input name="className" type="text" class="w100 p-lr-md" placeholder="分类名称" ng-model="param.className" id="classify" ng-focus="allSelectFun.changeEditShopClass('')" ng-change="allSelectFun.changeEditShopClass(param.className)" ng-blur="allSelectFun.blurEditShopClass()">
+                        <ul class="dropdown-menu w100 down-list ed_shop_class">
+                            <li ng-repeat="o in classData | filter: param.className"><a href="javascript:;" ng-mousedown="allSelectFun.getEditShopClass(o.id, o.name)">{{ o.name }}</a></li>
+                        </ul>
+                    </div>
+                    <span class="col-md-4 col-lg-4">备注： 这里显示的是一级分类</span>
+                </div>
+                <div class="form-group row m-b-sm">
+                    <label for="shopSign" class="col-md-4 col-lg-4 text-right p-r-lg">本店招牌</label>
+                    <input name="shopSign" type="text" id="shopSign" class="col-md-6 col-lg-6" placeholder="输入本店招牌(不超过15字)" ng-model="param.shopSign">
+                </div>
+                <div class="form-group row m-b-sm">
+                    <label for="consumptionPerPerson" class="col-md-4 col-lg-4 text-right p-r-lg">人均消费</label>
+                    <input name="consumptionPerPerson" type="text" id="consumptionPerPerson" class="col-md-6 col-lg-6" placeholder="输入人均消费(元)" ng-model="param.consumptionPerPerson">
+                </div>
+                <div class="form-group row m-b-sm">
+                    <label for="phone" class="col-md-4 col-lg-4 text-right p-r-lg">联系电话</label>
+                    <input name="phone" type="text" id="phone" class="col-md-6 col-lg-6" placeholder="输入电话号码" ng-model="param.phone">
+                </div>
+                <div class="form-group row m-b-sm">
+                    <label for="shopAddress" class="col-md-4 col-lg-4 text-right p-r-lg">店铺地址</label>
+                    <input name="shopAddress" type="text" id="shopAddress" class="col-md-6 col-lg-6" placeholder="输入店铺地址" ng-model="param.shopAddress">
+                </div>
+                <div class="form-group row m-b-sm">
+                    <label for="map" class="col-md-4 col-lg-4 text-right p-r-lg">请在地图上选择位置(必选)</label>
+                    <input type="text" class="col-md-4 col-lg-4" id="map" ng-model="mapValue" placeholder="例：唐山市路北区大理路">
+                    <button class="btn btn-info" type="button" ng-click="getLocation()">查找</button>
+                </div>
+                <div class="form-group row m-b-sm">
+                    <label class="col-md-4 col-lg-4 text-right p-r-lg"></label>
+                    <div class="col-lg-6 col-md-6 map" id="shopMap"></div>
+                </div>
+                <div class="form-group row text-center">
+                    <button class="btn btn-info" type="submit"><i class="iconfont icon-editsaved"></i>保存</button>
+                    <button class="btn btn-info" type="button" ng-click="goShop()"><i class="iconfont icon-shangjia"></i>返回</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

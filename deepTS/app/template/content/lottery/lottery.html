@@ -1,0 +1,272 @@
+  
+<script type="text/javascript" src="components/base/Radio/js/jquery-labelauty.js"></script>
+<script type="text/javascript" src="components/base/honeySwitch/honeySwitch.js"></script>
+
+<div class="con-main" ng-controller="lotteryCtrl">
+	<div class="m-xs">
+		<ul class="nav nav-tabs lottery-nav">
+		  <li role="presentation" class="active" ng-click="changeTab($event, 'basic')"><a href="javascript:;">基础设置</a></li>
+		  <li role="presentation" ng-click="changeTab($event, 'jackpot')"><a href="javascript:;">奖池设置</a></li>
+		  <li role="presentation" ng-click="changeTab($event, 'appoint')"><a href="javascript:;">指定中奖</a></li>
+		  <li role="presentation" ng-click="changeTab($event, 'constantly')"><a href="javascript:;">实时监控</a></li>
+			<li role="presentation" ng-click="changeTab($event, 'winningList')"><a href="javascript:;">中奖名单</a></li>
+			<!-- <li role="presentation" ng-click="changeTab($event, 'lotteryRecord')"><a href="javascript:;">抽奖记录</a></li> -->
+		</ul>
+	</div>
+	<div class="lottery-tab m-t-md">
+		<!-- 基础设置 -->
+		<div id="basic" class="">
+			<div class="form-group row m-b-sm p-t-sm">
+        <label class="col-md-3 col-lg-3 text-right">开启抽奖</label>
+				<div class="col-md-1 col-lg-1 text-left">
+					<span ng-class="{ true: 'switch-on switch-self', false: 'switch-off' }[basicParam.openWin == 0]" themeColor="#6d9eeb" id="open"></span>
+				</div>     
+	    </div>
+
+	    <div class="form-group row m-b-sm p-t-sm">
+        <label for="consume" class="col-md-3 col-lg-3 text-right">每次抽奖消耗</label>
+				<input type="number" min="0" name="consume" id="consume" class="col-md-4 col-lg-4" ng-model="basicParam.expend">
+				<label class="col-md-2 col-lg-2" style="padding-top: 15px;">能量值</label>
+	    </div>
+
+	    <div class="form-group row m-b-sm p-t-sm">
+        <label for="max" class="col-md-3 col-lg-3 text-right">最大抽奖次数</label>
+				<input type="number" min="0" name="max" id="max" class="col-md-4 col-lg-4" ng-model="basicParam.maxLottery">
+	    </div>
+	    
+	    <div class="form-group row m-b-sm p-t-sm">
+        <label class="col-md-3 col-lg-3 text-right">领奖信息</label>
+        <div class="col-md-4 col-lg-4 p-0" id="selectBasicImg">
+	        <div ng-if="!showBasicImg" href="" class="block lottery-img border" id="addImg">
+	          <span class="block text-center">+</span>
+	          <span class="img-tip block text-center">奖品宣传海报图片</span>
+	        </div>
+	        <img ng-if="showBasicImg" ng-src="{{ basicParam.acceptImg }}" alt="" style="height: 272px; width: 300px; margin-bottom: 10px;">
+		    </div>
+      </div>
+
+	    <div class="form-group row m-b-sm p-t-sm" id="consume">
+        <label for="consume" class="col-md-3 col-lg-3 text-right">领奖方式</label>
+				<input type="radio" name="radio" data-labelauty="邮寄" data-name="0">
+				<input type="radio" name="radio" data-labelauty="指定领奖地点" data-name="1">
+	    </div>
+
+	    <div class="form-group row m-b-sm p-t-sm" ng-if="basicParam.acceptTheWay == 1">
+				<label for="address" class="text-right col-md-3 col-lg-3">请输入地址</label>
+				<input type="text" name="address" id="address" class="col-md-4 col-lg-4" placeholder="请输入领取地址" ng-model="basicParam.address">
+	    </div>
+
+			<div class="form-group row text-center m-b-sm p-t-sm">
+        <button class="btn btn-info" ng-click="saveBasic()"><i class="iconfont icon-editsaved"></i>保存</button>
+      </div>
+		</div>
+		<!-- 奖池设置 -->
+		<div id="jackpot" class="hide">
+
+			<div class="form-group row m-b-sm p-l-sm">
+				<span class="add-prisent" ng-click="addJackpot()">+</span>
+				<span class="add-tooltip hide">新增奖品</span>
+			</div>
+
+			<div class="form-group row m-b-sm p-l-sm" ng-repeat="item in wareArr track by $index" on-finish-render-filters>
+				
+				<div class="col-md-2 col-lg-2"></div>
+				<div class="col-md-8 col-lg-8 border border-radius3 p-sm pos-relative">
+
+					<span class="del-ware" ng-click="delWare(item, $index)"><i class="glyphicon glyphicon-remove-circle"></i></span>
+
+					<!-- 保存之前 -->
+					<div ng-if="item.returnState == 1">
+						<div class="form-group row m-b-sm p-l-sm">
+							<label class="col-md-4 col-lg-4 text-right">奖品图片</label>
+							<div class="col-md-6 col-lg-6 p-0" id="{{ 'prisent_' + $index}}">
+				        <div ng-if="item.url === ''" href="" class="block prisent-img border" id="addImg">
+				          <span class="block text-center">+</span>
+				          <span class="img-tip block text-center">上传奖品图片</span>
+				        </div>
+				        <img ng-if="item.url !== ''" ng-src="{{item.url}}" alt="" style="width: 240px; margin-bottom: 10px;">
+					    </div>
+					  </div>
+						<div class="form-group row m-b-sm p-l-sm">
+							<label for="prisent" class="text-right col-md-4 col-lg-4">奖品名称</label>
+							<input type="text" name="prisent" id="prisent" class="col-md-6 col-lg-6" placeholder="请输入奖品名称" ng-model="item.name">
+						</div>
+						<div class="form-group row m-b-sm p-l-sm">
+							<label for="num" class="text-right col-md-4 col-lg-4">奖品数量</label>
+							<input type="number" name="num" id="num" class="col-md-6 col-lg-6" placeholder="请输入奖品数量" ng-model="item.num">
+						</div>
+						<div class="form-group row m-b-sm p-l-sm">
+							<label for="max" class="text-right col-md-4 col-lg-4">最大随机值</label>
+							<input type="number" name="max" id="max" class="col-md-6 col-lg-6" placeholder="请输入最大随机值" ng-model="item.max">
+						</div>
+						<div class="form-group row text-center m-b-sm p-t-sm">
+			        <button class="btn btn-info" ng-click="saveWare(item, $index)">保存数据</button>
+			        <span>(数据保存后不可修改)</span>
+			      </div>
+			    </div>
+
+			    <!-- 保存之后 -->
+			    <div class="show-ware" ng-if="item.returnState == 0">
+			    	<div class="form-group row m-b-sm p-l-sm">
+							<label class="col-md-4 col-lg-4 text-right">奖品图片</label>
+							<div class="col-md-6 col-lg-6 p-0" id="selectPrisent">
+								<img ng-src="{{item.url}}" alt="" style="width: 240px; margin-bottom: 10px;">
+							</div>
+						</div>
+						<div class="form-group row m-b-sm p-l-sm">
+							<label for="prisent" class="text-right col-md-4 col-lg-4">奖品名称</label>
+							<span class="col-md-6 col-lg-6" ng-bind="item.name"></span>
+						</div>
+						<div class="form-group row m-b-sm p-l-sm">
+							<label for="count" class="text-right col-md-4 col-lg-4">奖品数量</label>
+							<span class="col-md-6 col-lg-6" ng-bind="item.num"></span>
+						</div>
+						<div class="form-group row m-b-sm p-l-sm">
+							<label for="count" class="text-right col-md-4 col-lg-4">最大随机值</label>
+							<span class="col-md-6 col-lg-6" ng-bind="item.max"></span>
+						</div>
+			    </div>
+
+				</div>
+
+			</div>
+		</div>
+		<!-- 指定中奖 -->
+		<div id="appoint" class="hide">
+			<div class="form-group row m-b-sm p-t-sm">
+				<label for="appointName" class="text-right col-md-1 col-lg-1" style="width: 100px;">微信昵称</label>
+				<input type="text" name="appointName" id="appointName" class="col-md-3 col-lg-3" placeholder="请输入微信昵称" ng-model="appointName">
+				<button class="btn btn-info m-lr-sm" ng-click="searchAppointList()">查询</button>
+				<button class="btn btn-info" ng-click="appointLottery()">指定中奖人</button>
+	    </div>
+	    <table class="table table-striped">
+        <thead>
+          <tr>
+            <th class="text-center">微信昵称</th>
+            <th class="text-center">头像</th>
+            <th class="text-center">指定奖品</th>
+            <th class="text-center">中奖次数</th>
+            <th class="text-center">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in tableList">
+            <td class="text-center" ng-bind="item.nickName"></td>
+            <td class="text-center">
+              <img ng-src="{{ item.avatarUrl }}" alt="" class="admin-img">
+            </td>
+            <td class="text-center" ng-bind="item.winPrize.name"></td>
+            <td class="text-center" ng-bind="item.num"></td>
+            <td class="text-center">
+              <button class="btn btn-info" type="button" ng-click="delAppoint(item.id)">删除</button>
+            </td>
+          </tr>
+        </tbody>
+	    </table>
+	    <my-pagination ng-if="tableList.length > 0" page-option="option"></my-pagination>
+		</div>
+		<!-- 实时监控 -->
+		<div id="constantly" class="hide">
+			<div class="color-list">
+				<a class="ball_done m-r-sm"></a>
+				<a class="m-r-sm" style="width: auto;">已开奖</a>
+				<a class="ball_will m-r-sm"></a>
+				<a style="width: auto;">即将开奖</a>
+				<!-- <div>
+					<button class="btn btn-info m-lr-sm" ng-click="setZero()" style="width: auto;">抽奖数清零</button>
+				</div> -->
+				<div class="clear"></div>
+			</div>
+			<hr class="hr-line">
+			<div ng-repeat="item in constantParam">
+				<span class="p-sm" ng-bind="item[0].name"></span>
+				<ul class="grid m-sm text-center" style="width: 95%;" >
+					<li ng-repeat="itemA in item track by $index">
+						<a ng-if="itemA.winState == 1" href="javascript:;" class="ball ball_done" ng-bind="itemA.number" title="{{ itemA.number }}"></a>
+						<a ng-if="itemA.winState == 0 && item[($index - 1)].winState == 1" href="javascript:;" class="ball ball_will" ng-bind="itemA.number" title="{{ itemA.number }}"></a>
+						<input ng-if="itemA.winState == 0 && item[($index - 1)].winState != 1" type="text" name="" class="ball_null text-center" value="{{ itemA.number }}" title="{{ itemA.number }}" ng-focus="beforeChangeCons(itemA.number)" ng-blur="afterChangeCons($event, item[$index-1].number, item[$index+1].number, itemA.number, itemA, item)">
+					</li>
+					<div class="clear"></div>
+				</ul>
+			</div>
+		</div>
+		<!-- 中奖记录 -->
+		<div id="winningList" class="hide">
+			<div class="form-group row m-b-sm p-t-sm">
+				<label for="winningName" class="text-right col-md-1 col-lg-1" style="width: 100px;">微信昵称</label>
+				<input type="text" name="winningName" id="winningName" class="col-md-3 col-lg-3" placeholder="请输入微信昵称" ng-model="winningName">
+				<button class="btn btn-info m-lr-sm" ng-click="searchWinningList()">查询</button>
+	    </div>
+
+	    <table class="table table-striped">
+        <thead>
+          <tr>
+            <th class="text-center">微信昵称</th>
+            <th class="text-center">头像</th>
+            <th class="text-center">中奖奖品</th>
+            <th class="text-center">中奖时间</th>
+            <th class="text-center">奖品是否发放</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in tableList">
+            <td class="text-center" ng-bind="item.nickName"></td>
+            <td class="text-center">
+              <img ng-src="{{ item.avatarUrl }}" alt="" class="admin-img">
+            </td>
+            <td class="text-center" ng-bind="item.winName"></td>
+            <td class="text-center" ng-bind="item.createTime | date:format"></td>
+            <td class="text-center">
+              {{ item.isSend ? '未发放' : '已发放' }}
+            </td>
+          </tr>
+        </tbody>
+	    </table>
+	    <my-pagination ng-if="tableList.length > 0" page-option="option"></my-pagination>
+		</div>
+	</div>
+
+	<div style="height: 0; overflow: hidden">
+	  <div id="editAppointLayer">
+	    <div class="edit">
+	      <div class="form-group row m-b-sm p-t-sm">
+	        <label for="wxNickName" class="text-right col-md-3 col-lg-3">微信昵称</label>
+					<input type="text" name="wxNickName" id="wxNickName" class="col-md-4 col-lg-4" placeholder="请输入微信昵称" ng-model="wxNickName">
+					<button class="btn btn-info m-lr-sm" ng-click="appointAddWX()">查询</button>
+	      </div>
+				<div>
+					<div class="x-scroller m-b-sm">
+						<div id="setWidth">
+				      <div class="lottery-user border border-radius3" ng-repeat="item in appointAddMsg">
+				      	<img ng-src="{{ item.avatarUrl }}" width="80%" class="border-radius">
+				      	<span class="text-center" ng-bind="item.nickName" title="{{ item.nickName }}"></span>
+				      	<input type="text" name="winningCount" id="winningCount" placeholder="请输入中奖次数" ng-model="appointParam.num">
+				      	<button class="btn btn-info w100 m-0" ng-click="chooseUser(item.openId, $index)" ng-bind="item.chooseTxt"></button>
+				      </div>
+				      <div class="clear"></div>
+						</div>
+			    </div>
+					<div class="lottery-wares">
+						<div class="row m-b-sm p-t-sm">
+							<div class="ware" ng-click="chooseWare($event, item.id)" ng-repeat="item in appointWaresMsg">
+								<img ng-src="{{ item.url }}" width="100%" height="100%" class="border-radius3">
+								<span class="ware-name text-center" title="{{ item.name }}" ng-bind="item.name"></span>
+								<a href="javascript:;" class="text-center border-radius3">
+									<i class="glyphicon glyphicon-ok ware-i"></i>
+								</a>
+							</div>
+							<div class="clear"></div>
+						</div>
+					</div>
+					<div class="clear"></div>
+	      </div>
+	      <div class="form-group row text-center m-b-sm p-t-sm">
+	        <button class="btn btn-info m-r-sm" ng-click="saveAppointWares()">保存数据</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+</div>
+
+

@@ -1,0 +1,100 @@
+<!-- <script type="text/javascript" src="components/base/Radio/js/jquery-labelauty.js"></script> -->
+
+<div class="con-main" ng-controller="investigateCtrl">
+	<form action="">
+    <div class="form-group">
+      <button class="btn btn-info" type="button" ng-click="addNewInvest()" style="width: auto"><i class="iconfont icon-add"></i>创建新问卷</button>
+    </div>
+  </form>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th class="text-center">问卷名称</th>
+        <th class="text-center">创建时间</th>
+        <th class="text-center">投放问卷</th>
+        <th class="text-center">查看模板内容</th>
+        <th class="text-center">删除问卷</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="item in tableList" on-finish-render-filters>
+        <td class="text-center" ng-bind="item.name" style="min-width: 200px;"></td>
+        <td class="text-center" ng-bind="item.createTime | date:format"></td>
+        <td class="text-center">
+        	<input ng-if="item.sendResearch == 0" type="radio" name="radio" data-labelauty="投放" data-name="{{ $index }}" ng-click="sendResearch(item.id)">
+          <input ng-if="item.sendResearch == 1" type="radio" name="radio" data-labelauty="已投放" data-name="{{ $index }}" checked>
+        </td>
+        <td class="text-center">
+          <button class="btn btn-info" type="button" ng-click="showInvest(item.id)">查看</button>
+        </td>
+        <td class="text-center">
+          <!-- <button ng-if="item.disable == 1" class="btn btn-default" type="button" disabled>已关闭</button> -->
+          <button class="btn btn-info" type="button" ng-click="closeInvest(item.id)">删除</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <my-pagination ng-if="tableList.length > 0" page-option="option"></my-pagination>
+
+
+	<div style="height: 0; overflow: hidden">
+		<div id="editInvestLayer">
+      <div class="edit">
+        <form action="" id="editForm">
+        	<div class="form-group row m-b-sm p-l-sm">
+        		<input type="text" class="col-md-4 col-lg-4 m-r-sm" placeholder="问卷调查名称" ng-model="edit.name" name="name">
+            <button class="btn btn-info" style="width: auto" type="button" ng-click="addContent()">创建调研内容</button>
+        	</div>
+
+        	<hr class="hr-line">
+
+					<div class="form-group row m-b-sm m-t-sm p-l-sm p-r-sm">
+
+						<div class="col-md-4 col-lg-4 m-b-sm border border-radius3 p-t-sm" ng-repeat="item in contentArr track by $index" style="margin-left: -1px;">
+							<textarea rows="3" class="w100" placeholder="调查问题" ng-model="item.content"></textarea>
+							<div class="row p-l-sm m-t-sm" ng-repeat="option in item.researchSelectList">
+								<input type="text" class="col-md-7 col-lg-7 m-r-sm" placeholder="填写选项" name="name" ng-model="option.selectContent">
+								<button class="btn btn-info" type="button" style="width: 12%" ng-click="addOptions($parent.$index, $index)">+</button>
+								<button class="btn btn-info" type="button" style="width: 12%" ng-click="delOptions($parent.$index, $index)">-</button>
+							</div>
+              <span class="del-option" ng-click="delContent($index)">删除本条数据</span>
+              <div class="clear"></div>
+						</div>
+
+					</div>
+          <div class="form-group row p-l-sm text-center m-t-sm">
+            <button class="btn btn-info" style="width: auto" type="button" ng-click="saveContent()">保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
+	</div>
+
+  
+  <div style="height: 0; overflow: hidden">
+    <div class="watch-invest" id="watchInvestLayer">
+      <div class="edit">
+        <div class="form-group row m-b-sm m-t-sm text-center" ng-bind="showInvestData.name"></div>
+        <hr class="hr-line">
+        <div ng-repeat="item in showInvestData.researchTemplateList"> <!-- 用作循环 -->
+          <div class="form-group row m-b-sm">
+            <label class="col-md-2 col-lg-2 text-right" style="width: 100px;">问题: </label>
+            <label class="col-md-6 col-lg-6" ng-bind="item.content" style="color: #666"></label>
+          </div>
+          <div class="form-group row m-b-sm">
+            <label class="col-md-2 col-lg-2 text-right" style="width: 100px;">答案: </label>
+            <label class="col-md-6 col-lg-6">
+              <span ng-repeat="option in item.researchSelectList" style="line-height: 35px; color: #666; padding-right: 30px">
+                <i class="point">·&nbsp;</i>
+                {{ option.selectContent }}
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+

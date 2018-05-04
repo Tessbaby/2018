@@ -1,0 +1,86 @@
+<div class="con-main" ng-controller="waresPatrolDetailCtrl" style="overflow-y: auto;">
+	<div id="editWaresLayer">
+        <div class="edit" style="width: 100%;">
+            <form action="" id="editForm">
+                <div class="form-group row m-b-sm">
+                    <label class="col-md-4 col-lg-4 text-right p-r-lg">添加轮播图</label>
+                    <div class="col-md-4 col-lg-4 p-0" id="uploadBanner">
+                        <div href="" class="block add-img border" id="addImg">
+                            <span class="block text-center">+</span>
+                            <span class="img-tip block text-center">图片大小为：150px * 75px</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row m-b-sm" ng-if="param.banner.length > 0">
+                    <label class="col-md-4 col-lg-4"></label>
+                    <div class="col-md-6 col-lg-6 p-0 border banner p-tb-sm">
+                        <div ng-repeat="item in param.banner track by $index" class="col-md-6 col-lg-6 m-b-sm">
+                            <img ng-src="{{item}}" alt="" class="w100">
+                            <a class="del-banner border text-center" ng-click="delBanner($index)">X</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row m-b-sm">
+                    <label for="title" class="col-md-4 col-lg-4 text-right p-r-lg">标题</label>
+                    <input name="title" type="text" id="title" class="col-md-6 col-lg-6" placeholder="输入标题" ng-model="param.title">
+                </div>
+                <div class="form-group row m-b-sm">
+                    <label for="remark" class="col-md-4 col-lg-4 text-right p-r-lg">描述</label>
+                    <input name="remark" type="text" id="remark" class="col-md-6 col-lg-6" placeholder="输入描述" ng-model="param.remark">
+                </div>
+                <div class="form-group row m-b-sm">
+                    <label for="remark" class="col-md-4 col-lg-4 text-right p-r-lg">规格参数</label>
+                    <button class="btn btn-info" type="button" ng-click="addSpec()"><i class="fa fa-check-square-o"></i>添加</button>
+                </div>
+                <div class="form-group row m-b-sm" ng-if="param.specs.length > 0" ng-repeat="(index, item) in param.specs" on-finish-render-filters>
+                    <label for="" class="col-md-4 col-lg-4"></label>
+                    <div class="col-lg-6 col-md-6 spec border p-t-sm pos-relative">
+
+                        <a class="del-spec border text-center" ng-click="delSpec(index)">X</a>
+                        <div class="form-group row m-b-xs">
+                            <label for="subTitle" class="col-md-4 col-lg-4 text-right">规格名称</label>
+                            <input name="subTitle" type="text" id="subTitle" class="col-md-6 col-lg-6" placeholder="输入规格名称" ng-model="item.subTitle">
+                        </div>
+                        <div class="form-group row m-b-xs">
+                            <label for="price" class="col-md-4 col-lg-4 text-right">价格</label>
+                            <input name="price" type="text" id="price" class="col-md-6 col-lg-6" placeholder="输入价格" ng-model="item.price">
+                        </div>
+                        <div class="form-group row m-b-xs">
+                            <label for="prevPrice" class="col-md-4 col-lg-4 text-right">原价</label>
+                            <input name="prevPrice" type="text" id="prevPrice" class="col-md-6 col-lg-6" placeholder="输入原价" ng-model="item.prevPrice">
+                        </div>
+                        <div class="form-group row m-b-sm">
+                            <label class="col-md-4 col-lg-4 text-right">图示</label>
+                            <div class="col-md-6 col-lg-6 p-0" id="{{ 'specfiles_' + index }}">
+                                <div ng-if="item.img == ''" class="block add-img border" id="addImg" style="height: 200px;">
+                                    <span class="block text-center">+</span>
+                                    <span class="img-tip block text-center">图片大小为：150px * 75px</span>
+                                </div>
+                                <img ng-if="item.img != ''" ng-src="{{item.img}}" alt="" style="height: 140px; width: 100%; margin-bottom: 10px;">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group row m-b-sm"> <!-- 编辑器 -->
+                    <label class="col-md-4 col-lg-4 text-right p-r-lg">图文详情</label>
+                    <div class="col-md-6 col-lg-6 p-0" >
+                        <div style="height: 500px; width: 100%;" id="editDetail"></div>
+                    </div>
+                    <span ng-click="uploadImg()" class="hidden" id="plupload"></span>
+                </div>
+                <div class="form-group row m-b-sm"> <!-- 编辑器 -->
+                    <label class="col-md-4 col-lg-4 text-right p-r-lg">购买须知</label>
+                    <div class="col-md-6 col-lg-6 p-0" >
+                        <div style="height: 500px; width: 100%;" id="editNotes"></div>
+                    </div>
+                </div>
+                <div class="form-group row text-center">
+                    <button class="btn btn-info" type="button"><i class="iconfont icon-editsaved"></i>保存</button>
+                    <button class="btn btn-info" type="button" ng-click="goPrev()"><i class="iconfont icon-shangjia"></i>返回</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

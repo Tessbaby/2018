@@ -1,0 +1,74 @@
+
+<!--<ele-bread></ele-bread>-->
+<div class="con-main" ng-controller="waresPatrolCtrl">
+    <form action="">
+        <div class="form-group col-md-2">
+            <div class="input-group date">
+                <div class="input-group">
+                    <input id="date" type="text" class="form-control" readonly uib-datepicker-popup="{{datePicker.format}}" ng-model="datePicker.date" is-open="datePicker.opened" ng-required="true" close-text="关闭" clear-text="清空" current-text="今天" alt-input-formats="datePicker.altInputFormats" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="datePicker.openPicker()"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-2 p-lr-xs">
+            <input type="text" class="w100 p-lr-md" placeholder="分类" ng-model="search.className" id="classify" ng-focus="allSelectFun.changeMainClass('')" ng-change="allSelectFun.changeMainClass(search.className)" ng-blur="allSelectFun.blurMainClass()">
+            <ul class="dropdown-menu w100 down-list se_class">
+                <li ng-repeat="o in classData | filter: search.className"><a href="javascript:;" ng-mousedown="allSelectFun.getMainClass(o.id, o.name)">{{ o.name }}</a></li>
+            </ul>
+        </div>
+        <div class="form-group col-md-2 p-lr-xs">
+            <input type="text" class="w100 p-lr-md" placeholder="品牌名称" ng-model="search.brandName" id="brand" ng-focus="allSelectFun.changeMainBrand('')" ng-change="allSelectFun.changeMainBrand(search.brandName)" ng-blur="allSelectFun.blurMainBrand()">
+            <ul class="dropdown-menu w100 down-list se_brand">
+                <li ng-repeat="o in brandData | filter: search.brandName"><a href="javascript:;" ng-mousedown="allSelectFun.getMainBrand(o.id, o.name)">{{ o.name }}</a></li>
+            </ul>
+        </div>
+        <div class="form-group col-md-1 text-center" style="width: 140px;">
+            <label for="isHot" class="checkbox" ng-click="isChecked(this)">
+                <!--<span class="checkbox-inner"></span>-->
+                <input type="checkbox" id="isHot" style="display: none">是否爆款
+            </label>
+        </div>
+        <div class="form-group col-md-3">
+            <button class="btn btn-info" type="button" ng-click="search.searchFun()">查询</button>
+            <button class="btn btn-info" type="button" ng-click="goDetail()"><i class="fa fa-check-square-o"></i>添加</button>
+        </div>
+    </form>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="text-center">状态</th>
+                <th>店铺名称</th>
+                <th>商品编号</th>
+                <th>商品名称</th>
+                <th class="text-center">创建日期</th>
+                <th class="text-center">爆款商品</th>
+                <th class="text-center">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in table.tableList">
+                <td class="text-center">
+                    <i ng-if="item.disable == 0" class="iconfont icon-smile"></i>
+                    <i ng-if="item.disable != 0" class="iconfont icon-hand"></i>
+                </td>
+                <td ng-bind="item.brandName"></td>
+                <td ng-bind="item.code"></td>
+                <td ng-bind="item.title"></td>
+                <td ng-bind="item.createTime | date: 'yyyy-MM-dd'" class="text-center"></td>
+                <td ng-bind="item.isHot == 1 ? '是' : '否'" class="text-center"></td>
+                <td class="text-center" style="width: 20%;">
+                    <a><i class="iconfont icon-bianji p-r-xs icon-style" ng-click="goDetail(item.id)"></i></a>
+                    <a><i ng-if="item.disable == 0" ng-click="changeDisabled(item.id, item.shopId, 0)" class="iconfont icon-xiajia icon-style" style="font-size: 18px;"></i></a>
+                    <a><i ng-if="item.disable != 0" ng-click="changeDisabled(item.id, item.shopId, 1)" class="iconfont icon-shangjia icon-style"></i></a>
+                <!-- <button class="btn btn-info" type="button" ng-click="editWares(item.id)"><i class="iconfont icon-bianji"></i>编辑</button>
+                <button  ng-if="item.disable == 0" class="btn btn-danger" type="button" ng-click="changeDisabled(item.id, item.shopId, 0)"><i class="iconfont icon-xiajia"></i>下架</button>
+                <button  ng-if="item.disable != 0" class="btn btn-success" type="button" ng-click="changeDisabled(item.id, item.shopId, 1)"><i class="iconfont icon-shangjia"></i>正常</button> -->
+            </td>
+        </tr>
+    </tbody>
+</table>
+<page-nations></page-nations>
+</div>
+

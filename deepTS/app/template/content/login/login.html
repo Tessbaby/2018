@@ -1,0 +1,12 @@
+<div class="con-main" ng-controller="loginCtrl">
+    <div class="login text-center">
+        <div class="login-border inline">
+            <img ng-src="{{ loginImg }}" alt="" >
+            <div>打开微信APP，扫一扫登录</div>
+
+            <div class="login-layer" ng-show="isShowLayer">
+                <a class="inline" ng-click="reload()">点击此处重新生成二维码</a>
+            </div>
+        </div>
+    </div>
+</div>

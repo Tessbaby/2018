@@ -1,0 +1,78 @@
+
+<div class="con-main" ng-controller="bannerCtrl">
+    <!--<button class="btn btn-info" type="button" id="reload3">重新上传</button>
+    <button class="btn btn-info" type="button" id="reload4">重新上传</button>
+    <button class="btn btn-info" type="button" id="reload5">重新上传</button>-->
+    <div class="row m-b-md">
+        <div class="col-md-6 col-lg-6 text-center" ng-repeat="item in tableList" on-finish-render-filters>
+            <div class="m-b-md" style="height: 300px;">
+                <img ng-src="{{ item.titleImg ? item.titleImg : default.Img }}" alt="" class="banner-img">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-info" type="button" id="{{ 'reload_' + item.id }}">重新上传</button>
+                <button class="btn btn-info" type="button" ng-click="editBanner(item.id, item.bennerRelease)">编辑活动</button>
+                <button ng-if="item.bennerRelease == 1" class="btn btn-success" type="button" disabled>已发布</button>
+                <button ng-if="item.bennerRelease == 0" class="btn btn-info" type="button" ng-click="releaseBanner(item.id)">发布</button>
+                <button class="btn btn-danger" type="button" ng-click="delBanner(item.id)">删除</button>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-6 text-center">
+            <a href="" class="block banner-add" ng-click="editBanner()" style="height: auto;">
+                <span class="block text-center">+</span>
+                <span class="block text-center">添加活动</span>
+                <small class="block text-center">上传图片要求：700px * 372px</small>
+            </a>
+        </div>
+    </div>
+
+    <div style="height: 0; overflow: hidden">
+        <div id="editBannerLayer">
+            <div class="edit">
+                <div id="bannerStep2">
+                    <div class="m-t-md">
+                        <div class="form-group row m-b-sm">
+                            <label for="chooseWares" class="col-md-4 col-lg-4 text-right">输入商品编号</label>
+                            <input type="text" class="col-md-4 col-lg-4" id="chooseWares" ng-model="wareCode">
+                            <button class="btn btn-info" type="button" ng-click="getWare()">添加</button>
+                        </div>
+                    </div>
+                    <div class="m-t-md" ng-if="goodsImg">
+                        <div class="form-group row m-b-sm">
+                            <label class="col-md-4 col-lg-4 text-right"></label>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="col-md-3 col-lg-3 text-center pos-relative m-b-sm">
+                                    <img ng-src="{{ goodsImg.img }}" alt="" class="banner-step2-img">
+                                    <span ng-bind="goodsImg.name" class="block"></span>
+                                    <i class="del-ware inline text-center" ng-click="delGoods(item)">X</i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-t-md">
+                        <div class="form-group row m-b-sm pos-relative">
+                            <label for="chooseWares" class="col-md-4 col-lg-4 text-right">日期</label>
+                            <div class="input-group date">
+                                <div class="input-group">
+                                    <input id="date" type="text" class="form-control" readonly uib-datepicker-popup="{{datePicker.format}}" ng-model="datePicker.date" is-open="datePicker.opened" ng-required="true" close-text="关闭" clear-text="清空" current-text="今天" alt-input-formats="datePicker.altInputFormats" />
+                                    <span class="input-group-btn">
+                                     <button type="button" class="btn btn-default" ng-click="datePicker.openPicker()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                 </span>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="m-t-md">
+                    <div class="form-group row m-b-sm">
+                        <label for="remark" class="col-md-4 col-lg-4 text-right">主编说</label>
+                        <input type="text" class="col-md-6 col-lg-6" id="remark" ng-model="param.remark">
+                    </div>
+                </div>
+                <div class="form-group m-t-md text-center">
+                    <button class="btn btn-info" type="button" ng-click="saveEdit()">完成</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>

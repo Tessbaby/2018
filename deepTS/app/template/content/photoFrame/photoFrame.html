@@ -1,0 +1,17 @@
+<div class="con-main"  ng-controller="photoFrameCtrl">
+	<div class="form-group row m-b-sm p-t-sm">
+		<div class="col-md-3 col-lg-3 p-r-xs">
+			<div class="block border photo-frame" id="selectfiles">
+        <span class="block text-center add">+</span>
+        <span class="img-tip block text-center">上传合成相框图片</span>
+      </div>
+		</div>
+
+		<div class="col-lg-9 col-md-9 text-left">
+			<div class="dotted pos-relative m-r-xs" ng-repeat="item in imgArr track by $index">
+				<img ng-src="{{ item.photoUrl }}" class="w100" style="height: 100%">
+				<div class="dotted-cover" ng-click="delPhoto($index, item.id)">删除</div>
+			</div>
+		</div>
+	</div>
+</div>

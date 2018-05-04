@@ -1,0 +1,62 @@
+<div class="con-main" ng-controller="shopDetailCtrl" style="overflow-y: auto;">
+	<div id="editTicketLayer">
+		<div class="edit" style="overflow: inherit;">
+			<form action="" id="editForm">
+
+				<div class="form-group row m-b-sm">
+					<label for="brand" class="col-md-4 col-lg-4 text-right p-r-lg">选择店铺</label>
+					<div class="col-lg-6 col-md-6 p-0">
+						<input type="text" class="w100 p-lr-md" placeholder="品牌名称" ng-model="param.brandName" id="brand" ng-focus="allSelectFun.changeMainBrand('')" ng-blur="allSelectFun.blurMainBrand()" ng-change="allSelectFun.changeMainBrand(param.brandName)">
+						<ul class="dropdown-menu w100 down-list se_brand">
+							<li ng-repeat="o in brandData | filter: param.brandName"><a href="javascript:;" ng-mousedown="allSelectFun.getMainBrand(o.id, o.name)">{{ o.name }}</a></li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="form-group row m-b-sm">
+					<label for="money" class="col-md-4 col-lg-4 text-right p-r-lg">券值</label>
+					<input type="number" id="money" class="col-md-6 col-lg-6" placeholder="输入代金券金额" ng-model="param.money">
+				</div>
+
+				<div class="form-group row m-b-sm">
+					<label for="money" class="col-md-4 col-lg-4 text-right p-r-lg">卡券细则</label>
+					<textarea id="money" class="col-md-6 col-lg-6" placeholder="输入卡券使用规则" ng-model="param.rule" rows="4"></textarea>
+				</div>
+
+				<div class="form-group row m-b-sm">
+					<label for="startDate" class="col-md-4 col-lg-4 text-right p-r-lg">开始日期</label>
+					<div class="col-lg-6 col-md-6 p-0">
+						<div class="input-group date">
+							<div class="input-group">
+								<input id="startDate" type="text" class="form-control" readonly uib-datepicker-popup="{{startDate.format}}" ng-model="startDate.date" is-open="startDate.opened" ng-required="true" close-text="关闭" clear-text="清空" current-text="今天" alt-input-formats="startDate.altInputFormats" />
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default" ng-click="startDate.openPicker()"><i class="glyphicon glyphicon-calendar"></i></button>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row m-b-sm">
+					<label for="startDate" class="col-md-4 col-lg-4 text-right p-r-lg">结束日期</label>
+					<div class="col-lg-6 col-md-6 p-0">
+						<div class="input-group date">
+							<div class="input-group">
+								<input id="endDate" type="text" class="form-control" readonly uib-datepicker-popup="{{endDate.format}}" ng-model="endDate.date" is-open="endDate.opened" ng-required="true" close-text="关闭" clear-text="清空" current-text="今天" alt-input-formats="endDate.altInputFormats" />
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default" ng-click="endDate.openPicker()"><i class="glyphicon glyphicon-calendar"></i></button>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row text-center">
+					<button class="btn btn-info"><i class="iconfont icon-editsaved"></i>保存</button>
+					<button class="btn btn-info" type="button" ng-click="goTicketCenter()"><i class="iconfont icon-shangjia"></i>返回</button>
+				</div>
+
+			</form>
+		</div>
+	</div>
+</div>

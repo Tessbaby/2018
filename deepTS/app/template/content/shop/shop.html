@@ -1,0 +1,57 @@
+<!--<ele-bread></ele-bread>-->
+<div class="con-main" ng-controller="shopCtrl">
+    <form action="">
+        <div class="form-group col-md-2 p-0">
+            <input type="text" class="w100 p-lr-md" placeholder="店铺名称" ng-model="search.name">
+        </div>
+        <div class="form-group col-md-1 text-center m-l-xs" style="width: 140px;">
+            <label for="isAudit" class="checkbox" ng-click="isChecked(this)">
+                <input type="checkbox" id="isAudit" style="display: none">&nbsp;&nbsp;&nbsp;已审核 
+            </label>
+        </div>
+        <div class="form-group col-md-1 text-center m-l-xs" style="width: 140px;">
+            <label for="isDisable" class="checkbox" ng-click="isCheckedDis(this)">
+                <input type="checkbox" id="isDisable" style="display: none">&nbsp;&nbsp;&nbsp;已禁用 
+            </label>
+        </div>
+        <div class="form-group col-sm-3">
+            <button class="btn btn-info" type="button" ng-click="search.searchFun()">查询</button>
+            <button class="btn btn-info" type="button" ng-click="goEditShop()"><i class="fa fa-check-square-o"></i>添加</button>
+        </div>
+    </form>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="text-center">状态</th>
+                <th>店铺名称</th>
+                <th>地址</th>
+                <th>电话</th>
+                <th class="text-center">该店铺授权二维码</th>
+                <th class="text-center">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in table.tableList">
+                <td class="text-center">
+                    <i ng-if="item.disable == 0" class="iconfont icon-smile"></i>
+                    <i ng-if="item.disable != 0" class="iconfont icon-jinyong"></i>
+                </td>
+                <td ng-bind="item.shopName"></td>
+                <td ng-bind="item.shopAddress"></td>
+                <td ng-bind="item.phone"></td>
+                <td class="text-center">
+                    <a target="_blank" ng-click="getCode(item.id)">下载二维码</a>
+                </td>
+                <td class="text-center" style="width: 30%;">
+                    <button class="btn btn-info" type="button" ng-click="goEditShop(item.id)"><i class="iconfont icon-bianji"></i>编辑</button>
+                    <button ng-if="item.isAudit == 0" class="btn btn-success" type="button" ng-click="setAudit(item.id)"><i class="iconfont icon-qiyong"></i>待审核</button>
+                    <button ng-if="item.isAudit == 1" class="btn btn-default" type="button" disabled="disabled">已审核</button>
+
+                    <button ng-if="item.disable == 0" class="btn btn-danger" type="button" ng-click="changeDisabled(item.id, 0)"><i class="iconfont icon-jinyong"></i>禁用</button>
+                    <button ng-if="item.disable != 0" class="btn btn-success" type="button" ng-click="changeDisabled(item.id, 1)"><i class="iconfont icon-qiyong"></i>启用</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <my-pagination ng-if="table.tableList.length > 0" page-option="option"></my-pagination>
+</div>

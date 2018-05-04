@@ -1,0 +1,833 @@
+/* 公用样式 */
+* { margin: 0; padding: 0; }
+body { box-sizing: border-box; font-size: 14px; overflow: hidden; }
+a { cursor: pointer !important; }
+a:hover, a:focus { text-decoration: none; }
+textarea { resize: none; line-height: 30px; }
+
+.clear { clear: both; }
+.w100 { width: 100%; }
+.inline { display: inline-block; }
+.block { display: block; }
+.hide { display: none; }
+.valign { vertical-align: middle; }
+.talign { vertical-align: top; }
+.balign { vertical-align: bottom;  }
+.pos-relative { position: relative; }
+.p-0 { padding: 0; }
+.p-sm { padding: 20px; }
+.p-t-0 { padding-top: 0 !important; }
+.p-t-sm { padding-top: 20px; }
+.p-r-xs { padding-right: 10px; }
+.p-r-lg { padding-right: 50px; }
+.p-tb-sm { padding-top: 20px; padding-bottom: 20px; }
+.p-l-sm { padding-left: 20px; }
+.p-r-sm { padding-right: 20px; }
+.p-lr-xs { padding-left: 5px; padding-right: 5px; }
+.p-lr-sm { padding-left: 10px; padding-right: 10px; }
+.p-lr-md { padding-left: 15px; padding-right: 15px; }
+.m-0 { margin: 0 !important; }
+.m-xs { margin: 10px !important; }
+.m-sm { margin: 20px !important; }
+.m-b-xs { margin-bottom: 10px; }
+.m-b-sm { margin-bottom: 20px; }
+.m-b-md { margin-bottom: 30px; }
+.m-t-xs { margin-top: 10px; }
+.m-t-sm { margin-top: 20px; }
+.m-t-md { margin-top: 30px; }
+.m-l-xs { margin-left: 10px; }
+.m-r-xs { margin-right: 10px; }
+.m-r-sm { margin-right: 20px; }
+.m-lr-sm { margin-right: 20px !important; margin-left: 20px !important; }
+.border { border: 1px solid #aaa; }
+.border-radius { border-radius: 50%; }
+.border-radius3 { border-radius: 3px; }
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+  border-bottom: 1px solid #ddd;
+  vertical-align: middle;
+}
+.checkbox { font-size: 16px; }
+.checkbox::before {
+  content: ' ';
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #aaa;
+  width: 16px;
+  height: 16px;
+  margin-left: -23px;
+  margin-top: 2px;
+  z-index: 10;
+  border-radius: 2px;
+}
+.checkbox::after {
+  content: ' ';
+  position: absolute;
+  z-index: 11;
+  width: 10px;
+  height: 5px;
+  border: 0;
+  left: 3px;
+  top: 6px;
+}
+.checked:before {
+  background-color: #2aabd2;
+  border-color: #2aabd2;
+}
+.checked:after {
+  border-left: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  transform: rotate(-45deg);
+}
+.switch-self {
+  border-color: rgb(109, 158, 235) !important;
+  box-shadow: rgb(109, 158, 235) 0px 0px 0px 16px inset !important;
+  background-color: rgb(109, 158, 235) !important;
+}
+
+
+/* header */
+.header {
+  background-color: #010101;
+  color: #fff;
+}
+.header a,
+.header a:hover{
+  color: #fff;
+  text-decoration: none;
+}
+.header .row div {
+  line-height: 60px;
+  font-size: 16px;
+}
+.header .row div i {
+  padding-right: 5px;
+  font-size: 16px;
+}
+
+
+
+/* nav */
+.sidebar {
+  /*position: fixed;*/
+  width: 200px;
+  overflow-y: auto;
+  font-size: 16px;
+  border-right: 1px solid #bcbcbc;
+}
+.sidebar i {
+  padding-right:10px;
+}
+.sidebar a {
+  color: #bcbcbc;
+}
+.nav-msg {
+  border-bottom: 1px solid #bcbcbc;
+  margin-bottom: 10px;
+}
+.nav-msg img {
+  width: 90px;
+  height: 90px;
+  -webkit-border-radius:45px;
+  -moz-border-radius:45px;
+  border-radius:45px;
+}
+.nav > li > .nav-sub a {
+  padding-left: 30px;
+}
+#nav>li>a:focus, #nav>li>a:hover, #nav a.active, .navi li.active > a {
+  border-left: 3px solid #337ab7;
+  padding-left: 12px;
+  background-color: #dedede;
+}
+
+.navi li .nav-sub {
+  background-color: #eee;
+  height: 0;
+  margin-left: -20px;
+  overflow: hidden;
+  opacity: 0;
+  -webkit-transition: all 0.2s ease-in-out 0s;
+  transition: all 0.2s ease-in-out 0s;
+}
+.navi li:focus > .nav-sub,
+.navi li:active > .nav-sub,
+.navi li.active > .nav-sub{
+  display: block;
+  height: auto !important;
+  margin-left: 0;
+  overflow: auto;
+  opacity: 1;
+}
+.nav-sub>li>a:focus, .nav-sub>li>a:hover {
+  border-left: 3px solid #337ab7;
+  padding-left: 27px;
+  background-color: #dedede;
+}
+#nav > .nav-msg > a:focus, #nav > .nav-msg > a:hover {
+  border-left: none;
+  padding-left: 15px;
+  background-color: #fff;
+}
+.nav .iconfont {
+  font-size: 20px;
+}
+
+/* 面包屑导航 */
+.ele-bread {
+  background-color: #eee;
+  width: 100%;
+}
+.ele-bread i {
+  padding-left: 15px;
+}
+.ele-bread > li > a {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.ele-bread>li.active>a, .ele-bread>li.active>a:focus, .ele-bread>li.active>a:hover {
+  border-bottom: 1px solid #ddd;
+}
+
+/* login */
+.login {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  /*background-color: #fff;*/
+  background: #fff url('/components/Image/bg.jpg') no-repeat;
+  background-size: 100% 100%;
+}
+.login .login-border {
+  position: relative;
+  padding: 20px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  margin-top: 15%;
+  -moz-box-shadow: 10px 10px 5px #aaa; /* 老的 Firefox */
+  /*box-shadow: 3px 3px 5px #aaa;*/
+  background-color: #fff;
+}
+.login img {
+  width: 250px;
+  height: 250px;
+}
+.login .login-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 310px;
+  background: rgba(192, 193, 196, .98);
+}
+.login .login-layer a {
+  font-size: 16px;
+  color: #c12e2a;
+  margin-top: 10px;
+}
+.login-logo img {
+  width: 100px;
+  height: 100px;
+  float: left;
+}
+
+/* 主体部分 */
+.con-main {
+  padding: 20px;
+  overflow-y: auto;
+}
+.con-main button {
+  width: 100px;
+  margin: 0 3px;
+}
+.con-main button i {
+  padding-right: 5px;
+}
+.con-main table {
+  width: 95%;
+  margin: 0 auto;
+  margin-top: 70px;
+}
+.con-main > table tr th:last-child, .con-main > table tr td:last-child {
+  width: 20%;
+}
+.con-main > table tr th:first-child, .con-main > table tr td:first-child {
+  width: 6%;
+}
+.con-main select {
+  width: 100%;
+  border-radius: 5px;
+  height: 35px;
+  padding: 0 5px;
+}
+.con-main select:focus {
+  outline: none;
+}
+.con-main .down-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+.con-main .layer-select {
+  width: 33.33333333%;
+  height: 35px;
+  border-radius: 5px;
+}
+.con-main .admin-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+}
+.con-main .banner-img {
+  width: 80%;
+  height: 300px;
+}
+.con-main .banner-add {
+  width: 80%;
+  height: 180px;
+  margin: 0 auto;
+  padding-top: 15%;
+  color: #aaa;
+  border: 1px solid #aaa;
+}
+.con-main .banner-add span:first-child {
+  font-size: 60px;
+  font-weight: bold;
+}
+.con-main .banner-add span:last-child {
+  font-size: 18px;
+}
+.con-main .banner-add small {
+  font-size: 14px;
+  margin-top: 12%;
+}
+.con-main .banner-top,
+.con-main .banner-bottom {
+  vertical-align: top;
+}
+
+.con-main .lottery-tab label.text-right,
+.con-main .energy label {
+  line-height: 35px;
+}
+.con-main .lottery-img {
+  width: 300px;
+}
+.con-main .lottery-img span:first-child {
+  line-height: 250px;
+}
+
+.con-main .show-ware span {
+  line-height: 35px;
+}
+.con-main .del-ware {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 28px;
+  height: 28px;
+  font-size: 26px;
+  cursor: pointer;
+  background-color: #fff;
+}
+
+.con-main .prisent-img {
+  width: 240px;
+}
+.con-main .prisent-img span:first-child {
+  line-height: 120px;
+}
+
+.con-main .jackpot-content {
+  max-height: 380px;
+  overflow-y: auto;
+}
+.jackpot-content::-webkit-scrollbar {  /*滚动条样式*/
+  width: 4px;
+}
+.jackpot-content::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+  background: #ccc;
+}
+.jackpot-content::-webkit-scrollbar-track {/*滚动条里面轨道*/
+  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+  border-radius: 0;
+  background: #fff;
+}
+
+.con-main .lottery-tab > div {
+  position: relative;
+}
+.con-main .add-prisent {
+  border-radius: 50%;
+  position: absolute;
+  top: 0px;
+  left: 20px;
+  font-size: 20px;
+  line-height: 36px;
+  height: 35px;
+  width: 35px;
+  text-align: center;
+  background: #2aabd2;
+  color: #fff;
+  cursor: pointer;
+}
+.con-main .add-tooltip {
+  position: absolute;
+  top: 42px;
+  left: 0px;
+  line-height: 30px;
+  height: 30px;
+  width: 100px;
+  text-align: center;
+  background-color: #f1f1f1;
+  border-radius: 3px;
+  color: #666;
+  border: 1px solid #cfcfcf;
+}
+.con-main .add-tooltip:after {
+  content: ' ';
+  width: 7px;
+  height: 7px;
+  position: absolute;
+  top: -3px;
+  left: 33px;
+  transform: rotate(45deg);
+  border-top: 1px solid #cfcfcf;
+  border-left: 1px solid #cfcfcf;
+  background-color: #f1f1f1;
+}
+
+.con-main .color-list {
+  padding: 10px;
+  padding-left: 20px;
+}
+.con-main .color-list > div {
+  float: right;
+  margin-right: 30px;
+}
+.con-main .color-list > div > label {
+  vertical-align: top;
+  margin-right: 20px;
+}
+.con-main .color-list a {
+  float: left;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+}
+.con-main .hr-line {
+  margin-top: 0px;
+  width: 98%;
+  border-color: #ddd;
+  margin-left: auto;
+  margin-right: auto;
+}
+.con-main .grid li {
+  list-style: none;
+  float: left;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  border: 1px solid #ddd;
+  margin-left: -1px;
+  margin-top: -1px;
+}
+.con-main .grid li input {
+  outline: none;
+}
+
+.con-main .grid .ball,
+.con-main .grid li input {
+  display: block;
+  width: 100%;
+  height: 100%;
+  line-height: 40px; 
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}
+.con-main .ball_done {
+  background: url('../Image/ball_1.png');
+  background-size: 100% 100%;
+  color: #fff;
+}
+.con-main .ball_will {
+  background: url('../Image/ball_2.png');
+  background-size: 100% 100%;
+  color: #fff;
+}
+.con-main .ball_null {
+  width: 100%;
+  border: 0;
+}
+.con-main .ball_null:focus {
+  outline: none;
+}
+
+.con-main .photo-frame {
+  float: right;
+  width: 250px;
+  height: 445px;
+}
+.con-main .photo-frame .add {
+  line-height: 425px;
+  display: block;
+  font-size: 20px;
+}
+.con-main .dotted {
+  float: left;
+  width: 250px;
+  height: 445px;
+  border: 1px dashed #ddd;
+}
+ .con-main .dotted .dotted-cover {
+  display: none;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  line-height: 445px;
+  color: #fff;
+  text-align: center;
+  font-size: 20px;
+  background-color: rgba(0, 0, 0, .6);
+}
+.con-main .dotted:hover .dotted-cover,
+.con-main .dotted.active .dotted-cover {
+  display: block;
+} 
+
+
+
+.footer {
+  background-color: transparent;
+  margin-top: 20px;
+  border: none;
+  padding-right: 40px;
+}
+/* .wares-banner {
+  height: 140px; 
+  width: 284px; 
+  margin-bottom: 10px;
+  margin-left: 10px;
+} */
+
+/* layer */
+.edit {
+  width: 80%;
+  margin: 20px auto 20px auto;
+  overflow: hidden;
+}
+.edit .error {
+  color: #d43f3a;
+}
+.edit label, .edit span {
+  color: #aaa;
+  line-height: 35px;
+}
+.edit span {
+  color: #000;
+}
+.edit input,
+.con-main input{
+  height: 35px;
+  border-radius: 5px;
+  border: 1px solid #aaa;
+}
+.edit .shop-logo {
+  height: 250px;
+  width: 250px;
+}
+.edit .shop-banner {
+  height: 200px;
+  width: 300px;
+}
+.edit .shop-logo .add {
+  line-height: 230px;
+  height: 220px;
+  font-size: 50px;
+}
+.edit .shop-banner .add {
+  line-height: 190px;
+  height: 170px;
+  font-size: 50px;
+}
+.edit .banner-layer-step .stepO-blue, .edit .banner-layer-step .stepO-grey {
+  width: 40px;
+  height: 40px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  border: 1px solid #2aabd2;
+  color: #2aabd2;
+  font-size: 18px;
+  padding-top: 3px;
+}
+.edit .banner-layer-step .stepO-grey {
+  color: #aaa;
+  border-color: #aaa;
+}
+.edit .banner-layer-step .step-line {
+  border-bottom: 1px solid #2aabd2;
+  width: 25%;
+}
+.edit .banner-layer-step .step-text-blue {
+  color: #2aabd2;
+}
+.edit .banner-layer-step .step-text-grey {
+  color: #aaa;
+}
+.edit .banner-layer-step .step-text-mleft {
+  margin-left: 20%;
+}
+.edit .banner-upload > div {
+  width: 45%;
+}
+.edit .banner-upload .banner-bottom {
+  margin-left: 8%;
+}
+.edit .banner-step2-img {
+  width: 100%;
+  height: 130px;
+}
+.edit .add-img {
+  width: 100%;
+  padding-top: 30%;
+  /*padding-bottom: 25%;*/
+  font-size: 60px;
+  height: 200px;
+}
+.edit .add-img span {
+  color: #aaa;
+}
+.edit .class-img-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  line-height: 200px;
+  height: 200px;
+  opacity: 0;
+}
+.edit .del-ware {
+  position: absolute;
+  right: 0px;
+  top: -10px;
+  font-size: 18px;
+  line-height: 25px;
+  width: 25px;
+  color: #f1f1f1;
+  background-color: #000000;
+  opacity: .5;
+  border-radius: 12.5px;
+  font-style: normal;
+  cursor: pointer;
+}
+
+#editClassLayer .edit .add-img { /* 分类图片 */
+    width: 240px;
+    font-size: 50px;
+    height: 120px;
+    padding-top: 35px;
+}
+#editClassLayer .edit .add-img .img-tip {
+    font-size: 14px;
+    margin-top: 20px;
+}
+#editShopLayer .edit .add-img { /* 店铺logo */
+    width: 284px;
+    height: 140px;
+    padding-top: 45px;
+}
+#editShopLayer .edit .add-img .img-tip,
+#editWaresLayer .edit .add-img .img-tip {
+    font-size: 14px;
+    margin-top: 20px;
+}
+#editWaresLayer .edit .add-img {
+  height: 200px;
+  padding-top: 80px;
+}
+#editWaresLayer .edit .add-img .img-tip {
+  margin-top: 50px;
+}
+#editWaresLayer .spec,
+#editWaresLayer .banner {
+  border-radius: 5px;
+}
+
+#editWaresLayer .del-spec,
+#editWaresLayer .del-banner {
+  position: absolute;
+  right: -15px;
+  top: -15px;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  background-color: #fff;
+}
+#editWaresLayer .del-banner {
+  width: 20px;
+  height: 20px;
+  right: 5px;
+  top: -10px;
+  line-height: 20px;
+}
+.map {
+  height: 500px;
+}
+#editAppointLayer .x-scroller {
+  width: 700px;
+  overflow-x: auto;
+}
+#editAppointLayer .lottery-user {
+  padding: 15px 20px;
+  float: left;
+  margin-top: 30px;
+}
+#editAppointLayer .lottery-user img {
+  width: 100px;
+  height: 100px;
+}
+#editAppointLayer .lottery-user span {
+  display: block;
+  width: 100px;
+  line-height: 40px;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}
+#editAppointLayer .lottery-user input {
+  width: 100px;
+}
+#editAppointLayer .lottery-wares {
+  float: left;
+  max-height: 300px;
+  width: 700px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.x-scroller::-webkit-scrollbar {
+  height: 4px;
+}
+.lottery-wares::-webkit-scrollbar {  /*滚动条样式*/
+  width: 4px;
+}
+.lottery-wares::-webkit-scrollbar-thumb,
+.x-scroller::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+  background: #ccc;
+}
+.lottery-wares::-webkit-scrollbar-track,
+.x-scroller::-webkit-scrollbar-track {/*滚动条里面轨道*/
+  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+  border-radius: 0;
+  background: #fff;
+}
+#editAppointLayer .ware {
+  float: left;
+  width: 120px;
+  height: 120px;
+  margin: 10px;
+  position: relative;
+}
+#editAppointLayer .ware:hover a,
+#editAppointLayer .ware.active a {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  line-height: 120px;
+  background: rgba(0, 0, 0, 0.6);
+}
+#editAppointLayer .ware-i {
+  font-size: 20px;
+  color: #fff;
+}
+#editAppointLayer .ware-name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  height: 30px;
+  line-height: 30px;
+  width: 100%;
+  color: #fff;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+#editInvestLayer .del-option {
+  float: right;
+  color: #2aabd2;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.point {
+  font-size: 30px;
+  font-weight: bold;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+/* 引入样式重置 */
+.uib-datepicker-popup button, .input-group-btn button {
+  width: auto;
+  margin: 0;
+}
+.input-group-btn button {
+  height: 35px;
+}
+.uib-datepicker-popup table {
+  margin-top: 10px;
+}
+.edit .uib-datepicker-popup table tbody button.btn-sm {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.dropdown-menu {
+  top: 35px;
+}
+
+i.icon-style {
+  font-size: 20px;
+  color: #aaa;
+}
+
+.lottery-nav>li.active>a, .lottery-nav>li.active>a:focus, .lottery-nav>li.active>a:hover {
+  color: #555;
+  cursor: default;
+  background-color: #fff;
+  border: 0;
+  border-bottom: 3px solid #e4393c;
+  /*border-bottom-color: transparent*/
+}
+.lottery-nav > li > a {
+  border: 0;
+  padding: 10px 20px;
+}
+.lottery-nav > li > a:hover {
+  border: 0;
+}
+.lottery-nav > li > a:hover {
+  text-decoration: none;
+  background-color: #fff;
+  border-bottom: 3px solid #e4393c;
+}
+.lottery-nav > li > a:focus {
+  text-decoration: none;
+  background-color: #fff;
+}
+input.labelauty + label {
+  display: inline-block;
+  margin-right: 20px;
+}

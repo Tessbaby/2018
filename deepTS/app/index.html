@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>深度唐山</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="components/base/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="components/base/bootstrap/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="components/base/layer/mobile/need/layer.css">
+  <link rel="stylesheet" href="components/base/honeySwitch/honeySwitch.css">
+  <link rel="stylesheet" href="components/base/Radio/css/jquery-labelauty.css">
+  <link rel="stylesheet" href="components/CSS/app.css">
+  <link rel="stylesheet" href="https://at.alicdn.com/t/font_540856_17nzdffojutk2o6r.css">
+  <link rel="icon" href="components/Image/favicon.ico" mce_href="components/Image/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <div style="">
+    <div ng-include="'template/tpl/header.html'"></div>
+    <div class="sidebar" ng-include="'template/tpl/sidebar.html'"></div>
+  </div>
+  <div style="position: absolute; z-index: 100; top: 60px; left: 200px;">
+    <div class="content">
+      <ele-bread></ele-bread>
+      <div ng-view></div>
+    </div>
+  </div>
+  <script src="components/base/jquery/dist/jquery.min.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="components/base/bootstrap/js/bootstrap.min.js"></script>
+  <script src="components/base/ui-bootstrap/ui-bootstrap-tpls-1.3.2.js"></script>
+  <script src="components/base/ui-bootstrap/angular-locale_zh-cn.js"></script>
+  <script src="components/base/layer/layer.js"></script>
+  <script src="components/base/angular-cookies/angular-cookies.js"></script>
+  <script type="text/javascript" src="components/base/plupload.full.min.js"></script>
+  <script type="text/javascript" src="components/base/jquery.validate.js"></script>
+  <script type="text/javascript" src="components/base/jquery.validate.extend.js"></script>
+  <script type="text/javascript" src="components/base/UEditor/ueditor.config.js"></script>
+  <script type="text/javascript" src="components/base/UEditor/ueditor.all.js"></script>
+  <script type="text/javascript" src="components/base/UEditor/lang/zh-cn/zh-cn.js"></script>
+  <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&key=6J6BZ-K3ZH6-DBKSK-M6GUN-PS7X5-CCBD6"></script>
+  <script type="text/javascript" src="components/base/Radio/js/jquery-labelauty.js"></script>
+  <script type="text/javascript" src="components/base/honeySwitch/honeySwitch.js"></script>
+  <script src="components/JS/routeJs.js"></script>
+  <script src="app.js"></script>
+  <script>
+    var height = $(window).height() - 60;
+    var width = $(window).width() - 200;
+    $('.sidebar').height(height);
+    $('.content').width(width);
+
+    $(window).resize(function(event) {
+      var height = $(window).height() - 60;
+      var width = $(window).width() - 200;
+      $('.sidebar').height(height);
+      $('.content').width(width);
+    });
+  </script>
+</body>
+</html>

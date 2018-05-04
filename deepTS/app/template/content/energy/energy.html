@@ -1,0 +1,33 @@
+<div class="con-main"  ng-controller="energyCtrl">
+	<form action="" class="energy" id="energy">
+		<div class="form-group row m-b-sm p-t-sm">
+      <label for="initValue" class="col-md-4 col-lg-4 text-right">用户初始能量值设定</label>
+      <input type="number" min="0" id="initValue" class="col-md-4 col-lg-4" placeholder="用户初始能量值设定" ng-model="param.initValue" name="initValue">
+    </div>
+
+		<div class="form-group row m-b-sm p-t-sm">
+      <label for="shareShopValue" class="col-md-4 col-lg-4 text-right">分享商家能量值设置</label>
+      <input type="number" min="0" id="shareShopValue" class="col-md-4 col-lg-4" placeholder="分享商家能量值设置" ng-model="param.shareShopValue" name="shareShopValue">
+    </div>
+
+		<div class="form-group row m-b-sm p-t-sm">
+      <label for="markValue" class="col-md-4 col-lg-4 text-right">标记能量值设置</label>
+      <input type="number" min="0" id="markValue" class="col-md-4 col-lg-4" placeholder="标记能量值设置" ng-model="param.markValue" name="markValue">
+    </div>
+
+    <div class="form-group row m-b-sm p-t-sm">
+      <label for="researchValue" class="col-md-4 col-lg-4 text-right">标记分享能量值设置</label>
+      <input type="number" min="0" id="researchValue" class="col-md-4 col-lg-4" placeholder="标记分享能量值设置" ng-model="param.researchValue" name="researchValue">
+    </div>
+
+		<div class="form-group row m-b-sm p-t-sm">
+      <label for="singValue" class="col-md-4 col-lg-4 text-right">签到能量值设置</label>
+      <input type="number" min="0" id="singValue" class="col-md-4 col-lg-4" placeholder="签到能量值设置" ng-model="param.singValue" name="singValue">
+    </div>
+
+    <div class="form-group row text-center p-t-sm">
+      <button class="btn btn-info"><i class="iconfont icon-editsaved"></i>保存</button>
+    </div>
+
+	</form>
+</div>
