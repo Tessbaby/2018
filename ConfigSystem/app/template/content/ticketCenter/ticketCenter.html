@@ -44,8 +44,8 @@
             <td class="text-center">{{ item.startDate | date: 'yyyy-MM-dd' }} - {{ item.endDate | date: 'yyyy-MM-dd' }}</td>
             <td class="text-center">
                 <button class="btn btn-info" type="button" ng-click="showCard(item.qrCode)"><i class="iconfont icon-wodexuncha"></i>审查</button>
-                <button ng-if="item.isCoupon == 0" class="btn btn-danger" type="button" ng-click="changeDisabled(item.id, 0)"><i class="iconfont icon-jinyong"></i>禁用</button>
-                <button ng-if="item.isCoupon != 0" class="btn btn-success" type="button" ng-click="changeDisabled(item.id, 1)"><i class="iconfont icon-qiyong"></i>启用</button>
+                <button ng-if="item.isCoupon == 0" class="btn btn-danger" type="button" ng-click="changeDisabled(item.id, 0)"><i class="iconfont icon-jinyong"></i>点击禁用</button>
+                <button ng-if="item.isCoupon != 0" class="btn btn-success" type="button" ng-click="changeDisabled(item.id, 1)"><i class="iconfont icon-qiyong"></i>点击启用</button>
             </td>
         </tr>
         </tbody>

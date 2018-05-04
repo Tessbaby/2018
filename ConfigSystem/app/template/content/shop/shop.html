@@ -4,6 +4,11 @@
         <div class="form-group col-md-2 p-0">
             <input type="text" class="w100 p-lr-md" placeholder="店铺名称" ng-model="search.name">
         </div>
+        <div class="form-group col-md-1 text-center m-l-xs" style="width: 140px;">
+            <label for="isDisable" class="checkbox" ng-click="isCheckedDis(this)">
+                <input type="checkbox" id="isDisable" style="display: none">&nbsp;&nbsp;&nbsp;已禁用 
+            </label>
+        </div>
         <div class="form-group col-sm-3">
             <button class="btn btn-info" type="button" ng-click="search.searchFun()">查询</button>
             <button class="btn btn-info" type="button" ng-click="editShop()"><i class="fa fa-check-square-o"></i>添加</button>
@@ -34,13 +39,14 @@
             </td>
             <td class="text-center">
                 <button class="btn btn-info" type="button" ng-click="editShop(item.id)"><i class="iconfont icon-bianji"></i>编辑</button>
-                <button ng-if="item.disable == 0" class="btn btn-danger" type="button" ng-click="changeDisabled(item.id, 0)"><i class="iconfont icon-jinyong"></i>禁用</button>
-                <button ng-if="item.disable != 0" class="btn btn-success" type="button" ng-click="changeDisabled(item.id, 1)"><i class="iconfont icon-qiyong"></i>启用</button>
+                <button ng-if="item.disable == 0" class="btn btn-danger" type="button" ng-click="changeDisabled(item.id, 0)"><i class="iconfont icon-jinyong"></i>点击禁用</button>
+                <button ng-if="item.disable != 0" class="btn btn-success" type="button" ng-click="changeDisabled(item.id, 1)"><i class="iconfont icon-qiyong"></i>点击启用</button>
             </td>
         </tr>
         </tbody>
     </table>
-    <page-nations></page-nations>
+    <!-- <page-nations></page-nations> -->
+    <my-pagination ng-if="table.tableList.length > 0" page-option="option"></my-pagination>
 
     <div style="height: 0; overflow: hidden">
         <div id="editShopLayer">
@@ -85,7 +91,7 @@
                         <div class="col-md-4 col-lg-4 p-0" id="selectfiles">
                             <div ng-if="!isShowImg" href="" class="block add-img border" id="addImg">
                                 <span class="block text-center">+</span>
-                                <span class="img-tip block text-center">图片大小为：71px * 35px</span>
+                                <span class="img-tip block text-center">图片大小为：150px * 75px</span>
                             </div>
                             <img ng-if="isShowImg" ng-src="{{param.logo}}" alt="" style="height: 140px; width: 284px; margin-bottom: 10px;">
                         </div>

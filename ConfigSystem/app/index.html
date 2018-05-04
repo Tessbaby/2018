@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="components/base/layer/mobile/need/layer.css">
   <link rel="stylesheet" href="components/CSS/app.css">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_540856_nygf2rp7fn80vn29.css">
+  <link rel="icon" href="components/Image/favicon.ico" mce_href="components/Image/favicon.ico" type="image/x-icon">
 </head>
 <body>
   <div style="">
@@ -31,6 +32,7 @@
   <script src="bower_components/angular-route/angular-route.js"></script>
   <script src="components/base/bootstrap/js/bootstrap.min.js"></script>
   <script src="components/base/ui-bootstrap/ui-bootstrap-tpls-1.3.2.js"></script>
+  <script src="components/base/ui-bootstrap/angular-locale_zh-cn.js"></script>
   <script src="components/base/layer/layer.js"></script>
   <script src="components/base/angular-cookies/angular-cookies.js"></script>
   <script type="text/javascript" src="components/base/plupload.full.min.js"></script>
@@ -43,6 +45,13 @@
     var width = $(window).width() - 200;
     $('.sidebar').height(height);
     $('.content').width(width);
+
+    $(window).resize(function(event) {
+        var height = $(window).height() - 60;
+        var width = $(window).width() - 200;
+        $('.sidebar').height(height);
+        $('.content').width(width);
+    });
   </script>
 </body>
 </html>

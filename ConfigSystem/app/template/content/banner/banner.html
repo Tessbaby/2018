@@ -20,7 +20,7 @@
             <a href="" class="block banner-add" ng-click="editBanner()" style="height: auto;">
                 <span class="block text-center">+</span>
                 <span class="block text-center">添加活动</span>
-                <small class="block text-center">上传图片要求：414px * 220px</small>
+                <small class="block text-center">上传图片要求：700px * 372px</small>
             </a>
         </div>
     </div>
@@ -48,7 +48,7 @@
                                 <div ng-if="!isShowTopImg" style="padding-top: 15%">
                                     <span class="block text-center">+</span>
                                     <span class="block text-center">添加活动</span>
-                                    <small class="block text-center">上传图片要求：414px * 220px</small>
+                                    <small class="block text-center">上传顶部图片要求：700px * 372px</small>
                                 </div>
                                 <img ng-show="isShowTopImg" ng-src="{{ img.topImg }}" alt="" style="width: 100%; height: 180px;">
                             </div>
@@ -58,7 +58,7 @@
                                 <div ng-if="!isShowBottomImg" style="padding-top: 15%">
                                     <span class="block text-center">+</span>
                                     <span class="block text-center">添加活动</span>
-                                    <small class="block text-center">上传图片要求：414px * 220px</small>
+                                    <small class="block text-center">上传底部图片要求：700px * 372px</small>
                                 </div>
                                 <img ng-show="isShowBottomImg" ng-src="{{ img.bottomImg }}" alt="" style="width: 100%; height: 180px;">
                             </div>
@@ -102,7 +102,7 @@
                             <div class="col-md-3 col-lg-3 text-center pos-relative m-b-sm" ng-repeat="item in platformBennerGoodList">
                                 <img ng-src="{{ item.goodsImg.img }}" alt="" class="banner-step2-img">
                                 <span ng-bind="item.goodsImg.name" class="block"></span>
-                                <input type="text" ng-model="item.sort" placeholder="输入排序值">
+                                <input type="text" ng-model="item.sort" placeholder="输入排序值" style="width: 100%">
                                 <i class="del-ware inline text-center" ng-click="delGoodItem(item)">X</i>
                             </div>
                             <!--<div class="col-md-3 col-lg-3 text-center">
@@ -124,7 +124,7 @@
                     </div>
                     <div class="form-group m-t-md text-center">
                         <button class="btn btn-info" type="button" ng-click="goStep()">上一步</button>
-                        <button class="btn btn-info" type="button">预览</button>
+                        <!-- <button class="btn btn-info" type="button">预览</button> -->
                         <button class="btn btn-info" type="button" ng-click="saveEdit()">完成</button>
                     </div>
                 </div>

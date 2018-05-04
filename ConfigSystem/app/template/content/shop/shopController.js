@@ -3,6 +3,7 @@
  */
 
 app.register.controller('shopCtrl', function ($rootScope, $scope, httpAjax, $cookies, $location, $http) {
+    layer.closeAll();
     var height = $(window).height() - 160;
     var width = $(window).width();
     $('.con-main').height(height);
@@ -12,15 +13,32 @@ app.register.controller('shopCtrl', function ($rootScope, $scope, httpAjax, $coo
 
     // 设置查询参数
     $scope.search = {};
-    $scope.search.name = '';
+    $scope.search.name = null;
+    $scope.search.isDisable = 0;
+    $scope.search.page = 0;
+
+    $rootScope.pageClick2 = function (page) {
+        $scope.search.page = page;
+        $scope.search.searchFun();
+    }
+
+    // 是否禁用
+    $scope.isCheckedDis = function (event) {
+        var target = window.event;
+        var _this = $(target.srcElement);
+        if (_this[0].tagName == 'LABEL') {
+            _this.toggleClass('checked');
+            $scope.search.isDisable = $scope.search.isDisable == 0 ? 1 : 0;
+        }
+    };
 
     // 获取表格
-    $rootScope.searchTable('8070/shop/back/query?name=&page=0');
+    $rootScope.searchTable('8070', '/shop/back/query?name=null&page=0&disable=0');
     /* 点击查询 */
     $scope.search.searchFun = function () {
-        $rootScope.table.pageInfo.number = $rootScope.table.pageInfo.number == 0 ? 0 : $rootScope.table.pageInfo.number - 1
-        $scope.tableUrl = '8070/shop/back/query?name=' + $scope.search.name + '&page='+ $rootScope.table.pageInfo.number;
-        $rootScope.searchTable($scope.tableUrl);
+        if ($scope.search.name) {$scope.search.page = 0;};
+        $scope.tableUrl = '/shop/back/query?name=' + $scope.search.name + '&page='+ ($scope.search.page - 1) + '&disable=' + $scope.search.isDisable;
+        $rootScope.searchTable('8070', $scope.tableUrl);
     }
 
     $scope.allSelectFun = {
@@ -53,7 +71,7 @@ app.register.controller('shopCtrl', function ($rootScope, $scope, httpAjax, $coo
     // 获取二维码
     $scope.getCode = function (shopId) {
         $.ajax({
-            url:  $rootScope.default.dPath + '9070/qrcode',
+            url:  $rootScope.setPath(9070) + '/qrcode',
             method: 'post',
             data: 'shop-manage-add:' + shopId,
             withCredentials: true,//跨域
@@ -75,7 +93,7 @@ app.register.controller('shopCtrl', function ($rootScope, $scope, httpAjax, $coo
         var title = id ? '编辑' : '添加';
         if(id) {
             // 获取详情
-            $http.post($rootScope.default.dPath + '8070/shop/query/enityShopid?shopid=' + id, {})
+            $http.post($rootScope.setPath(8070) + '/shop/query/enityShopid?shopid=' + id, {})
                 .success(function (data) {
                     $scope.param = {
                         className: data.className,
@@ -92,7 +110,7 @@ app.register.controller('shopCtrl', function ($rootScope, $scope, httpAjax, $coo
                         provinceName: data.provinceName,
                         shopAddress: data.shopAddress,
                         shopName: data.shopName,
-                        //brandId: data.brandId
+                        brandId: data.brandId
                     };
                     $scope.isShowImg = true;
                     // getCode(); 获取二维码
@@ -135,7 +153,7 @@ app.register.controller('shopCtrl', function ($rootScope, $scope, httpAjax, $coo
             }).error(function (err) {
             layer.msg('未获取到分类信息', {time: 3000, icon:2});
         })
-
+        $('#editShopLayer label.error').remove();$('#editShopLayer input.error').removeClass('error');
         layer.open({
             type: 1,
             title: title,
@@ -151,14 +169,16 @@ app.register.controller('shopCtrl', function ($rootScope, $scope, httpAjax, $coo
     $scope.changeDisabled = function (id, dis) {
         var url = '',
             tip = '';
-        url = dis == 1 ? $rootScope.default.dPath + '8070/shop/enabled?id=' + id : $rootScope.default.dPath + '8070/shop/disable?id=' + id;
+        url = dis == 1 ? $rootScope.setPath(8070) + '/shop/enabled?id=' + id : $rootScope.setPath(8070) + '/shop/disable?id=' + id;
         tip = dis == 1 ? '启用' : '禁用';
         $http.post(url, {})
             .success(function (data) {
                 if(data == 0) {
                     layer.msg(tip + '成功', {time: 3000, icon:1});
                     setTimeout(function () {
-                        $scope.search.name = '';
+                        $('.checkbox').removeClass('checked');
+                        $scope.search.name = null;
+                        $scope.search.isDisable = 0;
                         $scope.search.searchFun();
                     }, 1000);
                 } else {
@@ -184,7 +204,7 @@ app.register.controller('shopCtrl', function ($rootScope, $scope, httpAjax, $coo
             var image = new Image();
             image.src = e.target.result;
             image.onload = function () {
-                if (this.width == 71 && this.height == 35) {
+                if (this.width == 150 && this.height == 75) { //this.width < 72 && this.height < 36
 
                     var imgFileName = files[0].name;
                     var fileName = '';
@@ -250,12 +270,13 @@ app.register.controller('shopCtrl', function ($rootScope, $scope, httpAjax, $coo
                 shopName: { required: true },
                 className: { required: true },
                 address: { required: true },
-                phone: { phone: true }
+                phone: { required: true }
             },
             messages: {
                 shopName: { required: '请添加品牌' },
                 className: { required: '请添加分类' },
                 address: { required: '请填写地址' },
+                phone: { required: '请填写电话' }
             },
             submitHandler: function () {
                 saveShop();
@@ -267,7 +288,7 @@ app.register.controller('shopCtrl', function ($rootScope, $scope, httpAjax, $coo
     function saveShop () {
         // 保存数据
         var saveUrl = '';
-        saveUrl = $scope.id ? $rootScope.default.dPath + '8070/shop/edit' : $rootScope.default.dPath + '8070/shop/add';
+        saveUrl = $scope.id ? $rootScope.setPath(8070) + '/shop/edit' : $rootScope.setPath(8070) + '/shop/add';
 
         // 保存数据
         $http.post(saveUrl, angular.toJson($scope.param), {'Content-Type':'application/x-www-form-urlencoded'})
@@ -276,7 +297,9 @@ app.register.controller('shopCtrl', function ($rootScope, $scope, httpAjax, $coo
                 if (data == 0) {
                     layer.msg('保存成功', {time: 3000, icon:1});
                     setTimeout(function () {
-                        $scope.search.name = '';
+                        $('.checkbox').removeClass('checked');
+                        $scope.search.name = null;
+                        $scope.search.isDisable = 0;
                         $scope.search.searchFun();
                     }, 1000);
                 } else {

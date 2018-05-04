@@ -2,6 +2,7 @@
  * Created by Administrator on 2018/1/29.
  */
 app.register.controller('ticketCenterCtrl', function ($rootScope, $scope, $http) {
+    layer.closeAll();
     var height = $(window).height() - 160;
     $('.con-main').height(height);
     $rootScope.checkIn()//验证
@@ -22,14 +23,14 @@ app.register.controller('ticketCenterCtrl', function ($rootScope, $scope, $http)
     $scope.search.brandName = '';
 
     // 获取表格
-    $rootScope.searchTable('8093/coupon/back/query?date=&brandid=&page=0');
+    $rootScope.searchTable('8093', '/coupon/back/query?date=&brandid=&page=0');
     /* 点击查询 */
     $scope.search.searchFun = function () {
         $scope.search.date = angular.element('#date')[0].value;
         //$scope.search.date = $rootScope.compareDate(date);
         $rootScope.table.pageInfo.number = $rootScope.table.pageInfo.number == 0 ? 0 : $rootScope.table.pageInfo.number - 1
-        $scope.tableUrl = '8093/coupon/back/query?date=' + $scope.search.date + '&brandid=' + $scope.search.brandid + '&page=' + $rootScope.table.pageInfo.number;
-        $rootScope.searchTable($scope.tableUrl);
+        $scope.tableUrl = '/coupon/back/query?date=' + $scope.search.date + '&brandid=' + $scope.search.brandid + '&page=' + $rootScope.table.pageInfo.number;
+        $rootScope.searchTable('8093', $scope.tableUrl);
     }
 
     /* 点击巡查 */
@@ -76,7 +77,7 @@ app.register.controller('ticketCenterCtrl', function ($rootScope, $scope, $http)
     $scope.changeDisabled = function (id, dis) {
         var url = '',
             tip = '';
-        url = dis == 1 ? $rootScope.default.dPath + '8093/coupon/enabled?id=' + id : $rootScope.default.dPath + '8093/coupon/disable?id=' + id;
+        url = dis == 1 ? $rootScope.setPath(8093) + '/coupon/enabled?id=' + id : $rootScope.setPath(8093) + '/coupon/disable?id=' + id;
         tip = dis == 1 ? '启用' : '禁用';
         $http.post(url, {})
             .success(function (data) {

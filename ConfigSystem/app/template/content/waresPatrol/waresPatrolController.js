@@ -2,6 +2,7 @@
  * Created by Administrator on 2018/1/29.
  */
 app.register.controller('waresPatrolCtrl', function ($rootScope, $scope, $http) {
+    layer.closeAll();
     var height = $(window).height() - 160;
     $('.con-main').height(height);
     $rootScope.checkIn()//验证
@@ -13,6 +14,7 @@ app.register.controller('waresPatrolCtrl', function ($rootScope, $scope, $http) 
         if (_this[0].tagName == 'LABEL') {
             _this.toggleClass('checked');
             $scope.search.isHot = $scope.search.isHot == 1 ? '' : 1;
+            $scope.search.page = 0;
         }
     }
 
@@ -34,16 +36,21 @@ app.register.controller('waresPatrolCtrl', function ($rootScope, $scope, $http) 
     $scope.search.brandName = '';
     $scope.search.brandid = '';
     $scope.search.isHot = '';
+    $scope.search.page = 0;
+
+    $rootScope.pageClick2 = function (page) {
+        $scope.search.page = page;
+        $scope.search.searchFun();
+    }
 
     // 获取表格
-    $rootScope.searchTable('8096/goods/activity/back/activity/query?date=&goodsclassid=&brandid=&ishot=&page=0');
+    $rootScope.searchTable('8096', '/goods/activity/back/activity/query?date=&goodsclassid=&brandid=&ishot=&page=0');
     /* 点击查询 */
     $scope.search.searchFun = function () {
-        $scope.search.date = angular.element('#date')[0].value
+        $scope.search.date = angular.element('#date')[0].value;
         //$scope.search.date = $rootScope.compareDate(date);
-        $rootScope.table.pageInfo.number = $rootScope.table.pageInfo.number == 0 ? 0 : $rootScope.table.pageInfo.number - 1
-        $scope.tableUrl = '8096/goods/activity/back/activity/query?date=' + $scope.search.date + '&goodsclassid=' + $scope.search.goodsclassid + '&brandid=' + $scope.search.brandid + '&ishot=' + $scope.search.isHot + '&page=' + $rootScope.table.pageInfo.number;
-        $rootScope.searchTable($scope.tableUrl);
+        $scope.tableUrl = '/goods/activity/back/activity/query?date=' + $scope.search.date + '&goodsclassid=' + $scope.search.goodsclassid + '&brandid=' + $scope.search.brandid + '&ishot=' + $scope.search.isHot + '&page=' + ($scope.search.page - 1);
+        $rootScope.searchTable('8096', $scope.tableUrl);
     }
 
     /* 点击巡查 */
@@ -111,7 +118,7 @@ app.register.controller('waresPatrolCtrl', function ($rootScope, $scope, $http) 
     $scope.changeDisabled = function (id, shopid, dis) {
         var url = '',
             tip = '';
-        url = dis == 1 ? $rootScope.default.dPath + '8096/goods/activity/enabled?id=' + id + '&shopid=' + shopid : $rootScope.default.dPath + '8096/goods/activity/disable?id=' + id + '&shopid=' + shopid;
+        url = dis == 1 ? $rootScope.setPath(8096) + '/goods/activity/enabled?id=' + id + '&shopid=' + shopid : $rootScope.setPath(8096) + '/goods/activity/disable?id=' + id + '&shopid=' + shopid;
         tip = dis == 1 ? '上架' : '下架';
         $http.post(url, {})
             .success(function (data) {
@@ -128,23 +135,23 @@ app.register.controller('waresPatrolCtrl', function ($rootScope, $scope, $http) 
         });
     }
 
-    // 分页
-    $scope.goPage = function (page) {
-        $rootScope.table.pageInfo.number = page;
-        $scope.search.searchFun();
-    }
-    $scope.goNextPage = function () {
-        if($rootScope.table.pageInfo.totalPages.length != $rootScope.table.pageInfo.number) {
-            $rootScope.table.pageInfo.number += 1;
-            $scope.search.searchFun();
-        }
-    }
-    $scope.goPrePage = function () {
-        if($rootScope.table.pageInfo.number != 1) {
-            $rootScope.table.pageInfo.number -= 1;
-            $scope.search.searchFun();
-        }
-    }
+    // // 分页
+    // $scope.goPage = function (page) {
+    //     $rootScope.table.pageInfo.number = page;
+    //     $scope.search.searchFun();
+    // }
+    // $scope.goNextPage = function () {
+    //     if($rootScope.table.pageInfo.totalPages.length != $rootScope.table.pageInfo.number) {
+    //         $rootScope.table.pageInfo.number += 1;
+    //         $scope.search.searchFun();
+    //     }
+    // }
+    // $scope.goPrePage = function () {
+    //     if($rootScope.table.pageInfo.number != 1) {
+    //         $rootScope.table.pageInfo.number -= 1;
+    //         $scope.search.searchFun();
+    //     }
+    // }
 
 
 })

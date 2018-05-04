@@ -2,13 +2,14 @@
  * Created by Administrator on 2018/1/29.
  */
 app.register.controller('manageCtrl', function ($rootScope, $scope, $http, $window) {
+    layer.closeAll();
     var height = $(window).height() - 160;
     $('.con-main').height(height);
     $rootScope.checkIn()//验证
 
     // 获取表格
     function getTable () {
-        $http.post($rootScope.default.dPath + '8062/admin/query', {})
+        $http.post($rootScope.setPath(8062) + '/admin/query', {})
             .success(function (data) {
                 $scope.tableList = data.content;
                 $scope.pageInfo = {
@@ -23,7 +24,7 @@ app.register.controller('manageCtrl', function ($rootScope, $scope, $http, $wind
     getTable ();
     // 删除
     $scope.delManage = function (id) {
-        $http.post($rootScope.default.dPath + '8062/admin/del?id=' + id, {})
+        $http.post($rootScope.setPath(8062) + '/admin/del?id=' + id, {})
             .success(function (data) {
                 if(data == 0) {
                     layer.msg('删除成功', {time: 3000, icon:1});
@@ -42,7 +43,7 @@ app.register.controller('manageCtrl', function ($rootScope, $scope, $http, $wind
     /* 授权二维码 */
     $scope.showPromise = function () {
         $.ajax({
-            url:  $rootScope.default.dPath + '9070/qrcode',
+            url:  $rootScope.setPath(9070) + '/qrcode',
             method: 'post',
             data: 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + $rootScope.default.appid + '&redirect_uri=http%3A%2F%2F' + $rootScope.default.yPath + '%2Fauth%2Fregister%2Fwx%2Fopenid&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect',
             //dataType: "text",

@@ -3,6 +3,8 @@
  */
 
 app.register.controller('classifyCtrl', function ($rootScope, $scope, httpAjax, $http) {
+    $rootScope.isLogin = false;
+    layer.closeAll();
     var height = $(window).height() - 160;
     $('.con-main').height(height);
     $rootScope.checkIn()//验证
@@ -12,14 +14,19 @@ app.register.controller('classifyCtrl', function ($rootScope, $scope, httpAjax, 
     $scope.search = {};
     $scope.search.rootid = '';
     $scope.search.name = '';
+    $scope.search.page = 0;
+
+    $rootScope.pageClick2 = function (page) {
+        $scope.search.page = page;
+        $scope.search.searchFun();
+    }
 
     /* 获取表格 */
-    $rootScope.searchTable('8060/goods/class/back/query?rootid=&page=0');
+    $rootScope.searchTable('8060', '/goods/class/back/query?rootid=&page=0');
     /* 点击查询 */
     $scope.search.searchFun = function () {
-        $rootScope.table.pageInfo.number = $rootScope.table.pageInfo.number == 0 ? 0 : $rootScope.table.pageInfo.number - 1
-        $scope.tableUrl = '8060/goods/class/back/query?rootid=' + $scope.search.rootid + '&page='+ $rootScope.table.pageInfo.number;
-        $rootScope.searchTable($scope.tableUrl);
+        $scope.tableUrl = '/goods/class/back/query?rootid=' + $scope.search.rootid + '&page='+ ($scope.search.page - 1);
+        $rootScope.searchTable('8060', $scope.tableUrl);
     }
 
     /* 获取下拉菜单分类 二级分类*/
@@ -86,6 +93,7 @@ app.register.controller('classifyCtrl', function ($rootScope, $scope, httpAjax, 
         httpAjax.postData($rootScope.default.ClassifyPath, '').then(function (data) {
             $scope.dummyData = data;
         })
+        $('#editClassLayer label.error').remove();$('#editClassLayer input.error').removeClass('error');
         layer.open({
             type: 1,
             title: $scope.title,
@@ -99,7 +107,7 @@ app.register.controller('classifyCtrl', function ($rootScope, $scope, httpAjax, 
     $scope.changeDisabled = function (id, dis) {
         var url = '',
             tip = '';
-        url = dis == 1 ? $rootScope.default.dPath + '8060/goods/class/enabled?id=' + id : $rootScope.default.dPath + '8060/goods/class/del?id=' + id;
+        url = dis == 1 ? $rootScope.setPath(8060) + '/goods/class/enabled?id=' + id : $rootScope.setPath(8060) + '/goods/class/del?id=' + id;
         tip = dis == 1 ? '启用' : '禁用';
         $http.post(url, {})
             .success(function (data) {
@@ -209,7 +217,7 @@ app.register.controller('classifyCtrl', function ($rootScope, $scope, httpAjax, 
     // 保存数据
     function saveClassify () {
         var saveUrl = '';
-        saveUrl = $scope.title == '添加' ? $rootScope.default.dPath + '8060/goods/class/add' : $rootScope.default.dPath + '8060/goods/class/edit';
+        saveUrl = $scope.title == '添加' ? $rootScope.setPath(8060) + '/goods/class/add' : $rootScope.setPath(8060) + '/goods/class/edit';
 
         // 保存数据
         $http.post(saveUrl, $scope.param, {'Content-Type':'application/x-www-form-urlencoded'})

@@ -24,7 +24,7 @@
                 <li ng-repeat="o in brandData | filter: search.brandName"><a href="javascript:;" ng-mousedown="allSelectFun.getMainBrand(o.id, o.name)">{{ o.name }}</a></li>
             </ul>
         </div>
-        <div class="form-group col-md-1 text-center">
+        <div class="form-group col-md-1 text-center" style="width: 140px;">
             <label for="isHot" class="checkbox" ng-click="isChecked(this)">
                 <!--<span class="checkbox-inner"></span>-->
                 <input type="checkbox" id="isHot" style="display: none">是否爆款
@@ -59,11 +59,12 @@
             <td ng-bind="item.isHot == 1 ? '是' : '否'" class="text-center"></td>
             <td class="text-center">
                 <button class="btn btn-info" type="button" ng-click="showCard(item.qrCode)"><i class="iconfont icon-wodexuncha"></i>巡查</button>
-                <button  ng-if="item.disable == 0" class="btn btn-danger" type="button" ng-click="changeDisabled(item.id, item.shopId, 0)"><i class="iconfont icon-xiajia"></i>下架</button>
-                <button  ng-if="item.disable != 0" class="btn btn-success" type="button" ng-click="changeDisabled(item.id, item.shopId, 1)"><i class="iconfont icon-shangjia"></i>正常</button>
+                <button  ng-if="item.disable == 0" class="btn btn-danger" type="button" ng-click="changeDisabled(item.id, item.shopId, 0)"><i class="iconfont icon-xiajia"></i>下架商品</button>
+                <button  ng-if="item.disable != 0" class="btn btn-success" type="button" ng-click="changeDisabled(item.id, item.shopId, 1)"><i class="iconfont icon-shangjia"></i>恢复正常</button>
             </td>
         </tr>
         </tbody>
     </table>
-    <page-nations></page-nations>
+    <!-- <page-nations></page-nations> -->
+    <my-pagination ng-if="table.tableList.length > 0" page-option="option"></my-pagination>
 </div>

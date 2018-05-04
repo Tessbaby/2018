@@ -15,7 +15,9 @@
         <thead>
         <tr>
             <th class="text-center">状态</th>
-            <th>分类</th>
+            <th class="text-center">分类</th>
+            <th class="text-center">子分类</th>
+            <th class="text-center">图示</th>
             <th class="text-center">操作</th>
         </tr>
         </thead>
@@ -25,17 +27,22 @@
                 <i ng-if="item.disable == 0" class="iconfont icon-smile"></i>
                 <i ng-if="item.disable != 0" class="iconfont icon-hand"></i>
             </td>
-            <td ng-bind="item.classRootName"></td>
+            <td class="text-center" ng-bind="item.classRootName"></td>
+            <td class="text-center" ng-bind="item.name"></td>
+            <td class="text-center">
+                <img ng-src="{{ item.img }}" alt="" style="width: 60px; height: 30px;">
+            </td>
             <td class="text-center">
                 <button class="btn btn-info" type="button" ng-click="editClassify(item)"><i class="iconfont icon-bianji"></i>编辑</button>
                 <!-- disable == 0 时是禁用状态 待启用 -->
-                <button ng-if="item.disable == 0" class="btn btn-danger" type="button" ng-click="changeDisabled(item.id, 0)"><i class="iconfont icon-jinyong"></i>禁用</button>
-                <button ng-if="item.disable != 0" class="btn btn-success" type="button" ng-click="changeDisabled(item.id, 1)"><i class="iconfont icon-qiyong"></i>启用</button>
+                <button ng-if="item.disable == 0" class="btn btn-danger" type="button" ng-click="changeDisabled(item.id, 0)"><i class="iconfont icon-jinyong"></i>点击禁用</button>
+                <button ng-if="item.disable != 0" class="btn btn-success" type="button" ng-click="changeDisabled(item.id, 1)"><i class="iconfont icon-qiyong"></i>点击启用</button>
             </td>
         </tr>
         </tbody>
     </table>
-    <page-nations></page-nations>
+    <!-- <page-nations></page-nations> -->
+    <my-pagination ng-if="table.tableList.length > 0" page-option="option"></my-pagination>
 
     <div style="height: 0; overflow: hidden">
         <div id="editClassLayer">

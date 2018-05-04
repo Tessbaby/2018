@@ -2,16 +2,27 @@
  * Created by Administrator on 2018/1/29.
  */
 app.register.controller('loginCtrl', function ($scope, $rootScope, $cookies, $http, $window) {
+    layer.closeAll();
     // 设置登录样式
     var w_width = $('body').width(),
         w_height = $('body').height();
     $('.login').width(w_width).height(w_height);
+    console.log(w_width, $(document).width())
+
+    $(window).resize(function(event) {
+        /* Act on the event */
+        var w_width = $('body').width(),
+        w_height = $('body').height();
+        $('.login').width(w_width).height(w_height);
+    });
+
+    $scope.isShowLayer = false;
     $rootScope.breadList.list = []; // 初始化面包屑导航
     $cookies.put('uuid', '');
     getCode();
     function getCode() {
         $.ajax({
-            url: $rootScope.default.dPath + '8066/auth/create/uuid',
+            url: $rootScope.setPath(8066) + '/auth/create/uuid',
             method: 'get',
             headers: {
                 "content-type": "text/plain"
@@ -20,7 +31,7 @@ app.register.controller('loginCtrl', function ($scope, $rootScope, $cookies, $ht
                 $cookies.put('uuid',data);
                 $rootScope.wxConnect = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + $rootScope.default.appid + '&redirect_uri=http%3A%2F%2F' + $rootScope.default.yPath + '%2Fauth%2Fread%2Fwx%2Fopenid&response_type=code&scope=snsapi_base&state=' + data
                 $.ajax({
-                    url: $rootScope.default.dPath + '9070/qrcode',
+                    url: $rootScope.setPath(9070) + '/qrcode',
                     method: 'post',
                     data: $rootScope.wxConnect,
                     //dataType: "text",
@@ -29,6 +40,7 @@ app.register.controller('loginCtrl', function ($scope, $rootScope, $cookies, $ht
                         'content-type': 'application/json'
                     },
                     success: function (_data) {
+                        $scope.isShowLayer = false;
                         $scope.loginImg = _data;
                         $scope.$apply();
                         setWS();
@@ -62,6 +74,7 @@ app.register.controller('loginCtrl', function ($scope, $rootScope, $cookies, $ht
             if (message.data) {
                 $cookies.put('openId', message.data);
                 layer.msg('登录成功', {time: 3000, icon:1})
+
                 setTimeout(function () {
                     window.location = '#/classify';
                     $('#nav > li').removeClass('active')
@@ -76,13 +89,20 @@ app.register.controller('loginCtrl', function ($scope, $rootScope, $cookies, $ht
         };
         ws.onclose = function(evt){
             if (!$scope.isLogin) {
-                layer.msg('请求超时, 正在重新生成二维码！', {time: 3000, icon:2});
-                getCode();
+                layer.msg('请求超时！', {time: 3000, icon:2});
+                $scope.isShowLayer = true;
+                $scope.$apply();
             }
         };
         ws.onerror = function(evt){
             layer.msg('登录失败，请重新登录！', {time: 3000, icon:2});
-            getCode();
+            $scope.isShowLayer = true;
+            $scope.$apply();
         };
     }
+
+    $scope.reload = function () {
+        getCode();
+    }
+
 })

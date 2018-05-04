@@ -1,6 +1,6 @@
 /* 公用样式 */
 * { margin: 0; padding: 0; }
-body { box-sizing: border-box; font-size: 14px; }
+body { box-sizing: border-box; font-size: 14px; overflow: hidden; }
 a { cursor: pointer !important; }
 a:hover { text-decoration: none; }
 
@@ -61,7 +61,7 @@ a:hover { text-decoration: none; }
 
 /* header */
 .header {
-  background-color: #337ab7;
+  background-color: #192549;
   color: #fff;
 }
 .header a,
@@ -172,6 +172,7 @@ a:hover { text-decoration: none; }
   background-size: 100% 47%;
 }
 .login .login-border {
+  position: relative;
   padding: 20px;
   border: 1px solid #aaa;
   border-radius: 3px;
@@ -183,6 +184,19 @@ a:hover { text-decoration: none; }
 .login img {
   width: 250px;
   height: 250px;
+}
+.login .login-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 310px;
+  background: rgba(192, 193, 196, .98);
+}
+.login .login-layer a {
+  font-size: 16px;
+  color: #c12e2a;
+  margin-top: 10px;
 }
 
 /* 主体部分 */
@@ -218,7 +232,7 @@ a:hover { text-decoration: none; }
   outline: none;
 }
 .con-main .down-list {
-  max-height: 300px;
+  max-height: 200px;
   overflow-y: auto;
 }
 .con-main .layer-select {
@@ -388,4 +402,7 @@ a:hover { text-decoration: none; }
 }
 .uib-datepicker-popup table {
   margin-top: 10px;
+}
+.dropdown-menu {
+  top: 35px;
 }

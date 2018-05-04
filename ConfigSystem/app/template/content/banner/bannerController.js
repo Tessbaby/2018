@@ -2,6 +2,7 @@
  * Created by Administrator on 2018/1/29.
  */
 app.register.controller('bannerCtrl', function ($rootScope, $scope, $http) {
+    layer.closeAll();
     var height = $(window).height() - 160;
     $('.con-main').height(height);
     $rootScope.checkIn()//验证
@@ -9,7 +10,7 @@ app.register.controller('bannerCtrl', function ($rootScope, $scope, $http) {
     // 获取表格
     function getTable () {
         layer.load(1, {shade: [0.2,'#000']}); // loading
-        $http.post($rootScope.default.dPath + '8061/benner/query/list/all', {})
+        $http.post($rootScope.setPath(8061) + '/benner/query/list/admin/all', {})
             .success(function (data) {
                 $scope.tableList = data;
                 $scope.newArr = [];
@@ -25,7 +26,7 @@ app.register.controller('bannerCtrl', function ($rootScope, $scope, $http) {
 
     // 发布
     $scope.releaseBanner = function (id) {
-        $http.post($rootScope.default.dPath + '8061/benner/release?id=' + id, {})
+        $http.post($rootScope.setPath(8061) + '/benner/release?id=' + id, {})
             .success(function (data) {
                 if(data == 0) {
                     layer.msg('发布成功', {time: 3000, icon:1});
@@ -50,7 +51,7 @@ app.register.controller('bannerCtrl', function ($rootScope, $scope, $http) {
         if (id) {
             $scope.bennerRelease = release; // 用于保存时
             $scope.platformBennerId = id; // 用于保存时
-            $http.post($rootScope.default.dPath + '8061/benner/query/list?id=' + id, {})
+            $http.post($rootScope.setPath(8061) + '/benner/query/list?id=' + id, {})
                 .success(function (data) {
                     $scope.beforeBennerGoodList = angular.copy(data.platformBennerGoodList); // 用作比对编辑时删除的原有数据
                     $scope.platformBennerGoodList = angular.copy(data.platformBennerGoodList);
@@ -93,7 +94,7 @@ app.register.controller('bannerCtrl', function ($rootScope, $scope, $http) {
     $scope.platformBennerGoodList = [];
     $scope.wareCode = '';
     $scope.getWare = function () {
-        $http.post($rootScope.default.dPath + '8096/goods/activity/query/code/?code=' + $scope.wareCode, {})
+        $http.post($rootScope.setPath(8096) + '/goods/activity/query/code/?code=' + $scope.wareCode, {})
             .success(function (data) {
                 if(data) {
                     //var _data = angular.copy(data);
@@ -149,7 +150,7 @@ app.register.controller('bannerCtrl', function ($rootScope, $scope, $http) {
         }
 
         var url = '';
-        url = $scope.platformBennerId ? $rootScope.default.dPath + '8061/benner/edit' : $rootScope.default.dPath + '8061/benner/add';
+        url = $scope.platformBennerId ? $rootScope.setPath(8061) + '/benner/edit' : $rootScope.setPath(8061) + '/benner/add';
         var obj = {};
         var param = {};
         param.bennerRelease = $scope.bennerRelease;
@@ -157,6 +158,7 @@ app.register.controller('bannerCtrl', function ($rootScope, $scope, $http) {
         param.titleImg = $scope.img.titleImg;
         param.topImg = $scope.img.topImg;
         param.platformBennerGoodList = [];
+        param.title = $scope.title;
         //param.delGoodList = [];
 
         if ($scope.platformBennerId) { // 编辑时判断
@@ -209,7 +211,7 @@ app.register.controller('bannerCtrl', function ($rootScope, $scope, $http) {
 
     // 删除
     $scope.delBanner = function (id) {
-        $http.post($rootScope.default.dPath + '8061/benner/del?id=' + id,{})
+        $http.post($rootScope.setPath(8061) + '/benner/del?id=' + id,{})
             .success(function (data) {
                 layer.closeAll();
                 if (data == 0) {
@@ -245,7 +247,7 @@ app.register.controller('bannerCtrl', function ($rootScope, $scope, $http) {
             var image = new Image();
             image.src = e.target.result;
             image.onload = function () {
-                if (this.width == 414 && this.height == 220) {
+                if (this.width == 700 && this.height == 372) { //414*220
                     var imgFileName = files[0].name;
                     var fileName = '';
                     $scope.imgFileNameTop = imgFileName;
@@ -297,7 +299,7 @@ app.register.controller('bannerCtrl', function ($rootScope, $scope, $http) {
             var image = new Image();
             image.src = e.target.result;
             image.onload = function () {
-                if (this.width == 414 && this.height == 220) {
+                if (this.width == 700 && this.height == 372) {
                     
                     var imgFileName = files[0].name;
                     var fileName = '';
@@ -358,7 +360,7 @@ app.register.controller('bannerCtrl', function ($rootScope, $scope, $http) {
                 var image = new Image();
                 image.src = e.target.result;
                 image.onload = function () {
-                    if (this.width == 414 && this.height == 220) {
+                    if (this.width == 700 && this.height == 372) {
                         layer.load(1, {shade: [0.2,'#000']}); // loading
                         var imgFileName = files[0].name;
                         var fileName = '';
@@ -395,7 +397,7 @@ app.register.controller('bannerCtrl', function ($rootScope, $scope, $http) {
                     titleImg: $scope.reloadImg,
                     id: $scope.reloadId
                 }
-                $http.post($rootScope.default.dPath + '8061/benner/upload/img', param)
+                $http.post($rootScope.setPath(8061) + '/benner/upload/img', param)
                     .success(function (data) {
                         layer.closeAll();
                         if (data == 0) {

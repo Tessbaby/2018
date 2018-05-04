@@ -1,136 +1,117 @@
 'use strict';
+var app = angular.module('myApp', ['ngRoute', 'ngCookies', 'ui.bootstrap']).config(['$locationProvider', '$routeProvider', '$httpProvider', '$controllerProvider', function($locationProvider, $routeProvider, $httpProvider, $controllerProvider) {
+    $httpProvider.defaults.headers.post = {"content-type": "application/json"}
+    app.register = {
+        controller: $controllerProvider.register, 
+    };
 
-// Declare app level module which depends on views, and components
-var app = angular.module('myApp', ['ngRoute', 'ngCookies', 'ui.bootstrap'])
-    .config(['$locationProvider', '$routeProvider', '$httpProvider', '$controllerProvider',
-        function($locationProvider, $routeProvider, $httpProvider, $controllerProvider) {
-
-            $httpProvider.defaults.headers.post = {"content-type": "application/json"}
-
-            app.register = {
-                controller: $controllerProvider.register, // 注册controller
-                /*directive: $compileProvider.directive,
-                filter: $filterProvider.register,
-                factory: $provide.factory,
-                service: $provide.service*/
-            };
-
-            app.asyncjs = function (js) { // 加载js
-                return ["$q", "$route", "$rootScope", function ($q, $route, $rootScope) {
-                    var deferred = $q.defer();
-                    var dependencies = js;
-                    if (Array.isArray(dependencies)) {
-                        for (var i = 0; i < dependencies.length; i++) {
-                            dependencies[i];
-                        }
-                    } else {
-                        dependencies
-                    }
-                    $script(dependencies, function () {
-                        $rootScope.$apply(function () {
-                            deferred.resolve();
-                        });
-                    });
-                    return deferred.promise;
-                }];
+    app.asyncjs = function (js) { 
+        return ["$q", "$route", "$rootScope", function ($q, $route, $rootScope) {
+            var deferred = $q.defer();
+            var dependencies = js;
+            if (Array.isArray(dependencies)) {
+                for (var i = 0; i < dependencies.length; i++) {
+                    dependencies[i];
+                }
+            } else {
+                dependencies
             }
-
-            $routeProvider.otherwise({redirectTo: '/login'})
-                .when('/login', {
-                    templateUrl: 'template/content/login/login.html',
-                    resolve: {
-                        load: app.asyncjs('template/content/login/loginController.js')
-                    }
-                })
-                .when('/index', {
-                    templateUrl: 'template/content/main.html'
-                })
-                .when('/shop', {
-                    templateUrl: 'template/content/shop/shop.html',
-                    resolve: {
-                        load: app.asyncjs('template/content/shop/shopController.js')
-                    }
-                })
-                .when('/classify', {
-                    templateUrl: 'template/content/classify/classify.html',
-                    resolve: {
-                        load: app.asyncjs('template/content/classify/classifyController.js')
-                    }
-                })
-                .when('/waresPatrol', {
-                    templateUrl: 'template/content/waresPatrol/waresPatrol.html',
-                    resolve: {
-                        load: app.asyncjs('template/content/waresPatrol/waresPatrolController.js')
-                    }
-                })
-                .when('/ticketCenter', {
-                    templateUrl: 'template/content/ticketCenter/ticketCenter.html',
-                    resolve: {
-                        load: app.asyncjs('template/content/ticketCenter/ticketCenterController.js')
-                    }
-                })
-                .when('/banner', {
-                    templateUrl: 'template/content/banner/banner.html',
-                    resolve: {
-                        load: app.asyncjs('template/content/banner/bannerController.js')
-                    }
-                })
-                .when('/order', {
-                    templateUrl: 'template/content/order/order.html',
-                    resolve: {
-                        load: app.asyncjs('template/content/order/orderController.js')
-                    }
-                })
-                .when('/manage', {
-                    templateUrl: 'template/content/manage/manage.html',
-                    resolve: {
-                        load: app.asyncjs('template/content/manage/manageController.js')
-                    }
+            $script(dependencies, function () {
+                $rootScope.$apply(function () {
+                    deferred.resolve();
                 });
-        }
-    ]);
-
-/* 页面加载即调用 */
-app.run(['$rootScope', '$location', '$rootElement', '$http', '$cookies', function ($rootScope, $location, $rootElement, $http, $cookies) {
-
-    $rootScope.personalMsg = ''; // 用于存储用户信息
-    $rootScope.headers = { // 设置headers
-        withCredentials: true,//跨域
-        headers: {
-            'content-type': 'application/json'
-        }//跨域
+            });
+            return deferred.promise;
+        }];
     }
 
-    // 用于验证是否超时
+    $routeProvider.otherwise({redirectTo: '/login'})
+        .when('/login', {
+            templateUrl: 'template/content/login/login.html',
+            resolve: {
+                load: app.asyncjs('template/content/login/loginController.js')
+            }
+        })
+        
+        .when('/shop', {
+            templateUrl: 'template/content/shop/shop.html',
+            resolve: {
+                load: app.asyncjs('template/content/shop/shopController.js')
+            }
+        })
+        .when('/classify', {
+            templateUrl: 'template/content/classify/classify.html',
+            resolve: {
+                load: app.asyncjs('template/content/classify/classifyController.js')
+            }
+        })
+        .when('/waresPatrol', {
+            templateUrl: 'template/content/waresPatrol/waresPatrol.html',
+            resolve: {
+                load: app.asyncjs('template/content/waresPatrol/waresPatrolController.js')
+            }
+        })
+        .when('/ticketCenter', {
+            templateUrl: 'template/content/ticketCenter/ticketCenter.html',
+            resolve: {
+                load: app.asyncjs('template/content/ticketCenter/ticketCenterController.js')
+            }
+        })
+        .when('/banner', {
+            templateUrl: 'template/content/banner/banner.html',
+            resolve: {
+                load: app.asyncjs('template/content/banner/bannerController.js')
+            }
+        })
+        .when('/order', {
+            templateUrl: 'template/content/order/order.html',
+            resolve: {
+                load: app.asyncjs('template/content/order/orderController.js')
+            }
+        })
+        .when('/manage', {
+            templateUrl: 'template/content/manage/manage.html',
+            resolve: {
+                load: app.asyncjs('template/content/manage/manageController.js')
+            }
+        });
+    }
+]);
+
+app.run(['$rootScope', '$location', '$rootElement', '$http', '$cookies', function ($rootScope, $location, $rootElement, $http, $cookies) {
+    $rootScope.headers = {
+        headers: {
+            'content-type': 'application/json',
+        }
+    };
+
     $rootScope.wxConnect = '';
     $rootScope.checkIn = function () {
         var uuid = $cookies.get('uuid');
         $.ajax({
-            url: $rootScope.default.dPath + '8066/auth/check?sequence=' + uuid,
+            url: $rootScope.setPath(8066) + '/auth/check?sequence=' + uuid,
             method: 'get',
-            //data: $rootScope.wxConnect,
-            withCredentials: true,//跨域
+            // 是否跨域
+            withCredentials: true,
             headers: {
                 'content-type': 'application/json'
             },
             success: function (data) {
-                /*if(data == 'false') {
+                if(data == 'false') {
                     layer.msg('登录超时！', {time: 3000, icon:2});
                     setTimeout(function () {
                         window.location = '#/login';
                     }, 1000);
                 } else {
-                    // 判断是否有用户信息
-                    if ($rootScope.personalMsg == '') {
-                        var openId = $cookies.get('openId');
-                        $http.post($rootScope.default.dPath + '8062/admin/check?openid=' + openId, {})
-                            .success(function (data) {
-                                $rootScope.personalMsg = data;
-                            }).error(function (err) {
-                                layer.msg('获取用户信息失败', {time: 3000, icon:2});
-                            })
-                    }
-                }*/
+                    
+                    var openId = $cookies.get('openId');
+                    $http.post($rootScope.setPath(8062) + '/admin/check?openid=' + openId, {})
+                        .success(function (data) {
+                            $rootScope.personalMsg = data;
+                        }).error(function (err) {
+                            layer.msg('获取用户信息失败', {time: 3000, icon:2});
+                        })
+                }
             },
             error: function () {
                 window.location = '#/login';
@@ -140,7 +121,7 @@ app.run(['$rootScope', '$location', '$rootElement', '$http', '$cookies', functio
     $rootScope.logout = function () {
         var uuid = $cookies.get('uuid');
         $.ajax({
-            url: $rootScope.default.dPath + '8066/auth/exit?sequence=' + uuid,
+            url: $rootScope.setPath(8066) + '/auth/exit?sequence=' + uuid,
             method: 'get',
             headers: {
                 "content-type": "text/plain"
@@ -154,69 +135,65 @@ app.run(['$rootScope', '$location', '$rootElement', '$http', '$cookies', functio
         })
     }
 
-    /* 设置默认路径 */
+    $rootScope.setPath = function (port) {
+        var basePath = 'http://192.168.0.113:' + port;
+        var basePath2 = 'http://api.haochepaidui.com';
+        return basePath2;
+    }
     $rootScope.default = {};
     $rootScope.default.Img = '/components/Image/default.png';
-    $rootScope.default.dPath = 'http://192.168.1.200:'; // 设置接口域名端口
-    $rootScope.default.yPath = 'rubusteam.xicp.io'; // 设置域名 验证用
-    $rootScope.default.appid = 'wx63d033e879c445f2'; // 设置appid 验证用
-     $rootScope.default.ws = 'ws://192.168.1.200:8443/websockets' // 长链接
-
-    $rootScope.default.imgPath = $rootScope.default.dPath + '9070/img'; // 图片上传接口
-    $rootScope.default.ClassifyPath = $rootScope.default.dPath + '8060/goods/class/father/downlist'; // 获取一级分类下拉菜单接口
-    $rootScope.default.ClassifyPath2 = $rootScope.default.dPath + '8060/goods/class/back/root/downlist' // 获取二级分类下拉菜单接口
-    $rootScope.default.ClassifyPath3 = $rootScope.default.dPath + '8060/goods/class/back/goodsclass/downlist'; // 获取3级分类下拉菜单接口
-    $rootScope.default.brandPath = $rootScope.default.dPath + '8070/shop/brand/list'; // 获取品牌下拉菜单接口
-
-    /* 菜单切换联动顶部菜单效果 */
+    $rootScope.default.yPath = 'api.haochepaidui.com';
+    $rootScope.default.appid = 'wx5def75f7381ab95b';
+    $rootScope.default.ws = 'ws://sockets.haochepaidui.com:8443/websockets' // 长链接 线上
+    $rootScope.default.imgPath = $rootScope.setPath(9070) + '/img'; 
+    $rootScope.default.ClassifyPath = $rootScope.setPath(8060) + '/goods/class/father/downlist';
+    $rootScope.default.ClassifyPath2 = $rootScope.setPath(8060) + '/goods/class/back/root/downlist';
+    $rootScope.default.ClassifyPath3 = $rootScope.setPath(8060) + '/goods/class/back/goodsclass/downlist';
+    $rootScope.default.brandPath = $rootScope.setPath(8070) + '/shop/brand/list';
     var _path;
     $rootScope.breadList = {};
-    $rootScope.breadList.list = []; // 保存点击过的菜单
-    $rootScope.breadList.current = ''; // 当前页面
+    $rootScope.breadList.list = [];
+    $rootScope.breadList.current = '';
     $rootScope.$on('$routeChangeSuccess', function(evt, current, previous) {
-        var _arr = $rootScope.breadList.list,
-            currentObj,
-            isIn = false; // 是否已经存在
-
+        var _arr = $rootScope.breadList.list, currentObj, isIn = false;
         _path = '#' + $location.path();
         $rootScope.breadList.current = _path;
-
-        if (previous && previous.$$route.originalPath != '/login') { // 如果不是刚进站
-            angular.forEach(_arr, function (obj1, index) {
-                if(obj1.permission == _path) {
+        if (previous && previous.$$route.originalPath != '/login') {
+            angular.forEach(_arr, function(obj1, index) {
+                if (obj1.permission == _path) {
                     isIn = true;
-                    return;
+                    return
                 }
             });
             if (!isIn) {
                 currentObj = newObj(_path);
-                currentObj && _arr.push(currentObj);
+                currentObj && _arr.push(currentObj)
             }
         } else {
             currentObj = newObj(_path)
             currentObj && _arr.push(currentObj);
         }
-        //console.log(_arr)
+        
         function newObj(a) {
             var newArr;
             angular.forEach($rootScope.navList, function (obj, index) {
                 if (obj.children.length != 0 ) {
                     obj = obj.children;
                 }
-                //console.log(obj)
+                
                 if(a == obj.permission) {
                     newArr = {
                         name: obj.name,
                         id: obj.id,
                         permission: obj.permission
-                    };
+                    }
                 }
             });
-            return newArr;
+            return newArr
         }
     });
 
-    /* 获取下拉框选项，可随时调用 */
+    
     $rootScope.getCheckboxVal = function (value) {
         return value;
     }
@@ -226,15 +203,15 @@ app.run(['$rootScope', '$location', '$rootElement', '$http', '$cookies', functio
         return defaults.concat(transform);
     }
 
-    /* 获取表格数据 */
     $rootScope.table = {};
-    $rootScope.searchTable = function (_url) {
-        // layer.load(1, {shade: [0.2,'#000']}); // loading
+    $rootScope.option = {};
+    $rootScope.searchTable = function (_port, _url) {
+        layer.load(1, {shade: [0.2,'#000']}); 
         $rootScope.table.tableList = [];
         $rootScope.table.pageInfo = {};
         $rootScope.table.pageInfo.number = 0;
         var url = '';
-        url = $rootScope.default.dPath + _url;
+        url = $rootScope.setPath(_port) + _url;
         $.ajax({
             url: url,
             method: 'get',
@@ -242,22 +219,26 @@ app.run(['$rootScope', '$location', '$rootElement', '$http', '$cookies', functio
                 "content-type": "application/json"
             },
             success: function (result) {
-                $rootScope.table.tableList = result.content ?  result.content : [];
-                $rootScope.table.pageInfo = {
-                    number: result.number + 1,
-                    totalPages: args(result.totalPages)
-                };
+                $rootScope.table.tableList = result.content ? result.content : [];
+                $rootScope.option = {
+                    curr: result.number + 1,  //当前页数
+                    all: result.totalPages,  //总页数
+                    count: 10,  //最多显示的页数，默认为10
+                    //点击页数的回调函数，参数page为点击的页数
+                    click: function (page) {
+                        //这里可以写跳转到某个页面等...
+                    }
+                }
                 $rootScope.$apply();
                 layer.closeAll();
-                //console.log($rootScope.table.tableList)
+                
             },
             error: function (err) {
-                //layer.alert(err);
+                
             }
         })
     }
 
-    // 创建数组
     function args(num) {
         var arr = [];
         for(var i = 1; i < num + 1; i++) {
@@ -266,7 +247,7 @@ app.run(['$rootScope', '$location', '$rootElement', '$http', '$cookies', functio
         return arr;
     }
 
-    // 对比时间
+    
     $rootScope.compareDate = function (date) {
         var today = Date.parse(new Date());
         var _date = Date.parse(new Date(date));
@@ -280,22 +261,16 @@ app.run(['$rootScope', '$location', '$rootElement', '$http', '$cookies', functio
 
 }])
 
-/* 左侧导航栏控制器 */
+
 app.controller('navCtrl', function ($scope, $http, $rootScope, $location) {
     $rootScope.navList = [
-        //{
-        //    permission: '#/index',
-        //    name: '首页',
-        //    id: 1,
-        //    children: []
-        //},
         {
             permission: '#/classify',
             name: '分类',
             id: 2,
             icon: 'iconfont icon-fenlei',
             children: [
-                /*{permission: '#/classify', name: '分类1', id: 2, children: []}*/
+                
             ]
         },
         {
@@ -312,13 +287,13 @@ app.controller('navCtrl', function ($scope, $http, $rootScope, $location) {
             icon: 'iconfont icon-shangpin',
             children: []
         },
-        {
+        /*{
             permission: '#/ticketCenter',
             name: '卡券中心',
             id: 5,
             icon: 'iconfont icon-youhuiquan',
             children: []
-        },
+        },*/
         {
             permission: '#/banner',
             name: '活动banner',
@@ -349,29 +324,30 @@ app.controller('navCtrl', function ($scope, $http, $rootScope, $location) {
     })
 })
 
-/* 左侧菜单栏 */
+
 app.directive('uiNav', function() {
     return {
         restrict: 'AC',
         link: function(scope, el, attr) {
             el.on('click', 'a', function(e) {
                 var _this = $(this);
-
-                _this.parent().siblings( ".active" ).toggleClass('active');
-                _this.parent().addClass('active');
-                _this.next().is('ul') &&  _this.parent().toggleClass('active') &&  e.preventDefault();
+                if (!$(this).parent().hasClass('nav-msg')) {
+                    _this.parent().siblings( ".active" ).toggleClass('active');
+                    _this.parent().addClass('active');
+                    _this.next().is('ul') &&  _this.parent().toggleClass('active') &&  e.preventDefault();
+                }
             });
         }
     };
 })
-/* 顶部面包屑导航 */
+
 app.directive('eleBread', function ($rootScope, $location) {
     return {
         restrict : 'EA',
         replace : true,
         transclude : true,
         template: '<div class=""><ul class="nav nav-tabs ele-bread">'
-                    /*+ '<li ng-repeat="li in breadList.list" ng-class="{ active: breadList.current == li.permission }" data-id="{{ li.id }}"><a ng-href="{{ li.permission }}">{{ li.name }}<i class="fa fa-close"></i></a></li>'*/
+                    
         + '<li ng-repeat="li in breadList.list" ng-class="{ active: breadList.current == li.permission }" data-id="{{ li.id }}" style="position: relative;">'
         + '<a href="javascript:;" ng-href="{{ li.permission }}" style="padding-right: 30px;">{{ li.name }}</a>'
         + '<i class="iconfont icon-close" style="position: absolute; top: 15px; right: 10px; cursor: pointer; font-size: 16px;"></i>'
@@ -387,9 +363,7 @@ app.directive('eleBread', function ($rootScope, $location) {
                     var nextHref = '';
                     var dataId = _this.parent().attr('data-id');
                     var thisArr = [];
-
                     var as = $('#nav > li > a');
-
                     if (_this.parent().hasClass('active')) {
                         $('#nav > li').removeClass('active');
                         if ($(prevLi).length > 0) {
@@ -424,33 +398,86 @@ app.directive('eleBread', function ($rootScope, $location) {
 
     }
 });
-/* 底部分页 */
-app.directive('pageNations', function () {
+
+app.directive('myPagination', function () {
     return {
-        restrict : 'E',
+        restrict : 'EA',
         replace : true,
-        transclude : true,
+        scope: {
+            option: '=pageOption'
+        },
         template: '<div class="footer">'
-                    + '<nav aria-label="Page navigation">'
-                    + '<ul class="pagination pull-right">'
-                    + '<li>'
-                    + '<a href="javascript:;" aria-label="Previous" ng-click="goPrePage()">'
-                    + '<span aria-hidden="true">&laquo;</span>'
-                    + '</a>'
-                    + '</li>'
-                    + '<li ng-class="{true : ' + "'active'" + '}[table.pageInfo.number == $index + 1]" ng-repeat="i in table.pageInfo.totalPages track by $index"><a href="javascript:;" ng-click="goPage($index + 1)">{{ $index + 1 }}</a></li>'
-                    + '<li>'
-                    + '<a href="javascript:;" aria-label="Next" ng-click="goNextPage()">'
-                    + '<span aria-hidden="true">&raquo;</span>'
-                    + '</a>'
-                    + '</li>'
-                    + '</ul>'
-                    + '</nav>'
-                    + '</div>'
+                + '<nav aria-label="Page navigation">'
+                + '<ul class="pagination pull-right">'
+                + '<li ng-class="{true : ' + "'active'" + '}[option.curr == p]" ng-repeat="p in page" ng-click="pageClick(p)">'
+                + '<a href="javascript:;">{{ p }}</a>'
+                + '</li>'
+                + '</ul>'
+                + '</nav>'
+                + '</div>',
+        controller: function ($scope, $rootScope){
+            if (!$scope.option.curr || isNaN($scope.option.curr) || $scope.option.curr < 1) $scope.option.curr = 1;
+            if (!$scope.option.all || isNaN($scope.option.all) || $scope.option.all < 1) $scope.option.all = 1;
+            if ($scope.option.curr > $scope.option.all) $scope.option.curr = $scope.option.all;
+            if (!$scope.option.count || isNaN($scope.option.count) || $scope.option.count < 1) $scope.option.count = 10;
+
+            //得到显示页数的数组
+            $scope.page = getRange($scope.option.curr, $scope.option.all, $scope.option.count);
+            //绑定点击事件
+            $scope.pageClick = function (page) {
+                // console.log(page)
+                if (page == '«') {
+                    page = parseInt($scope.option.curr) - 1;
+                } else if (page == '»') {
+                    page = parseInt($scope.option.curr) + 1;
+                }
+                if (page < 1) page = 1;
+                else if (page > $scope.option.all) page = $scope.option.all;
+                //点击相同的页数 不执行点击事件
+                if (page == $scope.option.curr) return;
+                if ($scope.option.click && typeof $scope.option.click === 'function') {
+                    // $scope.option.click(page);
+                    $rootScope.pageClick2(page);
+                    $scope.option.curr = page;
+                    $scope.page = getRange($scope.option.curr, $scope.option.all, $scope.option.count);
+                }
+            };
+
+            //返回页数范围（用来遍历）
+            function getRange(curr, all, count) {
+                //计算显示的页数
+                curr = parseInt(curr);
+                all = parseInt(all);
+                count = parseInt(count);
+                var from = curr - parseInt(count / 2);
+                var to = curr + parseInt(count / 2) + (count % 2) - 1;
+                //显示的页数容处理
+                if (from <= 0) {
+                    from = 1;
+                    to = from + count - 1;
+                    if (to > all) {
+                        to = all;
+                    }
+                }
+                if (to > all) {
+                    to = all;
+                    from = to - count + 1;
+                    if (from <= 0) {
+                        from = 1;
+                    }
+                }
+                var range = [];
+                for (var i = from; i <= to; i++) {
+                    range.push(i);
+                }
+                range.push('»');
+                range.unshift('«');
+                return range;
+            }
+        }
     }
 })
 
-// 配合使用 循环结束后的监听
 app.directive('onFinishRenderFilters', function ($timeout) {
     return {
         restrict: 'A',
@@ -465,12 +492,10 @@ app.directive('onFinishRenderFilters', function ($timeout) {
 });
 
 
-/* 定义get或post请求函数 */
+
 app.factory('httpAjax', function ($rootScope, $cookies, $http, $q) {
     var loadData = {};
     var defer = $q.defer();
-
-    // get 数据
     loadData.getData = function (_url) {
         $http({
             url: _url,
@@ -479,13 +504,13 @@ app.factory('httpAjax', function ($rootScope, $cookies, $http, $q) {
             defer.resolve(response);
         }).error(function () {
             defer.reject(function () {
-                layer.alert('error'); // 这里用来写error时的事件
+                layer.alert('error'); 
             })
         });
         return defer.promise;
     }
 
-    // post 数据
+    
     loadData.postData = function (_url, _data) {
         $http({
             url: _url,
@@ -502,8 +527,3 @@ app.factory('httpAjax', function ($rootScope, $cookies, $http, $q) {
     }
     return loadData;
 })
-
-
-
-
-

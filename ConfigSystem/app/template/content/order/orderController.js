@@ -2,6 +2,7 @@
  * Created by Administrator on 2018/1/29.
  */
 app.register.controller('orderCtrl', function ($rootScope, $scope, $http) {
+    layer.closeAll();
     var height = $(window).height() - 160;
     $('.con-main').height(height);
     $rootScope.checkIn()//验证
@@ -22,16 +23,22 @@ app.register.controller('orderCtrl', function ($rootScope, $scope, $http) {
     $scope.search.brandName = '';
     $scope.search.brandid = '';
     $scope.search.ordercode = '';
+    $scope.search.page = 0;
+
+    $rootScope.pageClick2 = function (page) {
+        $scope.search.page = page;
+        $scope.search.searchFun();
+    }
 
     // 获取表格
-    $rootScope.searchTable('8096/goods/activity/back/order/query?date=&brandid=&ordercode=&page=0');
+    $rootScope.searchTable('8096', '/goods/activity/back/order/query?date=&brandid=&ordercode=&page=0');
     /* 点击查询 */
     $scope.search.searchFun = function () {
         $scope.search.date = angular.element('#date')[0].value;
         //$scope.search.date = $rootScope.compareDate(date);
-        $rootScope.table.pageInfo.number = $rootScope.table.pageInfo.number == 0 ? 0 : $rootScope.table.pageInfo.number - 1
-        $scope.tableUrl = '8096/goods/activity/back/order/query?date=' + $scope.search.date + '&brandid=' + $scope.search.brandid + '&ordercode=' + $scope.search.ordercode + '&page=' + $rootScope.table.pageInfo.number;
-        $rootScope.searchTable($scope.tableUrl);
+        if ($scope.search.date || $scope.search.brandid || $scope.search.ordercode) {$scope.search.page = 0;};
+        $scope.tableUrl = '/goods/activity/back/order/query?date=' + $scope.search.date + '&brandid=' + $scope.search.brandid + '&ordercode=' + $scope.search.ordercode + '&page=' + ($scope.search.page - 1);
+        $rootScope.searchTable('8096', $scope.tableUrl);
     }
 
     // 获取下拉框值
