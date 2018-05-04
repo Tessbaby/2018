@@ -1,0 +1,133 @@
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><span><i class="fa fa-home">&nbsp;</i>数据一览</span></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+
+<div class="wrapper-md content">
+  <!-- 数据显示 -->
+  <div class="wrapper-data">
+    <div class="panel panel-default p-xs">
+    	<div class="row p-xs font18 grey-bg" style="margin: -10px -10px 10px -10px;"><strong>党员情况统计</strong></div>
+    	<div class="row p-m">
+    		<div class="col-md-4" ng-if="hasMemberCount">
+          <div class="border-color m-r-30 p-m row m-l-n">
+            <div class="col-md-5">
+              <img src="res/img/look/memberCount.png" alt="" style="width: 50%"> 
+            </div>
+            <div class="col-md-7 text-center" style="padding-top: 5px">
+              <strong class="font24" ng-bind="infoList.formalUserCount == null ? 0 : infoList.formalUserCount"></strong><br>
+              <span class="font18">党员数量</span>
+            </div>
+          </div>
+    		</div>
+    		<div class="col-md-4" ng-if="hasMemberDev">
+          <div class=" border-color m-r-30 p-m row m-l-n">
+            <div class="col-md-5">
+              <img src="res/img/look/memberDev.png" alt="" style="width: 50%"> 
+            </div>
+            <div class="col-md-7 text-center" style="padding-top: 5px">
+              <strong class="font24" ng-bind="infoList.developUserCount == null ? 0 : infoList.developUserCount"></strong><br>
+              <span class="font18">发展党员数量</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4" ng-if="hasMemberBind">
+          <div class="border-color m-r-30 p-m row m-l-n">
+            <div class="col-md-5">
+              <img src="res/img/look/memberBind.png" alt="" style="width: 50%"> 
+            </div>
+            <div class="col-md-7 text-center" style="padding-top: 5px">
+              <strong class="font24" ng-bind="infoList.bindUserCount == null ? 0 : infoList.bindUserCount"></strong><br>
+              <span class="font18">已绑定数量</span>
+            </div>
+          </div>
+        </div>
+    	</div>
+
+			<div class="row p-xs font18 grey-bg" style="margin: 10px -10px 0px -10px;"><strong>功能使用统计</strong></div>
+			<div class="row p-m">
+    		<div class="col-md-4 p-t-15" ng-if="hasNotice">
+          <div class="border-color m-r-30 p-m row m-l-n">
+            <div class="col-md-5">
+              <img src="res/img/look/notice.png" alt="" style="width: 50%"> 
+            </div>
+            <div class="col-md-7 text-center" style="padding-top: 5px">
+              <strong class="font24" ng-bind="usageList.notice == null ? 0 : usageList.notice"></strong><br>
+              <span class="font18">通知总数</span>
+            </div>
+          </div>
+    		</div>
+    		<div class="col-md-4 p-t-15" ng-if="hasMeeting">
+          <div class=" border-color m-r-30 p-m row m-l-n">
+            <div class="col-md-5">
+              <img src="res/img/look/meeting.png" alt="" style="width: 50%"> 
+            </div>
+            <div class="col-md-7 text-center" style="padding-top: 5px">
+              <strong class="font24" ng-bind="usageList.meeting == null ? 0 : usageList.meeting"></strong><br>
+              <span class="font18">会议总数</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 p-t-15" ng-if="hasStudy">
+          <div class="border-color m-r-30 p-m row m-l-n">
+            <div class="col-md-5">
+              <img src="res/img/look/learn.png" alt="" style="width: 50%"> 
+            </div>
+            <div class="col-md-7 text-center" style="padding-top: 5px">
+              <strong class="font24" ng-bind="usageList.study == null ? 0 : usageList.study"></strong><br>
+              <span class="font18">学分统计</span>
+            </div>
+          </div>
+        </div>
+    		<div class="col-md-4 p-t-15" ng-if="hasReport">
+          <div class="border-color m-r-30 p-m row m-l-n">
+            <div class="col-md-5">
+              <img src="res/img/look/report.png" alt="" style="width: 50%"> 
+            </div>
+            <div class="col-md-7 text-center" style="padding-top: 5px">
+              <strong class="font24" ng-bind="usageList.report == null ? 0 : usageList.report"></strong><br>
+              <span class="font18">计划总结</span>
+            </div>
+          </div>
+    		</div>
+    		<div class="col-md-4 p-t-15" ng-if="hasActivity">
+          <div class=" border-color m-r-30 p-m row m-l-n">
+            <div class="col-md-5">
+              <img src="res/img/look/activity.png" alt="" style="width: 50%"> 
+            </div>
+            <div class="col-md-7 text-center" style="padding-top: 5px">
+              <strong class="font24" ng-bind="usageList.activity == null ? 0 : usageList.activity"></strong><br>
+              <span class="font18">活动总数</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 p-t-15" ng-if="hasQuestion">
+          <div class="border-color m-r-30 p-m row m-l-n">
+            <div class="col-md-5">
+              <img src="res/img/look/vote.png" alt="" style="width: 50%"> 
+            </div>
+            <div class="col-md-7 text-center" style="padding-top: 5px">
+              <strong class="font24" ng-bind="usageList.question == null ? 0 : usageList.question"></strong><br>
+              <span class="font18">投票总数</span>
+            </div>
+          </div>
+        </div>
+    		<div class="col-md-4 p-t-15" ng-if="hasArticle">
+          <div class="border-color m-r-30 p-m row m-l-n">
+            <div class="col-md-5">
+              <img src="res/img/look/article.png" alt="" style="width: 50%"> 
+            </div>
+            <div class="col-md-7 text-center" style="padding-top: 5px">
+              <strong class="font24" ng-bind="usageList.article == null ? 0 : usageList.article"></strong><br>
+              <span class="font18">文章数量</span>
+            </div>
+          </div>
+    		</div>
+    	</div>
+    	
+    </div>
+  </div>
+ </div>

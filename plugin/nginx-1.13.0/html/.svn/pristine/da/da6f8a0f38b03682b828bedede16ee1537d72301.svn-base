@@ -1,0 +1,95 @@
+'use strict';
+
+angular.module('app')
+	.controller('roleListController', [ '$rootScope', '$scope', '$http', '$state','toaster',
+	  function($rootScope, $scope, $http, $state,toaster) {
+	  	$scope.title = '角色管理';
+	  	$scope.parts = {};
+	  	$scope.url = '/iBase4J-SYS-Web/role/read/list';
+	  	$rootScope.pageInfo = [];	  	
+
+	  	$rootScope.search($scope.url, $scope.parts);
+
+	  	//党组织结构设置
+      var setting = {
+        check: {
+          enable: false
+        },
+        data: {
+          key: {
+            id: "id",
+            children: "children",
+            name: "deptName"
+          }
+        },
+        callback: {
+          beforeClick: beforeClick
+        }
+      };
+      //获取选中子级
+      function beforeClick(e, treeId, treeNode) {
+        $scope.parts.deptid = Number(treeId.id);
+        $rootScope.search($scope.url, $scope.parts);
+      }
+      //党组织结构树
+      $.ajax({
+        type: 'PUT',
+        dataType: 'json',
+        contentType: 'application/json;charset=UTF-8',
+        url: '/iBase4J-SYS-Web/dept/read/treelist',
+        data: ''
+      }).then(function (result) {
+        $scope.loading = false;
+        if (result.httpCode == 200) {
+          // console.log(result);
+          var zNodes = result.dept;
+          var treeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+          treeObj.expandAll(true);
+        } else {
+          toaster.clear('*');
+	        toaster.pop('error', '', result.msg);
+        }
+        $scope.$apply();
+      });
+
+
+      $scope.clearSearch = function () {
+        $scope.parts.keyword = null;
+        $rootScope.search($scope.url, $scope.parts);
+      }
+
+      // 翻页 - 排序翻页数据与此一致
+      $scope.pagination = function (page) {
+        $scope.parts.pageNum = page;
+        $scope.parts.asc = $rootScope.changeAsc();
+        $rootScope.search($scope.url, $scope.parts);
+      };
+
+      // 删除暂无接口
+      $scope.cancel = function(id) {
+      	if(confirm('确认删除吗？')) {
+      		$.ajax({
+		        type: 'delete',
+		        dataType: 'json',
+		        contentType: 'application/json;charset=UTF-8',
+		        url: '/iBase4J-SYS-Web/role',
+		        data: angular.toJson({roleid: Number(id)})
+		      }).then(function (result) {
+		        if (result.httpCode == 200) {
+		        	toaster.clear('*');
+		        	toaster.pop('success', '删除成功');
+		        	var infoLength = $rootScope.pageInfo.data.length - 1;
+							if (infoLength == 0 && $scope.parts.pageNum != 1) {
+								$scope.parts.pageNum = $scope.parts.pageNum - 1;
+							}
+							$rootScope.search($scope.url, $scope.parts);
+		        } else {
+		        	toaster.clear('*');
+			        toaster.pop('error', '', result.msg);
+		        }
+		        $scope.$apply();
+		      })
+      	}
+      	
+      }
+	  }])

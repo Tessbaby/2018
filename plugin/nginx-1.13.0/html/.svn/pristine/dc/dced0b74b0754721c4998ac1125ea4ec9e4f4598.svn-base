@@ -1,0 +1,155 @@
+<style>
+    .tree-select {
+        width: 220px;
+        background-color: #fff !important;
+        color: #34495e !important;
+    }
+</style>
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="src/app/sys/partyners/partyInfoAddController.js"></script>
+<div ng-controller="partyInfoAddController">
+
+    <!--党籍信息模块-->
+
+    <div class="wrapper-md content m-n">
+        <div class="panel panel-default">
+            <!-- 头部 -->
+            <div class="panel-heading font-bold">
+                {{title}}
+    			<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.partyner"><i class="text-md fa fa-times text-muted"></i></a>
+            </div>
+            <!--表单-->
+            <div class="panel-body">
+                <form class="form-horizontal" name="organize_form">
+                    <div class="form-group m-b-md m-t-sm font-bold" style="font-size: 20px;">
+                        <span class="col-lg-1 col-sm-1 text-right">姓名</span>
+                        <span class="col-sm-2">二麻子</span>
+                        <span class="col-lg-1 col-sm-1 text-right">党组织：</span>
+                        <span class="col-sm-4">法院党总支/第一党支部/第一党小组</span>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="deptId"><span class="text-danger wrapper-sm">*</span>入党时所在支部</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control tree-select" name="deptId"  ng-model="model.deptText"  id="deptId" ng-click="showMenu()" readonly>
+                            <input id="treeids" type="hidden">
+                            <div id="depContent" class="depContent" style="display: none; position: absolute; z-index: 10">
+                                <ul id="depTree" class="ztree"></ul>
+                            </div>
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                        <label class="col-lg-2 col-sm-3 control-label" for="">加入日期</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control r-inline add-date laydate-icon" readonly name="joinDate" id="joinDate" ng-model="model.joinDate" placeholder="请选择日期">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="deptId">入党时所在支部名称</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" name="joinDeptName" placeholder="入党时所在支部名称" ng-model="model.joinDeptName">
+
+                            <span class="help-block m-b-none"></span>
+                        </div>
+
+                        <label class="col-lg-2 col-sm-3 control-label" for="">加入中共组织类型</label>
+                        <div class="col-sm-3">
+                            <select class="form-control add-select" ng-model="model.joinPartyLevel">
+                                <option value="">请选择</option>
+                                <option ng-repeat="item in PartyDropdowmList.joinPartyLevelList" value="{{item.code}}">{{item.codeText}}</option>
+
+                            </select>
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+
+                        <label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>转正日期</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control r-inline add-date laydate-icon" readonly name="regularDate" id="regularDate" ng-model="model.regularDate" placeholder="请选择日期">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                        <label class="col-lg-2 col-sm-3 control-label" for="remark3"><span class="text-danger wrapper-sm">*</span>转正情况</label>
+                        <div class="col-sm-3">
+                            <select class="form-control add-select" ng-model="model.regularRemark">
+                                <option value="">请选择</option>
+                                <option ng-repeat="item in PartyDropdowmList.regularRemarkList" value="{{item.code}}">{{item.codeText}}</option>
+                            </select>
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="sex">离开中共日期A</label>
+                        <div class="col-sm-2">
+
+                            <input type="text" class="form-control r-inline add-date laydate-icon" readonly name="leavePartyDate" id="leavePartyDate" ng-model="model.leavePartyDate" placeholder="请选择日期">
+                            <span class="help-block m-b-none"></span>
+
+                        </div>
+
+                        <label class="col-lg-2 col-sm-3 control-label" for="unitDuty">出党原因</label>
+                        <div class="col-sm-3">
+                            <select class="form-control add-select" ng-model="model.leaveReason">
+                                <option value="">请选择</option>
+                                <option ng-repeat="item in PartyDropdowmList.leaveReasonList" value="{{item.code}}">{{item.codeText}}</option>
+                            </select>
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="deptId">离开党组织类型</label>
+                        <div class="col-sm-2">
+                            <select class="form-control add-select" ng-model="model.leavePartyLevel">
+                                <option value="">请选择</option>
+                                <option ng-repeat="item in PartyDropdowmList.leavePartyLevelList" value="{{item.code}}">{{item.codeText}}</option>
+                            </select>
+                            <span class="help-block m-b-none"></span>
+                        </div>
+
+                        <label class="col-lg-2 col-sm-3 control-label" for="">参加组织生活情况</label>
+                        <div class="col-sm-3">
+                            <select class="form-control add-select" ng-model="model.activityRenark">
+                                <option value="">请选择</option>
+                                <option ng-repeat="item in PartyDropdowmList.activityRemarkList" value="{{item.code}}">{{item.codeText}}</option>
+                            </select>
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="birthDay">恢复党籍日期</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control r-inline add-date laydate-icon" readonly name="recoveryPartyDate" id="recoveryPartyDate" ng-model="model.recoveryPartyDate" placeholder="请选择日期">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+
+                        <label class="col-lg-2 col-sm-3 control-label" for="">党龄</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="unitDuty" placeholder="请输入出党原因" ng-model="model.leaveReason">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group text-center">
+                        <button class="btn btn-primary m-r-20 p-lr-20" id="submit" ng-disabled="btnState">{{btnInfo}}</button>
+                        <button type="button" class="btn btn-default p-lr-20" id="Button1" ng-click="cancel()">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,95 @@
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<style type="text/css">
+    .bread-crumb, .content { margin-top: 0 !important; }
+</style>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><a ui-sref="main.partyner"><i class="fa fa-home">&nbsp;</i>党员</a></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+
+<!-- 加载提醒 -->
+<div ng-show="loading" class="text-center m-t-md text-lg"><i class="fa fa-spin fa-spinner"></i>数据加载中...</div>
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+    <!-- 数据显示 -->
+    <div class="wrapper-data">
+        <div class="panel panel-default" style="margin-top: 60px;">
+            <!-- 头部 -->
+            <div class="panel-heading clearfix">
+
+                <a class="btn btn-info pull-right m-l-xs" ui-sref="main.develop.applyForm{userId:0}">
+                    <span class="" style="position: relative; top: 1px;"><i class="fa fa-plus text-md"></i></span>
+                    添加
+                </a>
+
+
+                <div class="w-lg">
+                    <form ng-submit="search(url, param)" class="ng-pristine ng-valid">
+                        <div class="input-group search-box">
+                            <input type="text" class="form-control" ng-model="param.keyword" placeholder="用户名、联系方式">
+                            <i ng-show="user.keyword" ng-click="clearSearch()" class="fa fa-times-circle text-muted search-clear"></i>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- 数据表格 -->
+            <div class="row org-m-t20 m-l-none m-r-none">
+                <div class="col-md-2 m-r-50">
+                    <div style="border: 1px solid #000; border-bottom: 0; width: 220px; margin-bottom: -10px; background: #f0f6e4; padding: 10px 15px;">
+                        <span>组织信息</span>
+                        <!-- <input type="checkbox" id="sy" class="checkbox first inline" /><span>包含下级</span> -->
+                    </div>
+                    <ul id="treeDemo" class="ztree"></ul>
+                </div>
+                <div class="col-md-9">
+                    <div class="table-responsive" style="width: 105%;">
+                        <table class="table table-striped b-t b-light text-center">
+                            <thead>
+                                <tr>
+                                    <th>姓名</th>
+                                    <th>性别</th>
+                                    <!--<th ng-click="sortData(url, 'send_dept_id', param,$event)" class="text-left sortable both">所在组织</th>-->
+
+                                    <th ng-click="sortData(url, 'dnzw_id', param,$event)" class="sortable both">职位</th>
+                                    <th ng-click="sortData(url, 'phone', param,$event)" class="sortable both">联系方式</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in pageInfo.data">
+                                    <td class="text-left">{{ item.userName }}</td>
+                                    <td>{{ item.sexText }}</td>
+                                    <!--<td class="text-left">{{ item.deptName }}</td>-->
+                                    <td class="text-left">{{ item.dnzwText }}</td>
+                                    <td>{{ item.phone }}</td>
+                                    <td>
+                                        <button class="btn btn-outline blue btn-xs m-r-10" ui-sref="main.partyners.detail({id: item.id})">详情</button>
+                                        <button class="btn btn-outline blue btn-xs m-r-10" ui-sref="main.partyners.update({id: item.id})" ng-show="hasUpdate">编辑</button>
+
+                                        <button class="btn btn-outline red  btn-xs m-r-10" ng-click="goUp(item.id)" ng-show="hasDelete">转为积极分子</button>
+                                         <button class="btn btn-outline red  btn-xs m-r-10" ng-click="goUp(item.id)" >转为积极分子</button>
+                                        <button class="btn btn-outline red  btn-xs m-r-10" ng-click="cancel(item.id)" ng-show="hasDelete">删除</button>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- 底部分页 -->
+            <span data-ng-include=" 'src/tpl/pageInfo.html' "></span>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,71 @@
+'use strict';
+
+angular.module('app')
+	.controller('listController', [ '$rootScope', '$scope', '$http', '$state','toaster','$timeout',
+	                                function($rootScope, $scope, $http, $state, toaster,$timeout) {
+		$scope.title = '工作汇报';
+		$scope.param = {};
+       
+		$scope.url = '/iBase4J-SYS-Web/report/list';
+		$scope.user = {};
+		$scope.upLeaderSel = '';
+		
+		
+		//上下级切换
+		$scope.changeHeader = function(){
+			//console.log($scope.upLeaderSel);
+			//if($scope.upLeaderSel==2){
+					$state.go('main.party.report');
+			//}			
+		}
+        
+		
+		$scope.clearSearch = function() {
+			$scope.param.keyword= null;
+			$rootScope.search($scope.url, $scope.param);
+		}
+		
+		// 翻页 - 排序翻页数据与此一致
+		$scope.pagination = function (page) {
+		  $scope.param.pageNum = page;
+		  $scope.param.asc = $rootScope.changeAsc();
+		  $rootScope.search($scope.url, $scope.param);
+		};
+
+		$scope.param.tab=1;
+		$rootScope.search($scope.url, $scope.param);
+		
+		
+		//删除
+		$scope.delInfo = function(id) {
+		    $scope.loading = true;
+			if(confirm('确认要删除？')){
+				$scope.loading = true;
+				$.ajax({
+					type: 'post',
+					dataType: 'json',
+					contentType:'application/json;charset=UTF-8',
+					url : '/iBase4J-SYS-Web/report/delete',
+					data: angular.toJson({"id":id})
+				}).then(function(result) {
+					$scope.loading = false;
+					
+					if (result.httpCode == 200) {
+						toaster.clear('*');
+						toaster.pop('success', '', "删除成功");						
+						//$timeout(function () {
+							$rootScope.search($scope.url, $scope.param);
+						//},800);
+					} else {
+						toaster.clear('*');
+						toaster.pop('error', '', result.msg);
+					}
+					$scope.$apply();
+				});
+			}
+		}
+		
+		
+		
+		
+} ]);

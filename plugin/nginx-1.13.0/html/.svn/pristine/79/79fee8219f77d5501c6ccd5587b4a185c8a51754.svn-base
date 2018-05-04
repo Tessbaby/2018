@@ -1,0 +1,11 @@
+'use strict';
+
+angular.module('app')
+	.controller('ewmController', [ '$rootScope', '$scope', '$http', '$state','toaster',
+	  function($rootScope, $scope, $http, $state,toaster) {
+
+	  	var id = $state.params.id;
+	  	function getData(id) {
+
+	  	}
+	  }])

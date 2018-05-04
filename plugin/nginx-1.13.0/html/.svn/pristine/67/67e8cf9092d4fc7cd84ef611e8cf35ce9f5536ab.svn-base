@@ -1,0 +1,211 @@
+'use strict';
+
+angular.module('app')
+	.controller('memImportController', ['$rootScope', '$scope', '$http', '$state',
+	  function ($rootScope, $scope, $http, $state) {
+
+	      $scope.record = {};
+
+	      $scope.btnInfo = '导入';
+	      $scope.btnState = false;
+	      var zNodes;
+	      $scope.thumb = [];
+	      getTreeList();
+	      validate();
+	      //上传文件
+	      $scope.reader = new FileReader();  //创建一个FileReader接口 
+	      $scope.file_upload = function (evt) {    //单次提交图片的函数
+	          var fileInfo = evt.currentTarget.files[0];
+	          $scope.guid = (new Date()).valueOf();
+	          $scope.reader.readAsDataURL(fileInfo); //FileReader的方法，把图片转成base64
+	          //console.log(fileInfo.type);
+	          if (fileInfo.type == "application/vnd.ms-excel") {
+	              $scope.reader.onload = function (ev) {
+	                  $scope.$apply(function () {
+	                      $scope.thumb = [{ 
+	                          file: ev.target.result,
+	                          filename: fileInfo.name
+	                      }];
+	                  });
+	              };
+	          } else {
+	              alertDialog("请使用正确的上传模板", 2);
+	              return;
+	          }
+
+	      };
+	      angular.element(document.querySelector('#file')).on('change', $scope.file_upload);
+	      $('.upload-file-box a').click(function () {
+	          $('#file').click();
+	      });
+	      //删除文件
+	      $scope.file_del = function (key) {  //删除，删除的时候thumb和form里面的图片数据都要删除，避免提交不必要的
+	          $scope.thumb.splice(key, 1);
+	      };
+	      var setting = {
+	          view: {
+	              dblClickExpand: false,
+	              showIcon: false
+	          },
+	          data: {
+	              key: {
+	                  name: "deptName"
+	              },
+	              simpleData: {
+	                  enable: true,
+	                  idKey: "id",
+	                  pIdKey: "parentId",
+	                  rootPId: 0
+	              }
+	          },
+	          callback: {
+	              onClick: onClick
+	          }
+	      };
+	      $scope.hasTemplet = true;
+	      getExcel();
+	      function getExcel() {	        
+	          $.ajax({
+	              type: 'get',
+	              url: '/iBase4J-SYS-Web/user/update/exportUser',
+
+	          }).then(function (result) {
+
+	              if (result.httpCode == 200) {
+	                  $scope.excelUrl = result.data;
+	              } else {
+	                  $scope.hasTemplet = false;
+	                  alertDialog(result.msg, 2);
+	              }
+	              $scope.$apply();
+	          });
+	      }
+
+	      // 获取党组织树 dept/read/treelist
+	      function getTreeList() {
+	          $.ajax({
+	              type: 'PUT',
+	              url: '/iBase4J-SYS-Web/dept/read/treelist2',
+	              dataType: 'json',
+	              contentType: 'application/json;charset=UTF-8',
+	              data: angular.toJson({}),
+	              // async: false,
+	          }).then(function (result) {
+	              zNodes = result.data;
+	              $.fn.zTree.init($('#treeDemo'), setting, zNodes);
+	              // console.log(result);
+	          });
+	      }
+
+	      function onClick(e, treeId, treeNode) { // 选择元素触发
+
+	          $scope.record.parentId = treeNode.id;
+	          var idObj = $('#deptId');
+	          idObj.val(treeNode.deptName);
+	          $scope.hideMenu();
+	      }
+
+	      $scope.showMenu = function () {
+	          var idObj = $('#deptId');
+	          var idOffset = $('#deptId').offset();
+	          $('#menuContent').slideDown('fast');
+	          $('body').bind('mousedown', onBodyDown);
+	      }
+
+	      $scope.hideMenu = function () {
+	          $('#menuContent').fadeOut('fast');
+	          $('body').unbind('mousedown', onBodyDown);
+	      }
+
+	      function onBodyDown(event) {
+	          if (!event.target.id == 'menuContent' || $(event.target).parents('#menuContent').length == 0) {
+	              if (event.target.id != 'deptId') {
+	                  $scope.hideMenu();
+	              }
+	          }
+	      }
+	      // 获取党组织树 END
+
+	      var dateState = true;
+
+
+
+
+	      var submit = function () {
+
+	          if ($scope.record.parentId == undefined || $scope.record.parentId == "") {
+	              layer.msg("请选择组织", { icon: 2 });
+	              return;
+	          }
+	          if ($scope.thumb.length == 0) {
+	              layer.msg("请选择上传模板", { icon: 2 });
+	              return;
+	          }
+	          //$.ajax({
+	          //    type: 'post',
+	          //    url: "/ibase4j-sys-web/user/update/adduser",
+	          //    datatype: 'json',
+	          //    contenttype: 'application/x-www-form-urlencoded; charset=utf-8',
+	          //}).then(function (result) {
+	          //    console.log(result);
+	          //    if (result.httpcode == 200) {
+	          //        $scope.result = result.data;
+	          //    } else {
+	          //        toaster.clear('*');
+	          //        toaster.pop('error', '', result.msg);
+	          //    }
+	          //    $scope.$apply();
+	          //});
+	          $scope.btnState = true;
+	          $scope.btnInfo = '导入中...';
+	          $("#importUser").ajaxSubmit({
+	              type: 'post',
+	              url: '/iBase4J-SYS-Web/user/update/addUser',
+	              contentType: "application/x-www-form-urlencoded; charset=utf-8",
+	              clearForm: "true",
+	              success: function (result) {
+	                  if (result.httpCode == 200) {
+	                      layer.msg("数据已成功导入", { icon: 1 });
+	                  } else {
+	                      layer.msg(result.msg, { icon: 2 });
+	                  }
+	                  $scope.btnState = false;
+	                  $scope.btnInfo = '导入';
+	                  $scope.thumb = [];
+	                  getTreeList();
+	                  $scope.$apply();
+	              }
+	          });
+	      }
+
+
+
+	      // 表单验证
+	      function validate() {
+	          jQuery('form').validate({
+	              rules: {
+	                  deptId: { required: true }
+
+
+	              },
+	              messages: {
+	                  deptId: { required: '请选择所属组织' }
+
+	              },
+	              submitHandler: function () {
+	                  submit();
+	              }
+	          })
+	      }
+
+
+
+	      $scope.cancel = function () {
+	          if (confirm('确定要退出吗？')) {
+	              //alert("ss");
+	              $state.go('main.partyner');
+	          }
+	      }
+
+
+	  }]);

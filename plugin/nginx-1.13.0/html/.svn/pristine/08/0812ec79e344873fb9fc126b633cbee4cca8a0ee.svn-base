@@ -1,0 +1,94 @@
+<script src="lib/flat-ui/js/application.js"></script>
+
+<link href="../../../../lib/calendar/calendar.css" rel="stylesheet" />
+<script src="../../../../lib/calendar/calendar.js"></script>
+<style>
+    .radio .icons {
+        left: 50%;
+        margin-left: -10px;
+    }
+</style>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><a><i class="fa fa-home">&nbsp;</i>党员身边事</a></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+
+<div class="wrapper-md content">
+    <div class="panel panel-default">
+        <!-- 头部 -->
+        <div class="panel-heading font-bold">
+            {{title}}
+			<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.party.hb"><i class="text-md fa fa-times text-muted"></i></a>
+        </div>
+        <!--表单-->
+        <div class="panel-body">
+            <form class="form-horizontal" name="user_form">
+                <div class="form-group">
+                    <label for="" class="p-r-20 m-b-10 w140 text-right">事件标题: </label>
+                    <span ng-bind="model.title"></span>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label for="" class="p-r-20 m-b-10 w140 text-right">描述: </label>
+                    <span ng-bind="model.remark"></span>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label for="" class="p-r-20 m-b-10 w140 text-right">状态: </label>
+                    <span ng-bind="model.enableName"></span>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="p-sm font7 text-orange-color">事件状态跟踪</div>
+                <div class="white-bg p-lg p-t-md p-b-none font6">
+                    <div class="time-line-wrap" ng-repeat="item in model.issueLog">
+                        <div class="time-dot active" ng-if="$index==0"></div>
+                        <div class="time-dot " ng-if="$index!=0"></div>
+                        <div class="p-b time-content">
+                            <div ng-bind="item.userName"></div>
+                            <div ng-bind="item.remark"></div>
+                            <div ng-bind="item.statusName"></div>
+                            <div ng-if="(item.pic|jsonParse).length>0">
+
+                                    <img ng-src="{{imgInfo.fileUrlPath}}" width="100px" height="100px" class="m-r-sm"  ng-repeat="imgInfo in  item.pic|jsonParse"> 
+
+                            </div>
+                            <div class="text-grey-color" ng-bind="item.createTime"></div>
+                        </div>
+                    </div>
+                    <!-- <div class="time-line-wrap">
+                        <div class="time-dot"></div>
+                        <div class="p-b time-content">
+                            <div>商家已发货，商品配送中</div>
+                            <div class="text-grey-color">2016-09-06 10:22:33</div>
+                        </div>
+                    </div>
+                    <div class="time-line-wrap">
+                        <div class="time-dot"></div>
+                        <div class="p-b time-content">
+                            <div>您已支付并提交了订单</div>
+                            <div class="text-grey-color">2016-09-06 10:22:33</div>
+                        </div>
+                    </div>
+                    <div class="time-line-wrap">
+                        <div class="time-dot"></div>
+                        <div class="p-b time-content">
+                            <div>系统已经确认您的订单</div>
+                            <div class="text-grey-color">2016-09-06 10:22:33</div>
+                        </div>
+                    </div>-->
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group text-center">
+                    <a ui-sref="main.faults.list" class="btn btn-default p-lr-20" id="cancel">返回</a>
+                </div>
+
+
+
+            </form>
+        </div>
+    </div>
+</div>
+

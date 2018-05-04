@@ -1,0 +1,126 @@
+<style>
+  .lActive { background-color: #ff7224 !important; color: #fff !important; }
+  .pointer { cursor: pointer; }
+</style>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><span><i class="fa fa-home">&nbsp;</i>工作看板</span></li>
+        <li><span>数据一览</span></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+
+<!-- 加载提醒 -->
+<!-- <div ng-show="loading" class="text-center m-t-md text-lg"><i class="fa fa-spin fa-spinner"></i>数据加载中...</div> -->
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+  <!-- 数据显示 -->
+  <div class="wrapper-data">
+    <div class="panel panel-default p-xs">
+    	<div class="row p-m">
+    		<div class="col-md-4">
+          <div class="border-color m-r-30 p-m row m-l-n">
+            <div class="col-md-5">
+              <img src="res/img/look/memberCount.png" alt="" style="width: 50%"> 
+            </div>
+            <div class="col-md-7 text-center" style="padding-top: 5px;">
+              <strong class="font24" ng-bind="infoList.formalUserCount == null ? 0 : infoList.formalUserCount"></strong><br>
+              <span class="font18">党员数量</span>
+            </div>
+          </div>
+    		</div>
+    		<div class="col-md-4">
+          <div class=" border-color m-r-30 p-m row m-l-n">
+            <div class="col-md-5">
+              <img src="res/img/look/memberDev.png" alt="" style="width: 50%"> 
+            </div>
+            <div class="col-md-7 text-center" style="padding-top: 5px;">
+              <strong class="font24" ng-bind="infoList.developUserCount == null ? 0 : infoList.developUserCount"></strong><br>
+              <span class="font18">发展党员数量</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="border-color m-r-30 p-m row m-l-n">
+            <div class="col-md-5">
+              <img src="res/img/look/memberBind.png" alt="" style="width: 50%"> 
+            </div>
+            <div class="col-md-7 text-center" style="padding-top: 5px;">
+              <strong class="font24" ng-bind="infoList.bindUserCount == null ? 0 : infoList.bindUserCount"></strong><br>
+              <span class="font18">已绑定数量</span>
+            </div>
+          </div>
+        </div>
+    	</div>
+
+      <div class="row p-m">
+        <div class="col-md-4">
+          <div class="m-r-30 border-color border-radius3" style="height: 400px" id="memberCount">
+            <div ng-if="countNone" class="text-center" style="margin-top: 45%">党员暂无数据</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="m-r-30 border-color border-radius3" style="height: 400px" id="memberDev">
+            <div ng-if="devNone" class="text-center" style="margin-top: 45%">发展党员暂无数据</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="m-r-30 border-color border-radius3" style="height: 400px" id="memberBind">
+            <div ng-if="bindNone" class="text-center" style="margin-top: 45%">已绑定党员暂无数据</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row p-m">
+        <div class="col-md-12 p-l-10 p-r-40">
+          <div class="col-md-6 text-center p-tb-10 border-color pointer" ng-class="{lActive: showDay}" ng-click="changeTab(1)">按日统计</div>
+          <div class="col-md-6 text-center p-tb-10 border-color pointer" ng-class="{lActive: !showDay}" ng-click="changeTab(2)">按月统计</div>
+        </div>
+      </div>
+
+      <div class="row p-m" style="padding-top: 0; margin-top: -10px">
+        <div class="col-md-12 p-l-10 p-r-40">
+          <div class="grey-bg p-m"">
+            <div class="inline" style="width: 40%" ng-if="showDay">
+              <span style="width: 30%" class="p-tb-5 inline m-r-10 white-bg text-center pointer" ng-class="{lActive: near1}" ng-click="changeNear(1)">最近7天</span>
+              <span style="width: 30%" class="p-tb-5 inline m-r-10 white-bg text-center pointer" ng-class="{lActive: near2}" ng-click="changeNear(2)">最近15天</span>
+              <span style="width: 30%" class="p-tb-5 inline m-r-10 white-bg text-center pointer" ng-class="{lActive: near3}" ng-click="changeNear(3)">最近30天</span>
+            </div>
+            <div class="inline" style="width: 40%" ng-if="!showDay">
+              <span style="width: 30%" class="p-tb-5 inline m-r-10 white-bg text-center pointer" ng-class="{lActive: near1}" ng-click="changeNear(1)">最近3个月</span>
+              <span style="width: 30%" class="p-tb-5 inline m-r-10 white-bg text-center pointer" ng-class="{lActive: near2}" ng-click="changeNear(2)">最近6个月</span>
+              <span style="width: 30%" class="p-tb-5 inline m-r-10 white-bg text-center pointer" ng-class="{lActive: near3}" ng-click="changeNear(3)">最近12个月</span>
+            </div>
+            <div class="inline" style="width: 59%">
+              <input ng-show="showDay" type="text" class="form-control r-inline add-date laydate-icon" name="" id="startTime" readonly placeholder="请选择日期" style="width: 35%" ng-model="param.startTime">
+              <input ng-show="!showDay" type="text" class="form-control r-inline add-date laydate-icon" name="" id="startTime1" readonly placeholder="请选择日期" style="width: 35%" ng-model="param.startTime">
+
+              <span style="width: 8%" class="inline text-center">至</span>
+              <input ng-show="showDay" type="text" class="form-control r-inline add-date laydate-icon m-r-10" name="" id="endTime" readonly placeholder="请选择日期" style="width: 35%" ng-model="param.endTime">
+              <input ng-show="!showDay" type="text" class="form-control r-inline add-date laydate-icon m-r-10" name="" id="endTime1" readonly placeholder="请选择日期" style="width: 35%" ng-model="param.endTime">
+
+              <button class="btn btn-primary p-lr-20" ng-click="search()">查询</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row p-m">
+        <div class="col-md-12 p-l-10 p-r-40">
+          <div style="height: 300px" id="increase">
+            <div ng-if="increNone" class="text-center">党员减少暂无数据</div>
+          </div>
+        </div>
+      </div>
+      <div class="row p-m">
+        <div class="col-md-12 p-l-10 p-r-40">
+          <div style="height: 300px" id="reduce">
+            <div ng-if="reduceNone" class="text-center">党员新增暂无数据</div>
+          </div>
+        </div>
+      </div>
+   	</div>
+  </div>
+</div>

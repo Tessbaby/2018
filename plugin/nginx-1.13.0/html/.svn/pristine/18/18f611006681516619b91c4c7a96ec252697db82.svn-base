@@ -1,0 +1,100 @@
+<style>
+	.panel-heading li {
+		width: 15%;
+	}
+	.panel-heading li > a {
+		height: 100px;
+	}
+	.padding {
+		padding: 20px;
+	}
+	.h145 {
+		height: 145px;
+	}
+</style>
+
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+  <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+    <li><a ui-sref="main.partyner"><i class="fa fa-home">&nbsp;</i>工作面板</a></li>
+    <li class="active" ng-bind="title">党委工作台</li>
+  </ul>
+</div>
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+  <!-- 数据显示 -->
+  <div class="wrapper-data">
+    <div class="panel panel-default" style="background-color: #f6f8f8">
+      <!-- 头部 -->
+      <div class="panel-heading clearfix m-b-sm" style="background-color: #fff">
+      	<ul class="m-n p-n">
+      		<li class="pull-left border-right">
+      			<a href="" class="block full-width text-center">
+      				<img src="./res/img/system/工作部署.png" alt="">
+      				<span class="block m-t-sm" style="font-size: 20px; color: #809bb1">工作部署</span>
+      			</a>
+      		</li>
+      		<li class="pull-left">
+      			<a href="" class="block full-width text-center">
+      				<img src="./res/img/system/通知.png" alt="" class="m-t-xs" style="height: 90%">
+      			</a>
+      		</li>
+      		<li class="pull-left">
+      			<a href="" class="block full-width text-center">
+      				<img src="./res/img/system/会议.png" alt="" class="m-t-xs" style="height: 90%">
+      			</a>
+      		</li>
+      		<li class="pull-left">
+						<a href="" class="block full-width text-center">
+      				<img src="./res/img/system/活动.png" alt="" class="m-t-xs" style="height: 90%">
+      			</a>
+      		</li>
+      		<li class="pull-left">
+      			<a href="" class="block full-width text-center">
+      				<img src="./res/img/system/任务.png" alt="" class="m-t-xs" style="height: 90%">
+      			</a>
+      		</li>
+      	</ul>
+      </div>
+
+      <div class="org-m-t20 padding white-bg">
+      	<div class="row">
+	      	<div class="col-sm-4 text-center h145 m-b-sm">
+	      		<a href="" class="block full-width">
+	      			<img src="./res/img/system/微传递.png" alt="" class="m-t-xs" style="height: 90%">
+	      		</a>
+	      	</div>
+	      	<div class="col-sm-4 text-center h145">
+		      	<a href="" class="block full-width">
+		      		<img src="./res/img/system/微党课.png" alt="" class="m-t-xs" style="height: 90%">
+		      	</a>
+	      	</div>
+	      	<div class="col-sm-4 text-center h145">
+		      	<a href="" class="block full-width">
+		      		<img src="./res/img/system/计划总结z.png" alt="" class="m-t-xs" style="height: 90%">
+		      	</a>
+	      	</div>
+      	</div>
+
+      	<div class="row">
+	      	<div class="col-sm-4 text-center h145 m-b-sm">
+		      	<a href="" class="block full-width">
+		      		<img src="./res/img/system/民主评议.png" alt="" class="m-t-xs" style="height: 90%">
+	      		</a>
+	      	</div>
+	      	<div class="col-sm-4 text-center h145">
+		      	<a href="" class="block full-width">
+		      		<img src="./res/img/system/精彩推荐.png" alt="" class="m-t-xs" style="height: 90%">
+	      		</a>
+	      	</div>
+	      	<div class="col-sm-4 text-center h145">
+		      	<a href="" class="block full-width">
+		      		<img src="./res/img/system/管理制度.png" alt="" class="m-t-xs" style="height: 90%">
+	      		</a>
+	      	</div>
+      	</div>
+      </div>
+    </div>
+  </div>
+</div>

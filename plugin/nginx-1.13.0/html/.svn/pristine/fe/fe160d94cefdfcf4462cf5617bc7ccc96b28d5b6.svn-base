@@ -1,0 +1,39 @@
+'use strict';
+
+angular.module('app')
+	.controller('groupListController', ['$rootScope', '$scope', '$http', '$state',
+    function ($rootScope, $scope, $http, $state) {
+    	/* 编辑名称 */
+    	$scope.editName = function (id) {
+    		layer.open({
+    			type: 1,
+    			title: '编辑分组',
+    			area: ['500px', '300px'],
+    			content: $('#editName'),
+    			btn: ['确认', '取消'],
+    			yes: function () {}
+    		})
+    	}
+
+      /* 查看人员列表 */
+      $scope.goMemberList = function () {
+        $state.go('main.grouping.memberList');
+      }
+    	$scope.cancel = function () {
+    		layer.confirm('确认要删除？', function () {
+      		$.ajax({
+            url: '/iBase4J-SYS-Web/sysDeptComment',
+            type: 'delete',
+            data: angular.toJson({id: _id})
+          }).then(function (result) {
+          	if (result.httpCode == 200) {
+          		tipDialog("删除成功", 1, 0.8 * 1000, function () {
+              });
+          	} else {
+          		alertDialog(result.msg, 2);
+          	}
+          	$scope.$apply();
+          })
+      	})
+    	}
+    }])

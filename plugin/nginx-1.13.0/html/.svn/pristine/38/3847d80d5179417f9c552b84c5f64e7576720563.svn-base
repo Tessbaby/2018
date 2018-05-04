@@ -1,0 +1,12 @@
+'use strict';
+
+angular.module('app')
+	.controller('operateListController', ['$rootScope', '$scope', '$http', '$state',
+    function ($rootScope, $scope, $http, $state) {
+    	$scope.baseInfoTab = 'src/app/sys/partyners/baseInfoAdd.html'; // 基本信息添加
+    	$scope.partyInfoTab = 'src/app/sys/partyners/partyInfoAdd.html'; // 党籍信息添加
+    	$scope.orgRelationShipTab = 'src/app/sys/partyners/orgRelationShip.html'; // 组织关系列表
+    	$scope.democraticTab = 'src/app/sys/partyners/democratic.html'; // 民主评议列表
+    	$scope.RAPInfoTab = 'src/app/sys/partyners/RAPInfo.html'; // 奖惩信息
+    	$scope.trainingTab = 'src/app/sys/partyners/training.html'; // 奖惩信息
+    }])

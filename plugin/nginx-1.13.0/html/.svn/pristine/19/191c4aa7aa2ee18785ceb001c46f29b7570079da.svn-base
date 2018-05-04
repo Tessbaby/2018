@@ -1,0 +1,10 @@
+'use strict';
+
+angular.module('app')
+	.controller('activityAddController', [ '$rootScope', '$scope', '$http', '$state','toaster',
+	  function($rootScope, $scope, $http, $state,toaster) {
+	  	$scope.title = '活动发布';
+	  	$scope.openSign = false;
+	  	$scope.isEnd = false;
+
+	  }])

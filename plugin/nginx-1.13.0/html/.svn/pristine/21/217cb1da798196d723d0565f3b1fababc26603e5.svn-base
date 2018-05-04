@@ -1,0 +1,158 @@
+'use strict';
+
+angular.module('app')
+	.controller('bindListController', ['$rootScope', '$scope', '$http', '$state', '$timeout',
+	    function ($rootScope, $scope, $http, $state, $timeout) {
+
+	        $scope.title = '事件负责人';
+	        $scope.param = {};
+	        $scope.member = {}; // 弹出列表参数
+	        $scope.user; // 弹出层查询时需要的参数
+
+	        //=======================================验证权限 statr===================================
+	        //权限模块代码
+	        //$scope.permissionCode = $state.$current.name;
+	        //$scope.hasQuery = $.inArray($scope.permissionCode + '.query', $rootScope.permissionList) != -1;
+	        //$scope.hasUpdate = $.inArray($scope.permissionCode + '.update', $rootScope.permissionList) != -1;
+	        //$scope.hasDelete = $.inArray($scope.permissionCode + '.delete', $rootScope.permissionList) != -1;
+
+	        //if (!$scope.hasQuery) {
+	        //    layer.alert("未经授权，禁止访问！", { icon: 2 });
+	        //    return false;
+	        //}
+	        //=======================================验证权限 end===================================
+
+
+
+	        //==================================执行查询 start==================================
+
+	        $scope.url = '/iBase4J-SYS-Web/issueUser/list';
+	        $rootScope.pageInfo = []; // 请求数据前清空
+	        $rootScope.search($scope.url, $scope.param);
+
+
+
+	        $scope.clearSearch = function () {
+	            $scope.param.keyword = null;
+	            $rootScope.search($scope.url, $scope.param);
+	        }
+
+
+	        // 翻页 - 排序翻页数据与此一致
+	        $scope.pagination = function (page) {
+	            $scope.param.pageNum = page;
+	            $scope.param.asc = $rootScope.changeAsc();
+	            $rootScope.search($scope.url, $scope.param);
+	        };
+
+	        //==================================执行查询 end==================================
+
+	        // 设置
+	        $scope.configMember = function(id, deptId, uId) {
+	        	var _id = id; // 修改时需要的
+	        	var _deptId = deptId; // 部门id
+	        	var _uId = uId; // 设置修改默认值时使用
+	        	var title = (_id == '') ? '设置' : '修改';
+	        	$scope.member.keyword = '';
+	        	$scope.getMemberList(_deptId, _uId); // 获取人员列表
+	        	layer.open({
+	        		type: 1,
+	        		title: title + '负责人',
+	        		content: $('#memberLayer'),
+	        		btn: ['确认', '取消'],
+              area: ['50%', '400'],
+              yes: function (index) {
+              	var memberData;
+              	var _userId = $('input[name="chooseMember"]:checked').attr('id');
+              	if (_id == '') { // 设置
+              		memberData = {
+	              		deptId: _deptId,
+	              		userId: _userId
+	              	}
+              	} else {	// 修改
+              		memberData = {
+	              		deptId: _deptId,
+	              		userId: _userId,
+	              		id: _id
+	              	}
+              	}
+              	// var memberData = {
+              	// 	deptId: _id,
+              	// 	userId: $('input[name="chooseMember"]:checked').attr('id')
+              	// }
+              	$.ajax({
+		              url: '/iBase4J-SYS-Web/issueUser/update',
+		              type: 'post',
+		              data: angular.toJson(memberData)
+			          }).then(function (result) {
+			          	layer.close(index);
+		              if (result.httpCode == 200) {
+		              	if (_id == '') {
+		                  tipDialog("设置成功", 1, 0.8 * 1000);
+		              	} else {
+		              		tipDialog("修改成功", 1, 0.8 * 1000);
+		              	}
+		              	$rootScope.search($scope.url, $scope.param);
+		              } else {
+		                  alertDialog(result.msg, 2);
+		              }
+		              $scope.$apply();
+			          })
+              }
+	        	})
+	        }
+	        $scope.getMemberList = function(dept, user) {
+	        	if (dept || user) {
+	        		$scope.member.deptId = dept;
+		        	$scope.user = user;
+	        	} else {
+	        		user = $scope.user;
+	        	}
+	        	$.ajax({
+              url: '/iBase4J-SYS-Web/user/read/list',
+              type: 'put',
+              data: angular.toJson($scope.member)
+	          }).then(function (result) {
+              if (result.httpCode == 200) {
+                $scope.memberList = result.data;
+                if (user != 0) {
+                	angular.forEach($scope.memberList, function (item, i) {
+                		if (item.id == user) {
+                			item.checked = true;
+                		} else {
+                			item.checked = false;
+                		}
+                	})
+                }
+              } else {
+                  alertDialog(result.msg, 2);
+              }
+              $scope.$apply();
+	          })
+	        }
+	        // $scope.del = function (id) {
+
+	        //     var postData = { meetid: id };
+	        //     layer.confirm('确认要删除？', function () {
+	        //         $.ajax({
+	        //             url: '/iBase4J-SYS-Web/sysMeeting',
+	        //             type: 'delete',
+	        //             data: angular.toJson(postData)
+	        //         }).then(function (result) {
+	        //             $scope.loading = false;
+	        //             if (result.httpCode == 200) {
+	        //                 tipDialog("删除成功", 1, 0.8 * 1000, function () {
+	        //                     if ($rootScope.pageInfo.data.length == 1 && $scope.param.pageNum > 1) {
+	        //                         $scope.param.pageNum = $scope.param.pageNum - 1;
+	        //                     }
+	        //                     $rootScope.search($scope.url, $scope.param);
+	        //                 });
+	        //             } else {
+	        //                 alertDialog(result.msg, 2);
+	        //             }
+	        //             $scope.$apply();
+	        //         })
+	        //     })
+	        // }
+
+	    }]);

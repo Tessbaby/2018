@@ -1,0 +1,80 @@
+﻿<style>
+    .tree-select {
+        width: 220px;
+        background-color: #fff !important;
+        color: #34495e !important;
+    }
+</style>
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><a ui-sref="main.partyner"><i class="fa fa-home">&nbsp;</i>党员</a></li>
+        <li class="active" >批量导入</li>
+    </ul>
+</div>
+
+<div class="wrapper-md content">
+    <div class="panel panel-default">
+        <!-- 头部 -->
+        <div class="panel-heading font-bold">
+            {{title}}
+			<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.partyner"><i class="text-md fa fa-times text-muted"></i></a>
+        </div>
+        <!--表单-->
+        <div class="panel-body">
+            <form class="form-horizontal" method="post" enctype="multipart/form-data" id="importUser">
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="deptId"><span class="text-danger wrapper-sm">*</span>所属组织</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control tree-select" name="deptId" id="deptId" ng-click="showMenu()" readonly>
+
+                        <input id="treeids" type="hidden">
+                        <div id="menuContent" class="menuContent" style="display: none; position: absolute; z-index: 10">
+                            <ul id="treeDemo" class="ztree"></ul>
+                        </div>
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                    <div class="col-sm-6">
+                        <a class="btn btn-info  m-l-xs" href="{{excelUrl}}" ng-show="hasTemplet">
+                            <i class="icon-user-follow m-r-sm text-md"></i>
+
+                            下载模板
+                        </a>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="userLogoPic">上传文件</label>
+                    <div class="col-sm-6">
+                        <div class="m-b upload-file-box">
+                            <a href="javascript:void(0);" class="btn btn-default btn-addon">
+                                <i class="fa fa-upload"></i>选择模板
+                            </a>
+                        </div>
+                        <input type="hidden" name="parentId" id="parentId" value="{{record.parentId}}" />
+                        <input type="file" name="file" id="file" class="fileInput" ng-hide="1" />
+                        <div>
+                            <div class="m-t-sm" ng-repeat="item in thumb">
+                                <span>{{item.filename}}</span>
+                                <span class="inline " ng-click="file_del($index)"><i class="text-md fa fa-times text-muted"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                <div class="form-group text-center">
+                    <button class="btn btn-primary m-r-20 p-lr-20" id="submit" ng-disabled="btnState">{{btnInfo}}</button>
+                    <button type="button" class="btn btn-default p-lr-20" id="Button1" ng-click="cancel()">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

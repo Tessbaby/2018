@@ -1,0 +1,114 @@
+'use strict';
+
+angular.module('app')
+	.controller('meetingDetailController', ['$rootScope', '$scope', '$http', '$state', 'toaster', '$timeout',
+	  function ($rootScope, $scope, $http, $state, toaster, $timeout) {
+
+
+
+
+	      $scope.id = $state.params.id;	   
+	    
+	      $scope.title = '详情';
+	   
+
+
+	      getMeetingInfo($scope.id);
+
+	   
+	      /*  获取详情 */
+	      function getMeetingInfo(id) {
+	          $.ajax({
+	              type: 'PUT',
+	              url: '/iBase4J-SYS-Web/sysMeeting/read/detail',
+	              data: angular.toJson({ id: $scope.id })
+	          }).then(function (result) {
+
+	          	if (result.httpCode == 200) {
+	          		$scope.meetingInfo = result.data;	            
+	              if (result.data.mcontent != '') {
+	                  myEditor.ready(function () {//编辑器初始化完成再赋值  
+	                      myEditor.setContent(result.data.mcontent);  //赋值给UEditor  
+	                  });
+	              }
+	          	} else {
+	          		toaster.clear('*');
+				        toaster.pop('error', '', result.msg);
+	          	}
+	          	$scope.$apply();
+	          })
+	      }
+
+	      function getPersonList() {
+	          $.ajax({
+	              type: 'PUT',
+	              url: '/iBase4J-SYS-Web/sysMeetingUser/read/list',
+	              async: false,
+	              data: angular.toJson({ id: $scope.id })
+	          }).then(function (result) {
+	              $scope.personList = result.data;
+	          })
+	      }
+
+	      $scope.showDetail = function () {
+	          getPersonList();
+	          var html = '';
+	          var qd = '';
+	          var fColor = '';
+	          $.each($scope.personList, function (index, item) {
+
+	              if (item.qdstatus == -1) {
+	                  qd = '未签';
+	                  fColor = 'red';
+	              } else if (item.qdstatus == 1) {
+	                  qd = '已签';
+	                  fColor = 'green';
+	              } else if (item.qdstatus == 1) {
+	                  qd = '迟到';
+	                  fColor = 'yellow';
+	              }
+	              html += '<div class="form-group" style="height: 20px;">'
+                                  + '<span class="col-xs-3 col-md-3 text-center" style="color:' + fColor + '">' + qd + '</span>'
+                                  + '<span class="col-xs-3 col-md-3">' + (item.username ? item.username : ' ') + '</span>'
+                                  + '<span class="col-xs-6 col-md-6">' + (item.duty ? item.duty : ' ') + '</span></div>'
+	          })
+	          layer.open({
+	              type: 1, //page层
+	              shade: 0.5, //遮罩透明度
+	              moveType: 1, //拖拽风格，0是默认，1是传统拖动
+	              shift: 1, //0-6的动画形式，-1不开启
+	              area: ['550px', '300px'],
+	              skin: 'layer-add',
+	              content: html
+	          })
+	      }
+
+	      //百度编辑器
+	      var myEditor = UE.getEditor("myEditor", {
+	          topOffset: 0,
+	          autoFloatEnabled: false,
+	          autoHeightEnabled: false,
+	          wordCount: false,
+	          autotypeset: {
+	              removeEmptyline: true
+	          },
+	          readonly: true,
+	          toolbars: [
+
+	          ]
+	      });
+
+	      $scope.cancel = function () {
+	      	if(confirm('确定要退出吗？')) {
+	      		history.go(-1);
+	      	}
+	         
+
+	      }
+
+
+
+
+
+
+	  }])

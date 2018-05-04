@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		select {
+			width: 180px;
+			height: 40px;
+			line-height: 40px;
+		}
+	</style>
+	<script type="text/javascript" src="jquery.min.js"></script>
+</head>
+<body>
+	<select id="check1">
+	</select>
+	<select id="check2">
+	</select>
+	<select id="check3">
+	</select>
+
+	<script type="text/javascript">
+		var data1 = [
+			{
+				id: 1,
+				name: '一级11'
+			},
+			{
+				id: 2,
+				name: '一级22'
+			},
+			{
+				id: 3,
+				name: '一级33'
+			}, 
+			{
+				id: 4,
+				name: '一级44'
+			}
+		];
+		var data2 = [
+			{
+				id: 1,
+				name: '二级11'
+			},
+			{
+				id: 2,
+				name: '二级22'
+			},
+			{
+				id: 3,
+				name: '二级33'
+			}, 
+			{
+				id: 4,
+				name: '二级44'
+			}
+		];
+		var data3 = [
+			{
+				id: 1,
+				name: '三级11'
+			},
+			{
+				id: 2,
+				name: '三级22'
+			},
+			{
+				id: 3,
+				name: '三级33'
+			}, 
+			{
+				id: 4,
+				name: '三级44'
+			}
+		];
+
+
+		var option = '';
+		$.each(data1, function (index, item) {
+			option += '<option id="' + item.id + '">' + item.name + '</option>';
+		})
+		$('#check1').html(option);
+
+		$('select').on('change', function(event) {
+			var target = event.target;
+			var id = $(target).attr('id');
+			switch (id) {
+				case 'check1' :
+					$('#check3').html('');
+					var option = '';
+					$.each(data2, function (index, item) {
+						option += '<option id="' + item.id + '">' + item.name + '</option>';
+					});
+					$('#check2').html(option);
+					break;
+
+				case 'check2':
+					var option = '';
+					$.each(data3, function (index, item) {
+						option += '<option id="' + item.id + '">' + item.name + '</option>';
+					});
+					$('#check3').html(option);
+					break;
+			}
+		});
+
+	</script>
+</body>
+</html>

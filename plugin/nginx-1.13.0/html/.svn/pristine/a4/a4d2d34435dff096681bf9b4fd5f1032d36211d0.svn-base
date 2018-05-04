@@ -1,0 +1,33 @@
+'use strict';
+
+angular.module('app')
+	.controller('detailController', [ '$rootScope', '$scope', '$http', '$state','toaster','$timeout',
+	                                function($rootScope, $scope, $http, $state,toaster,$timeout) {
+		$scope.title = "详情";
+        $scope.loading = true;
+		$scope.id = $state.params.id;
+		initVoteInfo($scope.id);
+		 // 初始化页面 - 编辑时
+	  function initVoteInfo(id) {
+		$scope.loading = true;
+		$.ajax({
+			type: 'PUT',
+				url : '/iBase4J-SYS-Web/question/listAnswers',
+				dataType: 'json',
+				contentType:'application/json;charset=UTF-8',
+				data: angular.toJson({'id': id})
+			}).then(function(result) {
+				
+				$scope.loading = false;
+				if (result.httpCode == 200) {
+					$scope.record = result.data;
+					
+				} else {
+					$scope.msg = result.msg;
+				}
+				$scope.$apply();
+				
+			});
+	  }
+		
+} ]);

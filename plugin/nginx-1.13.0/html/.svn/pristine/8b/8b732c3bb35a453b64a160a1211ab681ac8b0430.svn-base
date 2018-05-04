@@ -1,0 +1,187 @@
+'use strict';
+
+angular.module('app')
+	.controller('meetingController', [ '$rootScope', '$scope', '$http', '$state','toaster', '$timeout',
+	                                function($rootScope, $scope, $http, $state,toaster, $timeout) {
+										
+		$scope.title = '会议管理';
+		$scope.param = {};
+		$scope.id = ''; // 用于二维码下载
+		$scope.loading = false;
+		$scope.statusList =[
+								{"value":"3","name":"全部"},
+								{"value":"-1","name":"未开始"},
+								{"value":"1","name":"进行中"},
+								{"value":"2","name":"已结束"},
+								] ;
+		$scope.param.status = $scope.statusList[0].value;
+
+		// 切换会议状态
+		$scope.meetingState = function () {
+			$rootScope.search($scope.url, $scope.param);
+			//$scope.$apply();
+		}
+		//党组织结构设置
+		var setting = {
+			check: { enable: false },
+			data: {
+				key : {
+					id : "id",
+					children : "children",
+					name : "deptName"
+				}
+			},
+			callback:{ onClick:onClick }
+		};
+		
+		//获取选中子级
+		function onClick(e,treeId,treeNode){
+			
+		$scope.param.deptid= treeNode.id ;			
+	    $rootScope.search($scope.url, $scope.param);
+    }
+		//党组织结构树
+		
+		$scope.getDepTree = function () {
+	    $scope.loading = true;
+			$.ajax({
+				type: 'PUT',
+				dataType: 'json',
+				contentType:'application/json;charset=UTF-8',
+				url : '/iBase4J-SYS-Web/dept/read/treelist',
+				data: angular.toJson($scope.param)
+			}).then(function(result) {
+		       $scope.loading = false;
+				if (result.httpCode == 200) {
+					//console.log(result);
+					var zNodes = result.dept;
+					var treeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+					treeObj.expandAll(true); 
+					
+				} else {
+					$scope.msg = result.msg;
+				}
+				$scope.$apply();
+			});
+		}
+	  $scope.url = '/iBase4J-SYS-Web/sysMeeting/read/list';
+		$rootScope.search($scope.url, $scope.param);
+		$scope.getDepTree();
+		
+		$scope.clearSearch = function() {
+			$scope.param.keyword= null;
+			$rootScope.search($scope.url, $scope.param);
+		}	
+		
+		
+		// 翻页 - 排序翻页数据与此一致
+		$scope.pagination = function (page) {
+			$scope.param.pageNum = page;
+			$scope.param.asc = $rootScope.changeAsc();
+			$rootScope.search($scope.url, $scope.param);
+		};
+		
+		$scope.del=function(id){
+
+			var m = {meetid: id};
+			if(confirm('确认要删除？')) {
+				$scope.loading = true;
+				$.ajax({
+					url: '/iBase4J-SYS-Web/sysMeeting',
+					type: 'delete',
+					dataType: 'json',
+					contentType:'application/json;charset=UTF-8',
+					data: angular.toJson(m)					
+				}).then(function (result) {
+					$scope.loading = false;
+					if (result.httpCode == 200) {
+						toaster.pop('success', '', "删除成功");
+						var infoLength = $rootScope.pageInfo.data.length - 1;
+						if (infoLength == 0 && $scope.param.pageNum != 1) {
+							$scope.param.pageNum = $scope.param.pageNum - 1;
+						}
+						$rootScope.search($scope.url, $scope.param);
+					} else {
+						toaster.clear('*');
+						toaster.pop('error', '', result.msg);
+					}
+					$scope.$apply();
+				})
+			}
+		}
+
+		// 二维码下载
+		$scope.showEWM = function (id) {
+			$scope.id = id;
+			var m = {
+				keyword: $scope.param.keyword,
+				enable: 1,
+				type: 'BARCODETYPE'
+			};
+			$.ajax({
+				url: '/iBase4J-SYS-Web/dic/read/list',
+				type: 'put',
+				dataType: 'json',
+				contentType:'application/json;charset=UTF-8',
+				data: angular.toJson(m)
+			}).then(function (result) {
+				if (result.httpCode == 200) {
+					$scope.ewmList = result.data;
+					layer.open({
+						type: 1, //信息层
+						title: '二维码下载', //显示标题
+						shade: 0.5, //遮罩透明度
+						moveType: 1, //拖拽风格，0是默认，1是传统拖动
+						shift: 1, //0-6的动画形式，-1不开启
+						area: ['550px', '300px'],
+						skin: 'layer-add',
+						content: $('#ewmHTML')
+					})
+				} else {
+					toaster.clear('*');
+					toaster.pop('error', '', result.msg);
+				}
+				$scope.$apply();
+			})
+		}
+
+		$scope.download = function(code) {
+			// var load = parent.layer.load(0, { shade: false });
+			var dParam = {
+				barlength: code,
+				meetid: $scope.id
+			};
+			$timeout(function () {
+				$.ajax({
+					url: '/iBase4J-SYS-Web/sysMeeting/read/barcode',
+					type: 'put',
+					dataType: 'json',
+					contentType:'application/json;charset=UTF-8',
+					data: angular.toJson(dParam)
+				}).then(function (result) {
+					if (result.httpCode == 200) {
+						var img = result.data.imgpath;
+						if (img) {
+							$('#image').attr('src', img);
+							$("#down").attr({"href": img});
+		          layer.open({
+								type: 1, //信息层
+								title: false, //显示标题
+								shade: 0.5, //遮罩透明度
+								moveType: 1, //拖拽风格，0是默认，1是传统拖动
+								shift: 1, //0-6的动画形式，-1不开启
+								area: ['400px', '300px'],
+								content: $('#downMsg')
+							})
+						} else {
+							layer.alert('无二维码');
+						}
+					} else {
+						toaster.clear('*');
+						toaster.pop('error', '', result.msg);
+					}
+					$scope.$apply();
+				})
+			}, 200);
+		}
+} ]);

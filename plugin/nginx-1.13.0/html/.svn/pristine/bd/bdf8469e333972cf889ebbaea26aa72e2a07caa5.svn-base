@@ -1,0 +1,87 @@
+<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+
+<div class="wrapper">
+	<div>
+		<ul class="breadcrumb">
+      <li><span>党务办公</span></li>
+      <li class="active"><a ui-sref="main.party.files">文件流转</a></li>
+	  <li class="active" ng-bind="title"></li>
+	  </ul>
+	</div>
+	
+	<div class="org-m-t20 ">
+		<div class="add-content white-bg form-horizontal p-lr-20">
+			<div class="form-group">
+				<label for="memName" class="pull-left p-r-20 w140 text-right">上传时间: </label>
+				<div class="m-l-140 form-control-static">{{data.createTime}}</div>
+			</div>
+			<div class="form-group">
+				<label for="memName" class="pull-left p-r-20 w140 text-right">文件列表: </label>
+				<div class="m-l-140 form-control-static"><a href="{{data.filePath}}">{{data.fileName}}</a></div>
+			</div>
+			<div class="form-group">
+				<label for="memName" class="pull-left p-r-20 w140 text-right">文件说明: </label>
+				<div class="m-l-140 form-control-static">{{data.remark}}</div>
+			</div>
+			<div class="form-group">
+				<label for="memName" class="pull-left p-r-20 w140 text-right">是否公开: </label>
+				<div class="m-l-140 form-control-static">{{data.isPublic ==1?"是":"否"}}</div>
+			</div>
+			<div class="form-group">
+				<label for="memName" class="pull-left p-r-20 w140 text-right">文件流转动态: </label>
+				<div class="m-l-140 form-control-static">
+					<div class="m-b-n">
+						<div class="time-line-wrap" ng-repeat="item in data.fileLog" >
+							<div class="time-dot active" ng-if="$index==0"></div>
+							<div class="time-dot" ng-if="$index!=0"></div>
+							<div class="p-b time-content">
+								<div>{{item.remark}}</div>
+								<div class="text-grey-color">{{item.createTime}}</div>
+							</div>
+						</div>
+						<!-- <div class="time-line-wrap m-t-n" >
+							<div class="time-dot"></div>
+						</div> -->
+					</div>
+				</div>
+			</div>
+			
+			
+			
+			
+			
+			<!-- <div class="form-group">
+				<label class="col-lg-2 col-sm-3 control-label" for="remark"><span class="text-danger wrapper-sm"></span>上传时间</label>
+				<div class="col-sm-6">
+					<div class="form-control-static">2017-05-21 09：21：12</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 col-sm-3 control-label" for="remark"><span class="text-danger wrapper-sm"></span>文件列表</label>
+				<div class="col-sm-6">
+					<div>文明单位申请表.doc</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 col-sm-3 control-label" for="remark"><span class="text-danger wrapper-sm"></span>文件说明</label>
+				<div class="col-sm-6">
+					<div>发给各党支部的文件，支部会议时的宣传资料。发给各党支部的文件，支部会议时的宣传资料。发给各党支部的文件，支部会议时的宣传资料。</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 col-sm-3 control-label" for="remark"><span class="text-danger wrapper-sm"></span>是否公开</label>
+				<div class="col-sm-6">
+					<div>否</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 col-sm-3 control-label" for="remark"><span class="text-danger wrapper-sm"></span>文件流转动态</label>
+				<div class="col-sm-6">
+					<div>否</div>
+				</div>
+			</div> -->
+		</div>
+	</div>
+	
+	
+</div>

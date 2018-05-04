@@ -1,0 +1,242 @@
+﻿'use strict';
+
+angular.module('app')
+	.controller('partyInfoAddController', ['$rootScope', '$scope', '$http', '$state',
+	  function ($rootScope, $scope, $http, $state) {
+
+	      $scope.model = {};
+
+	      validateParty();
+
+	      $scope.btnInfo = '提交';
+	      $scope.btnState = false;
+	      var userId = $state.params.userId;
+	    
+	      console.log("partyInfoAdd userId=" + userId);
+	      //id = 155;
+	      if (userId) {
+	          $scope.title = '编辑';
+	          getModel(userId);
+	      } else {
+	          $scope.title = '提交';
+	      }
+
+	      //获取党员详情
+	      function getModel(userId) {
+	          // 文件流转详情
+	          $.ajax({
+	              type: 'get',
+	              url: '/iBase4J-SYS-Web/userParty/detail',
+	              data: { userId: userId }
+	          }).then(function (result) {
+	              $scope.loading = false;
+	              if (result.httpCode == 200) {
+	                  debugger;
+	                  $scope.model = result.data;
+	                  $scope.model.userId = userId;
+	                  console.log($scope.model);
+	                  //所属部门
+	                  $('#deptId').attr('value', $scope.model.joinDeptName);
+	                  $('#treeids').attr('value', $scope.model.deptId);
+
+	              } else {
+	                  // $scope.msg = result.msg;
+	                  alertDialog(result.msg, 2);
+	              }
+
+	              $scope.$apply();
+	          });
+	      }
+
+	      getDropdowmList();
+	      var zNodes;
+	      //获取页面下拉框配置
+	      function getDropdowmList() {
+	          $.ajax({
+	              type: "get",
+	              url: '/iBase4J-SYS-Web/userParty/getAllSelect',
+	          }).then(function (result) {
+	              if (result.httpCode == 200) {
+	                  $scope.PartyDropdowmList = result.data;
+	                  //console.log(result);
+	                  zNodes = $scope.PartyDropdowmList.deptList;
+	                  //console.log(zNodes);
+	                  $.fn.zTree.init($('#depTree'), setting, zNodes);
+	                  $scope.$apply();
+	              } else {
+	                  alertDialog(result.msg, 2);
+	              }
+	          });
+	      }
+
+	      var setting = {
+	          view: {
+	              dblClickExpand: false,
+	              showIcon: false
+	          },
+	          data: {
+	              key: {
+	                  name: "deptName"
+	              },
+	              simpleData: {
+	                  enable: false,
+	                  //idKey: " id",
+	                  //pIdKey: "parentId",
+	                  //rootPId: 0
+	              }
+	          },
+	          callback: {
+	              onClick: onClick
+	          }
+	      };
+	      function onClick(e, treeId, treeNode) { // 选择元素触发
+
+	         
+	          //var zTree = $.fn.zTree.getZTreeObj('depTree'),
+              //nodes = zTree.getSelectedNodes(),
+              //v = '',
+              //ids = '';
+	          //nodes.sort(function compare(a, b) { return a.id - b.id; });
+
+	          //for (var i = 0, l = nodes.length; i < l; i++) {
+	          //    v += nodes[i].deptName + ',';
+	          //    ids += nodes[i].id + ',';
+	          //}
+
+	          //if (v.length > 0) v = v.substring(0, v.length - 1);
+	          //$('#deptId').val(v);
+	          
+	          //// 将选中的id放到隐藏的文本域中
+	          //if (ids.length > 0) {
+	          //    ids = ids.substring(0, ids.length - 1);
+	          //}
+	          //var treeids = $('#treeids');
+	          //treeids.attr('value', ids);
+	          //$scope.model.deptId = ids;
+
+	          $scope.model.deptText = treeNode.deptName;
+	          $scope.model.deptId = treeNode.id;	       
+	          $scope.$apply();
+	      }
+
+	      $scope.showMenu = function () {
+	         
+	          var idObj = $('#deptId');
+	          var idOffset = $('#deptId').offset();
+	          $('#depContent').slideDown('fast');
+	          $('body').bind('mousedown', onBodyDown);
+	      }
+
+	      $scope.hideMenu = function () {
+	          $('#depContent').fadeOut('fast');
+	          $('body').unbind('mousedown', onBodyDown);
+	      }
+
+	      function onBodyDown(event) {
+	          if (!event.target.id == 'depContent' || $(event.target).parents('#depContent').length == 0) {
+	              if (event.target.id != 'deptId') {
+	                  $scope.hideMenu();
+	              }
+	          }
+	      }
+
+	      // 日期
+	      function setDate() {
+	          //加入日期
+	          laydate({
+	              elem: '#joinDate',
+	              format: 'YYYY-MM-DD',
+	              choose: function (datas) {
+	                  $scope.model.joinDate = datas;
+	              }
+
+	          });
+	          //转正日期
+	          laydate({
+	              elem: '#regularDate',
+	              format: 'YYYY-MM-DD',
+	              choose: function (datas) {
+	                  $scope.model.regularDate = datas;
+	              }
+
+	          });
+	          //离开中共日期A
+	          laydate({
+	              elem: '#leavePartyDate',
+	              format: 'YYYY-MM-DD',
+	              choose: function (datas) {
+	                  $scope.model.leavePartyDate = datas;
+	              }
+
+	          });
+	          //恢复党籍日期
+	          laydate({
+	              elem: '#recoveryPartyDate',
+	              format: 'YYYY-MM-DD',
+	              choose: function (datas) {
+	                  $scope.model.recoveryPartyDate = datas;
+	              }
+
+	          });
+	      }
+	      setDate();
+
+	      //表单验证
+	      function validateParty() {
+	          var validator = jQuery('form').validate({
+	              ignore: "",
+	              rules: {
+	                  joinDeptName: {
+
+	                      maxlength: 50
+	                  },
+	                  //content: {
+	                  //    date: true
+	                  //},
+
+
+	              },
+	              messages: {
+	                  joinDeptName: {
+
+	                      maxLength: "入党时所在支部名称50个字"
+	                  },
+	                  //content: {
+	                  //    required: '汇报内容不能为空'
+	                  //},
+
+	              },
+	              submitHandler: function () {
+	                  $scope.submitParty();
+	              }
+	          });
+
+	      }
+	      $scope.submitParty = function () {
+	          var postData = angular.copy($scope.model);
+
+	          debugger;
+
+	          $scope.btnInfo = '提交中...';
+	          $scope.btnState = true;
+	          console.log(angular.toJson(postData));
+	          $.ajax({
+	              type: 'post',
+	              url: '/iBase4J-SYS-Web/userParty/update',
+	              data: angular.toJson(postData)
+	          }).then(function (result) {
+	              console.log(result);
+	              if (result.httpCode == 200) {
+	                  tipDialog("保存成功", 1, 0.8 * 1000, function () {
+
+	                  });
+	              } else {
+	                  alertDialog(result.msg, 2);
+	              }
+	              $scope.btnInfo = '提交';
+	              $scope.btnState = false;
+	              $scope.$apply();
+	          });
+	      }
+
+	  }])

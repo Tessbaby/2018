@@ -1,0 +1,52 @@
+'use strict';
+
+angular.module('app')
+	.controller('faultsConfigController', ['$rootScope', '$scope', '$http', '$state',
+	       function ($rootScope, $scope, $http, $state) {
+	           $scope.title = '统计配置';
+			
+				$scope.helpInfo = function(){
+					layer.msg("帮助提示");
+				}
+
+	           //=======================================验证权限 statr===================================
+	           ////权限模块代码
+	           //$scope.permissionCode = $state.$current.name;
+	           //$scope.hasQuery = $.inArray($scope.permissionCode + '.query', $rootScope.permissionList) != -1;
+	           //$scope.hasUpdate = $.inArray($scope.permissionCode + '.update', $rootScope.permissionList) != -1;
+	           //$scope.hasDelete = $.inArray($scope.permissionCode + '.delete', $rootScope.permissionList) != -1;
+	           //$scope.hasShare = $.inArray($scope.permissionCode + '.share', $rootScope.permissionList) != -1;
+	           //if (!$scope.hasQuery) {
+	           //    layer.alert("未经授权，禁止访问！", { icon: 2 });
+	           //    return false;
+	           //}
+	           //=======================================验证权限 end===================================
+
+	           
+
+	          
+	         
+
+
+	           //==================================执行查询 start==================================
+	           //$scope.param = {};
+	           //$scope.url = '/iBase4J-SYS-Web/file/list';
+	           //$rootScope.pageInfo = []; // 请求数据前清空
+	           //$rootScope.search($scope.url, $scope.param);
+
+	           //$scope.clearSearch = function () {
+	           //    $scope.param.keyword = null;
+	           //    $rootScope.search($scope.url, $scope.param);
+	           //}
+	           //// 翻页 - 排序翻页数据与此一致
+	           //$scope.pagination = function (page) {
+	           //    $scope.param.pageNum = page;
+	           //    $scope.param.asc = $rootScope.changeAsc();
+	           //    $rootScope.search($scope.url, $scope.param);
+	           //};
+
+	           //==================================执行查询 end==================================
+
+	           
+
+	       }]);

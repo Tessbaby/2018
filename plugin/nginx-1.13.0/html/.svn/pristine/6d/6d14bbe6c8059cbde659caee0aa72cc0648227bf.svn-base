@@ -1,0 +1,92 @@
+'use strict';
+
+angular.module('app')
+	.controller('faultsConfigController', ['$rootScope', '$scope', '$http', '$state',
+	       function ($rootScope, $scope, $http, $state) {
+	           $scope.title = '统计配置';
+
+	           $scope.helpInfo = function () {
+	               layer.msg("帮助提示");
+	           }
+
+	           //=======================================验证权限 statr===================================
+	           ////权限模块代码
+	           //$scope.permissionCode = $state.$current.name;
+	           //$scope.hasQuery = $.inArray($scope.permissionCode + '.query', $rootScope.permissionList) != -1;
+	           //$scope.hasUpdate = $.inArray($scope.permissionCode + '.update', $rootScope.permissionList) != -1;
+	           //$scope.hasDelete = $.inArray($scope.permissionCode + '.delete', $rootScope.permissionList) != -1;
+	           //$scope.hasShare = $.inArray($scope.permissionCode + '.share', $rootScope.permissionList) != -1;
+	           //if (!$scope.hasQuery) {
+	           //    layer.alert("未经授权，禁止访问！", { icon: 2 });
+	           //    return false;
+	           //}
+	           //=======================================验证权限 end===================================
+
+	           $scope
+	           getConfig();
+	           /*  获取详情 */
+	           function getConfig() {
+	               $.ajax({
+	                   type: 'PUT',
+	                   url: '/iBase4J-SYS-Web/issueConfig/list',
+	                   data: angular.toJson({ id: $scope.id })
+	               }).then(function (result) {
+
+	                   if (result.httpCode == 200) {
+	                       $scope.config = result.data;
+
+	                       //if ($scope.config.orderBy.length>0) {
+	                       //    $scope.orderSelect = $scope.config.orderBy[0].code;
+	                       //}
+
+	                   } else {
+	                       alertDialog(result.msg, 2);
+	                   }
+	                   $scope.$apply();
+	               })
+	           }
+
+	           $scope.saveData = function () {
+	              
+	               $scope.btnInfo = '提交中...';
+	               $scope.btnState = true;
+	               var model = $scope.config;
+
+	               var total = 0;
+	               //验证得分百分比不能超过100
+	               $.each($scope.config.score, function (index, item) {
+	                   total = total + Number(item.value);
+	               });
+	               if (total != 100) {
+	                   alertDialog("得分百分比相加必须为100", 2);
+	                   return false;
+	               }
+
+	               //设置排序方式选中的是哪个
+	               var orderSelect = $("input[name='optionsRadios']:checked").val();
+	               for (var i = 0; i < $scope.config.orderBy.length; i++) {
+	                   if ($scope.config.orderBy[i].code == orderSelect) {
+	                       $scope.config.orderBy[i].isCheck = 1;
+	                   } else {
+	                       $scope.config.orderBy[i].isCheck = 2;
+	                   }
+	               }
+	               ShowLoading();
+	               //$scope.record.tdate = $("#tdate").val();
+	               $.ajax({
+	                   type: 'POST',
+	                   url: '/iBase4J-SYS-Web/issueConfig/update',
+	                   data: angular.toJson($scope.config)
+	               }).then(function (result) {
+	                   HideLoading();
+	                   if (result.httpCode == 200) {//成功
+	                       alertDialog("设置已生效，下月开始执行",1);
+	                   } else {
+	                       $scope.btnInfo = '提交';
+	                       $scope.btnState = false;
+	                       alertDialog(result.msg, 2);
+
+	                   }
+	               });
+	           }
+	       }]);

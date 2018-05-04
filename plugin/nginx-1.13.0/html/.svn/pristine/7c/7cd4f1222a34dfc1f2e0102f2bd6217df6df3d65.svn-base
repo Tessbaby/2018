@@ -1,0 +1,96 @@
+<toaster-container toaster-options="{'position-class': 'toast-center', 'close-button':true}"></toaster-container>
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<style type="text/css"></style>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><a><i class="fa fa-home"></i>党委办公</a></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+
+<!-- 加载提醒 -->
+<div ng-show="loading" class="text-center m-t-md text-lg"><i class="fa fa-spin fa-spinner"></i>数据加载中...</div>
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+    <!-- 数据显示 -->
+    <div class="wrapper-data">
+        <div class="panel panel-default">
+            <!-- 头部 -->
+            <div class="panel-heading clearfix">
+                <a ui-sref="main.party.hbAdd" class="btn btn-info pull-right m-l-xs">
+                    <span class="" style="position:relative;top:1px;"><i class="fa fa-plus text-md"></i></span>
+					汇报
+                </a>
+                <div class="w-lg pull-left">
+                    <form ng-submit="search(url, param)" class="ng-pristine ng-valid">
+                        <div class="input-group search-box">
+                            <input type="text" class="form-control" ng-model="param.keyword" placeholder="标题">
+                            <i ng-show="user.keyword" ng-click="clearSearch()" class="fa fa-times-circle text-muted search-clear"></i>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
+
+                    </form>
+                </div>
+                <div class=" pull-left m-l-sm">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="button" style="padding: 10px 15px;">向上汇报记录</button>
+                        <button class="btn btn-white" type="button" style="padding: 10px 15px;" ng-click="changeHeader()">下级汇报记录</button>
+                    </div>
+                    <!-- <select class="form-control r-inline add-select" ng-init="upLeaderSel='1'" ng-model="upLeaderSel"  ng-change="changeHeader()"  id="memNation">
+						<option value="1">向上汇报记录</option>
+						<option value="2">下级汇报记录</option>
+					</select> -->
+                </div>
+            </div>
+
+            <!-- 数据表格 -->
+            <div class="row org-m-t20 m-l-none m-r-none">
+                <div class="table-responsive">
+                    <table class="table table-striped b-t b-light text-center">
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th class="text-left">标题</th>
+                                <th ng-click="sortData(url, '', param, $event)" class="text-left sortable both">汇报类型</th>
+                                <th ng-click="sortData(url, '', param, $event)" class="sortable both">上级阅读状态</th>
+                                <th ng-click="sortData(url, '', param, $event)" class="sortable both">汇报时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in pageInfo.data">
+                                <td>{{ (pageInfo.current-1)*pageInfo.size+$index+1 }}</td>
+                                <td class="text-left">{{  item.title | cut:true:12:' ...' }} </td>
+                                <td class="text-left">{{ item.typeName }}</td>
+
+                                <td>
+                                    <span ng-show="item.status==1" class="text-danger">未读</span>
+                                    <span ng-show="item.status==2">已读</span>
+                                </td>
+                                <td>{{ item.createTime }}</td>
+                                <td>
+                                    <button class="btn btn-outline blue btn-xs m-r-10" ui-sref="main.party.hbDetail({id: item.id})">详情</button>
+                                    <button class="btn btn-outline red btn-xs m-r-10 " ng-click="delInfo(item.id)">删除</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+
+            <!-- 底部分页 -->
+            <span data-ng-include=" 'src/tpl/pageInfo.html' "></span>
+        </div>
+    </div>
+
+</div>
+

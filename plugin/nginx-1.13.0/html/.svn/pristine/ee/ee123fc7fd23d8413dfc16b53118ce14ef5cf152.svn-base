@@ -1,0 +1,164 @@
+
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><span><i class="fa fa-home"></i> 党员身边事</span></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+<div class="wrapper-md content">
+    <div class="panel panel-default">
+        <!-- 头部 -->
+        <div class="panel-heading font-bold">{{title}}
+			<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.article.list({typeCode:record.typeCode})"><i class="text-md fa fa-times text-muted"></i></a>
+        </div>
+        <!--表单-->
+            <div class="panel-body">
+			
+                <form class="form-horizontal" name="user_form" id="user_form">
+					<div class="form-group">
+						<div class="col-sm-6 col-sm-offset-2">
+							<span class="inline m-r-sm text-right" style="width:150px;">展示排名前</span>
+                            <input type="text" class="form-control inline" name="articleTitle" id="articleTitle" placeholder="" ng-model="record.title" style="width:70px" >
+							<span class="inline m-l-sm">名</span>
+                        </div>
+                    </div>
+					<div class="line line-dashed b-b line-lg pull-in"></div>
+					<div class="form-group">
+						<div class="col-sm-6 col-sm-offset-2">
+							<span class="inline m-r-sm text-right" style="width:150px;">每月统计时间节点</span>
+                            <input type="text" class="form-control inline" name="articleTitle" id="articleTitle" placeholder="" ng-model="record.title" style="width:70px" >
+							<span class="inline m-l-sm" ng-click="helpInfo()"><i class="fa fa-question-circle fa-lg"></i></span>
+                        </div>
+                    </div>
+					<div class="line line-dashed b-b line-lg pull-in"></div>
+					<div class="form-group">
+						<div class="col-sm-6 col-sm-offset-2">
+							<span class="inline m-r-sm text-right" style="width:150px;">排序规则</span>
+						</div>
+                    </div>
+					
+					<div class="form-group">
+						<div class="col-sm-6 col-sm-offset-2">
+							<div class="" style="margin-left:160px;">
+								<input type="radio" name="radio1" id="radio1" value="option1" checked="">
+								<label for="radio1">
+									事件最少
+								</label>
+							</div>
+							<div class="" style="margin-left:160px;">
+								<input type="radio" name="radio1" id="radio1" value="option1" checked="">
+								<label for="radio1">
+									处理率最高
+								</label>
+							</div>
+							<div class="" style="margin-left:160px;">
+								<input type="radio" name="radio1" id="radio1" value="option1" checked="">
+								<label for="radio1">
+									处理速度最快
+								</label>
+							</div>
+							<div class="" style="margin-left:160px;">
+								<input type="radio" name="radio1" id="radio1" value="option1" checked="">
+								<label for="radio1">
+									平均得分
+								</label>
+							</div>
+                        </div>
+                    </div>
+					<div class="line line-dashed b-b line-lg pull-in"></div>
+					<div class="form-group">
+						<div class="col-sm-6 col-sm-offset-2">
+							<span class="inline m-r-sm text-right" style="width:150px;">计得分规则</span>
+						</div>
+                    </div>
+					<div class="form-group">
+						<div class="col-sm-6 col-sm-offset-2">
+							<span class="inline m-r-sm text-right" style="width:150px;">事件数占比</span>
+                            <input type="text" class="form-control inline" name="articleTitle" id="articleTitle" placeholder="" ng-model="record.title" style="width:70px" >
+							<span class="inline m-l-sm">%</span>
+                        </div>
+                    </div>
+					<div class="form-group">
+						<div class="col-sm-6 col-sm-offset-2">
+							<span class="inline m-r-sm text-right" style="width:150px;">处理率占比</span>
+                            <input type="text" class="form-control inline" name="articleTitle" id="articleTitle" placeholder="" ng-model="record.title" style="width:70px" >
+							<span class="inline m-l-sm">%</span>
+                        </div>
+                    </div>
+					<div class="line line-dashed b-b line-lg pull-in"></div>
+					
+					
+					
+                    
+                    
+                    <div class="form-group text-center">
+						<button class="btn btn-primary m-r-20 p-lr-20" type="submit" ng-disabled="isDisabled">保存</button>
+						<a ui-sref="main.article.list({typeCode:record.typeCode})" class="btn btn-default p-lr-20" id="cancel">取消</a>
+					</div>
+                </form>
+            </div>
+    </div>
+</div>
+
+<!-- 
+<div class="layui-layer layui-layer-page  layer-anim" id="layui-layer2" type="page" times="2" showtime="0" contype="object" style="z-index: 19891016; width: 500px; top: 209.5px; left: 143.5px;">
+    <div class="layui-layer-title" style="cursor: move;">评分规则</div>
+    <div id="" class="layui-layer-content">
+        <div class="list-group layui-layer-wrap" id="rules">
+            <div class="list-group-item">
+                <div class="m-t-md">
+                    <h5>评分规则设置</h5>
+                </div>
+                <div>
+                    <form role="form" class="form-inline">
+                        <div id="rulesList">
+                            <div class="m-b-sm">
+                                <label class="control-label text-right" style="width: 150px;">居民活跃度</label>
+                                <div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;权重：<input type="text" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" id="Residentactivity" value="0" class="form-control h20" style="width: 50px;">%        </div>
+                            </div>
+                            <div class="m-b-sm">
+                                <label class="control-label text-right" style="width: 150px;">社区民生服务</label>
+                                <div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;权重：<input type="text" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" id="Livelihoodservices" value="0" class="form-control h20" style="width: 50px;">%        </div>
+                            </div>
+                            <div class="m-b-sm">
+                                <label class="control-label text-right" style="width: 150px;">社区文明建设</label>
+                                <div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;权重：<input type="text" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" id="civilizationconstruction" value="0" class="form-control h20" style="width: 50px;">%        </div>
+                            </div>
+                            <div class="m-b-sm">
+                                <label class="control-label text-right" style="width: 150px;">社会咨询处置率</label>
+                                <div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;权重：<input type="text" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" id="Eventhandlingrate" value="0" class="form-control h20" style="width: 50px;">%        </div>
+                            </div>
+                            <div class="m-b-sm">
+                                <label class="control-label text-right" style="width: 150px;">信息完善度</label>
+                                <div class="form-group">&nbsp;&nbsp;&nbsp;&nbsp;权重：<input type="text" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" id="InformationPerfection" value="100" class="form-control h20" style="width: 50px;">%        </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="list-group-item">
+                <div class="">
+                    <h5>评分周期设置</h5>
+                </div>
+                <div class="">
+                    <form role="form" class="form-inline" id="timeRules">
+                        <div class="radio radio-info radio-inline">
+                            <input type="radio" id="inlineRadio0" value="0" name="radioInline">
+                            <label for="inlineRadio0">上一周</label></div>
+                        <div class="radio radio-info radio-inline">
+                            <input type="radio" id="inlineRadio1" value="1" name="radioInline" checked="">
+                            <label for="inlineRadio1">上一个月</label></div>
+                        <div class="radio radio-info radio-inline">
+                            <input type="radio" id="inlineRadio2" value="2" name="radioInline">
+                            <label for="inlineRadio2">上一年</label></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span class="layui-layer-setwin"><a class="layui-layer-ico layui-layer-close layui-layer-close1" href="javascript:;"></a></span>
+    <div class="layui-layer-btn layui-layer-btn-"><a class="layui-layer-btn0">确定</a><a class="layui-layer-btn1">取消</a></div>
+    <span class="layui-layer-resize"></span>
+</div> -->

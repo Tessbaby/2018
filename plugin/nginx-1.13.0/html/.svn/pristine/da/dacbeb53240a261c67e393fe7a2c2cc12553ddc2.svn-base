@@ -1,0 +1,174 @@
+
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<style type="text/css">
+    .app-content-body {
+        margin-top: 0;
+    }
+
+    .bread-crumb {
+        margin-top: -5px;
+    }
+
+    .wrapper-data {
+        margin-top: 50px;
+    }
+
+    .se-content {
+        position: relative;
+        left: 350px;
+        width: 400px;
+    }
+
+        .se-content label {
+            position: absolute;
+            left: 0;
+            width: 110px;
+            text-align: center;
+        }
+
+        .se-content select {
+            position: absolute;
+            left: 110px;
+            vertical-align: middle;
+            height: 40px;
+        }
+</style>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><a><i class="fa fa-home"></i>组织生活</a></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+
+<!-- 加载提醒 -->
+<div ng-show="loading" class="text-center m-t-md text-lg"><i class="fa fa-spin fa-spinner"></i>数据加载中...</div>
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+    <!-- 数据显示 -->
+    <div class="wrapper-data">
+        <div class="panel panel-default">
+            <!-- 头部 -->
+            <div class="panel-heading clearfix">
+                <a class="btn btn-info pull-right m-l-xs" ui-sref="main.lifes.meetingAdd({status: ''})" ng-show="hasUpdate">
+                    <span class="" style="position: relative; top: 1px;"><i class="fa fa-plus text-md"></i></span>
+                    发布会议
+                </a>
+                <div class="w-lg se-content form-group" style="">
+                    <label class="col-lg-2 col-sm-3 control-label" for="">会议状态</label>
+
+                    <select class="col-sm-6" ng-change="meetingState()" ng-model="param.status">
+                        <option ng-repeat="x in statusList" value="{{x.value}}">{{x.name}}</option>
+                    </select>
+                </div>
+                <div class="w-lg">
+                    <form ng-submit="search(url, param)" class="ng-pristine ng-valid">
+                        <div class="input-group search-box">
+                            <input type="text" class="form-control" ng-model="param.keyword" placeholder="主题、发布组织">
+                            <i ng-show="user.keyword" ng-click="clearSearch()" class="fa fa-times-circle text-muted search-clear"></i>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 数据表格 -->
+            <div class="row org-m-t20 m-l-none m-r-none">
+                <div class="col-md-2 m-r-50">
+                    <div style="border: 1px solid #000; border-bottom: 0; width: 220px; margin-bottom: -10px; background: #f0f6e4; padding: 10px 15px;">
+                        <span>组织信息</span>
+                        <!-- <input type="checkbox" id="sy" class="checkbox first inline" /><span>包含下级</span> -->
+                    </div>
+                    <ul id="treeDemo" class="ztree"></ul>
+                </div>
+                <div class="col-md-9">
+                    <div class="table-responsive" style="width: 105%;">
+                        <table class="table table-striped b-t b-light text-center">
+                            <thead>
+                                <tr>
+                                    <th ng-click="sortData(url, '', param,$event)" class="sortable both">序号</th>
+                                    <th ng-click="sortData(url, '', param,$event)" class="sortable both text-left">主题</th>
+                                    <th ng-click="sortData(url, '', param,$event)" class="sortable both">开始时间</th>
+								    <th ng-click="sortData(url, '', param,$event)" class="sortable both">结束时间</th>
+                                    <th ng-click="sortData(url, '', param,$event)" class="sortable both">签到/应到</th>
+                                    <th ng-click="sortData(url, '', param,$event)" class="sortable both">状态</th>
+                                    <th ng-click="sortData(url, '', param,$event)" class="sortable both">发布时间</th>
+                                    <th ng-click="sortData(url, '', param,$event)" class="sortable both">发布组织</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in pageInfo.data">
+                                  <td>{{ (pageInfo.current-1)*pageInfo.size+$index+1 }}</td>
+                                  <td class="text-left">{{  item.mname.length > 10 ? item.mname.substr(0, 7)+'...' : item.mname }} </td>
+                                  <td >
+                                  	{{ item.startdate }}                                 
+                                  </td>
+								   <td >                                  
+                                  	{{ item.enddate }}
+                                  </td>
+                                  <td >{{ item.hashere }}/{{ item.allhere}}</td>
+                                  <td >
+                                      <span ng-show="item.status==1" class="text-danger">进行中</span>
+                                      <span ng-show="item.status==2">已结束</span>
+                                      <span ng-show="item.status==-1">未开始</span>
+                                  </td>
+                                  <td>
+                                  	{{ item.createTime }}
+                                  </td>
+                                  <td class="text-left">{{ item.deptname }}</td>
+                                  <td class="text-left">
+                                    <button class="btn btn-outline blue btn-xs m-r-10" ng-click="showEWM(item.id)">二维码</button>
+
+                                    <button class="btn btn-outline blue btn-xs m-r-10" ui-sref="main.lifes.meetingDetail({id: item.id})">详情</button>                                   
+                                    <button class="btn btn-outline blue btn-xs m-r-10" ui-sref="main.lifes.meetingAdd({id: item.id})"  ng-show="item.allowEdit==1 && hasUpdate">编辑</button>
+									<button class="btn btn-outline blue btn-xs m-r-10" ui-sref="main.lifes.meetingRecord({id: item.id})"  ng-show="item.allowEditRemark==1 && hasUpdate">写备注</button>
+                                    <button class="btn btn-outline blue btn-xs m-r-10" ng-click="del(item.id)"  ng-show="item.allowDelete==1 && hasDelete">删除</button>
+                                  </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <span data-ng-include=" 'src/tpl/pageInfo.html' "></span>
+        </div>
+    </div>
+</div>
+
+<div style="height:1px;overflow:hidden;">
+	<div class="panel panel-default" id="ewmHTML">
+		<div class="row org-m-t20 m-l-none m-r-none">
+			<div class="table-responsive">
+				<table class="table table-striped b-t b-light text-center">
+					<thead>
+						<tr>
+						<th>二维码边长(cm)</th>
+						<th>建议扫描距离(m)</th>
+						<th>下载链接</th></tr></thead>
+						<tbody>
+							<tr ng-repeat="item in ewmList">
+								<td>{{ item.codeText }}</td>
+								<td>{{ item.remark }}</td>
+								<td><a ng-click="download(item.code)">预览</a></td>
+							</tr>
+						</tbody> 
+					</table>
+				</div> 
+			</div> 
+		</div> 
+
+		<div class="text-center" id="downMsg"> 
+			<img id="image" style="display: inline-block; width: 200px; height: 180px; margin-top: 30px"/>
+			<a href="" id="down" style="display: block; margin: 0 auto;">点击下载</a>
+		</div>
+	</div>
+</div>
+
+

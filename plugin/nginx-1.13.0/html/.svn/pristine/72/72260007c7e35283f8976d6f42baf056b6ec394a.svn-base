@@ -1,0 +1,94 @@
+'use strict';
+
+angular.module('app')
+	.controller('listHeadController', ['$rootScope', '$scope', '$http', '$state', 'toaster',
+	      function ($rootScope, $scope, $http, $state, toaster) {
+	          $scope.title = '文件头&落款';
+	          $scope.param = {};
+	          $scope.loading = false;
+
+	          $scope.search = function () {
+	              $scope.loading = true;
+	              $.ajax({
+	                  type: 'PUT',
+	                  dataType: 'json',
+	                  contentType: 'application/json;charset=UTF-8',
+	                  url: '/iBase4J-SYS-Web/noticeHeader/header/list',
+	                  data: angular.toJson($scope.param)
+	              }).then(function (result) {
+	                  $scope.loading = false;
+	                  if (result.httpCode == 200) {
+	                      $scope.pageInfo = result;
+	                  } else {
+	                      // $scope.msg = result.msg;
+	                      toaster.clear('*');
+	                      toaster.pop('error', '', result.msg);
+	                  }
+	                  $scope.$apply();
+	              });
+	          }
+	          $scope.pageInfo = [];
+	          $scope.search();
+
+	          // 翻页
+	          $scope.pagination = function (page) {
+	              $scope.param.pageNum = page;
+	              $scope.search();
+	          };
+
+	          //设置默认值
+	          $scope.setDefault = function (id) {
+	              $.ajax({
+	                  type: 'post',
+	                  dataType: 'json',
+	                  contentType: 'application/json;charset=UTF-8',
+	                  url: '/iBase4J-SYS-Web/noticeHeader/header/updateDefault',
+	                  data: angular.toJson({ "id": id })
+	              }).then(function (result) {
+	                  $scope.loading = false;
+	                  console.log(result);
+	                  if (result.httpCode == 200) {
+	                      toaster.clear('*');
+	                      toaster.pop('success', '', "设置成功");
+	                      $scope.search();
+	                  } else {
+	                      toaster.clear('*');
+	                      toaster.pop('error', '', result.msg);
+	                  }
+	                  $scope.$apply();
+	              });
+	          }
+	          //删除
+	          $scope.delInfo = function (id) {
+	              if (confirm('确认要删除？')) {
+	                  $.ajax({
+	                      type: 'post',
+	                      dataType: 'json',
+	                      contentType: 'application/json;charset=UTF-8',
+	                      url: '/iBase4J-SYS-Web/noticeHeader/header/delete',
+	                      data: angular.toJson({ "id": id, "enable": "-1" })
+	                  }).then(function (result) {
+	                      $scope.loading = false;
+	                      console.log(result);
+	                      if (result.httpCode == 200) {
+
+	                          if ($scope.pageInfo.data.length == 1 && $scope.param.pageNum > 1) {
+	                              $scope.param.pageNum = $scope.param.pageNum - 1;
+	                          }
+	                          $scope.search($scope.url, $scope.param);
+	                      } else {
+	                          // $scope.msg = result.msg;
+	                          toaster.clear('*');
+	                          toaster.pop('error', '', result.msg);
+	                      }
+	                      $scope.$apply();
+	                  });
+	              }
+	          }
+
+
+
+
+
+
+	      }]);

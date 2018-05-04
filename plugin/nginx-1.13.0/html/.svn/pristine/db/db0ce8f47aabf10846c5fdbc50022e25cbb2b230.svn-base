@@ -1,0 +1,4 @@
+<script type="text/javascript" src="src/app/sys/partyners/partyInfoAddController.js"></script>
+<div ng-controller="partyInfoAddController">
+	党籍信息
+</div>

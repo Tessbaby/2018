@@ -1,0 +1,7 @@
+'use strict';
+
+angular.module('app')
+	.controller('partDetailController', [ '$rootScope', '$scope', '$http', '$state','toaster',
+	  function($rootScope, $scope, $http, $state,toaster) {
+	  	$scope.title = '详情'
+	  }])

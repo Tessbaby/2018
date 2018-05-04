@@ -1,0 +1,121 @@
+<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+
+<div class="wrapper">
+	<div>
+		<ul class="breadcrumb">
+      <li><a href="#">党务办公</a></li>
+      <li class="active"><a href="#">工作汇报</a></li>
+	  <li class="active"><a href="#">详情</a></li>
+	  </ul>
+	</div>
+	
+	<div class="org-m-t20 ">
+		<div class="add-content white-bg form-horizontal p-md">
+			<div class="row m-b-xl">
+                <h4 class="col-sm-7 col-sm-offset-2 m-t-md font16">{{record.title}}</h4>
+				<div ng-repeat="item in record.answerData">
+					<div class="col-sm-10 col-sm-offset-2 m-t-md m-b-md"><strong>{{$index+1}} &nbsp;. {{item.title}}</strong></div> 
+					<div class="col-sm-10 col-sm-offset-2" ng-if="item.optiontype == 1">
+						
+							<div class="radio m-l-lg" ng-repeat="info in item.options">
+								<input type="radio" id="inlineRadio1" value="1" name="radioInline" disabled>
+								<label for="inlineRadio1" class="text-lineheight1">{{info.content}} </label>
+								<span class="inline m-l-lg">{{info.count}} 票</span>
+							</div> 
+					</div>
+						<div class="col-sm-10 col-sm-offset-2" ng-if="item.optiontype == 2">
+						
+							<div class="checkbox m-l-lg" ng-repeat="info in item.options">
+								<input type="checkbox" id="inlineCheckbox1" value="1" name="totem" disabled>
+								<label for="inlineCheckbox1" class="text-lineheight1">{{info.content}} </label>
+								<span class="inline m-l-lg">{{info.count}} 票</span>
+							</div> 
+					</div>
+				</div>
+				<!-- <div class="col-sm-10 col-sm-offset-2 m-t-md m-b-md"><strong>1 &nbsp;. 我之前曾经对取名这件事专门写过一篇文章</strong></div> 
+				<div class="col-sm-10 col-sm-offset-2">
+					<div class="radio m-l-lg">
+						<input type="radio" id="inlineRadio1" value="1" name="radioInline" disabled>
+						<label for="inlineRadio1" class="text-lineheight1">上周跟马占凯老师聊天 </label>
+						<span class="inline m-l-lg">3 人</span>
+					</div>                            
+					<div class="radio m-l-lg">
+						<input type="radio" id="inlineRadio2" value="2" name="radioInline" disabled>
+						<label for="inlineRadio2" class="text-lineheight1">他正在对取名进行研究 </label>
+						<span class="inline m-l-lg">0 人</span>
+					</div>                            <div class="radio m-l-lg">
+						<input type="radio" id="inlineRadio3" value="3" name="radioInline" disabled>
+						<label for="inlineRadio3" class="text-lineheight1">讨论后又有些新得，罗列如下。 </label>
+						<span class="inline m-l-lg">0 人</span>
+					</div>                    
+				</div>
+					
+                <div class="col-sm-10 col-sm-offset-2 m-t-md m-b-md"><strong>2 &nbsp;.  步步高的创始人段永平曾经说</strong></div>
+				<div class="col-sm-10 col-sm-offset-2">
+					<div class="checkbox m-l-lg">
+						<input type="checkbox" id="inlineCheckbox1" value="1" name="totem" disabled>
+						<label for="inlineCheckbox1" class="text-lineheight1">名字多一个字，就要多费一千万的广告费 </label>
+						<span class="inline m-l-lg">3 人</span>
+					</div>
+					<div class="checkbox m-l-lg">
+						<input type="checkbox" id="inlineCheckbox1" value="1" name="totem" disabled>
+						<label for="inlineCheckbox1" class="text-lineheight1">但是步步高因为有个字是两个重复的，所以算是2.5个字 </label>
+						<span class="inline m-l-lg">1 人</span>
+					</div>
+					<div class="checkbox m-l-lg">
+						<input type="checkbox" id="inlineCheckbox1" value="1" name="totem" disabled>
+						<label for="inlineCheckbox1" class="text-lineheight1">但是我个人觉得，名字长短还是要看具体情况 </label>
+						<span class="inline m-l-lg">0 人</span>
+					</div>
+				</div> -->
+
+                
+
+            </div>
+			
+			
+			
+			
+			<div >
+				{{data.content}}
+			</div>
+			
+			
+			
+			
+			
+			<!-- <div class="form-group">
+				<label class="col-lg-2 col-sm-3 control-label" for="remark"><span class="text-danger wrapper-sm"></span>上传时间</label>
+				<div class="col-sm-6">
+					<div class="form-control-static">2017-05-21 09：21：12</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 col-sm-3 control-label" for="remark"><span class="text-danger wrapper-sm"></span>文件列表</label>
+				<div class="col-sm-6">
+					<div>文明单位申请表.doc</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 col-sm-3 control-label" for="remark"><span class="text-danger wrapper-sm"></span>文件说明</label>
+				<div class="col-sm-6">
+					<div>发给各党支部的文件，支部会议时的宣传资料。发给各党支部的文件，支部会议时的宣传资料。发给各党支部的文件，支部会议时的宣传资料。</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 col-sm-3 control-label" for="remark"><span class="text-danger wrapper-sm"></span>是否公开</label>
+				<div class="col-sm-6">
+					<div>否</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 col-sm-3 control-label" for="remark"><span class="text-danger wrapper-sm"></span>文件流转动态</label>
+				<div class="col-sm-6">
+					<div>否</div>
+				</div>
+			</div> -->
+		</div>
+	</div>
+	
+	
+</div>

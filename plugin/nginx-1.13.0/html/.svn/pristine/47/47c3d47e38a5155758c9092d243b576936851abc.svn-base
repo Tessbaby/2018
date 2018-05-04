@@ -1,0 +1,20 @@
+'use strict';
+
+angular.module('app')
+	.controller('demoResultController', ['$rootScope', '$scope', '$http', '$state', '$timeout',
+    function ($rootScope, $scope, $http, $state, $timeout) {
+
+    	function getList() {
+    		$.ajax({
+          url: '/iBase4J-SYS-Web/sysDeptComment/read/detail',
+          type: 'get',
+          data: {id: id}
+        }).then(function (result) {
+        	if (result.httpCode == 200) {
+        		$scope.resultList = result.data;
+        	} else {
+            alertDialog(result.msg, 2);
+        	}
+        })
+    	}
+    }])

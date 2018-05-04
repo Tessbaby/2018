@@ -1,0 +1,11 @@
+'use strict';
+
+angular.module('app')
+	.controller('signListController', [ '$rootScope', '$scope', '$http', '$state','toaster',
+	  function($rootScope, $scope, $http, $state,toaster) {
+	  	$scope.title = '报名详情';
+	  	$scope.activity = {};
+	  	$scope.activity.activityid = $state.params.id;
+	  	$scope.url = '/iBase4J-SYS-Web/activitySignner/list';
+	  	$rootScope.search($scope.url, $scope.activity);
+	  }])

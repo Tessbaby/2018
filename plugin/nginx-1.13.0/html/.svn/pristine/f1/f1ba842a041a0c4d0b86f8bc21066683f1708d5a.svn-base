@@ -1,0 +1,58 @@
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+  <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+    <li><a><i class="fa fa-home">&nbsp;</i>党员</a></li>
+    <li><a><i class="fa fa-home">&nbsp;</i>分组管理</a></li>
+    <li class="active" ng-bind="title"></li>
+  </ul>
+</div>
+
+<div class="wrapper-md content">
+	<div class="wrapper-data">
+		<div class="panel panel-default">
+			<div class="panel-heading font-bold" ng-bind="title">
+      </div>
+		</div>
+		<div class="panel-body white-bg">
+			<div class="form-group" style="height: 450px;">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-3">
+	          <div style="border: 1px solid #b3b1b1; border-radius: 6px; height: 400px; overflow-y: auto;">
+	              <ul id="treeDemo" class="ztree " style="margin-left: auto; margin-right: auto;"></ul>
+	          </div>
+	      </div>
+	      <div class="col-sm-3">
+	          <div style="border: 1px solid #b3b1b1; border-radius: 6px; height: 400px; overflow-y: auto;">
+	              <div class="font7 m-md m-b-sm" ng-click="checkAll()">
+	                  <input type="checkbox" id="checkAll" value="" ng-checked="isSelected" /><label for="checkAll1"> 全选</label>
+	              </div>
+	              <div class="m-md font7">
+	                  <div class="m-b-sm" ng-repeat="item in person.sourceList" ng-click="checkInfo($index)">
+	                      <input type="checkbox" id="{{item.id}}" value="{{item.id}}" />
+	                      <label ng-if="item.dnzwText==''" for="{{item.id}}">{{item.userName}}</label>
+	                      <label ng-if="item.dnzwText!=''" for="{{item.id}}">{{item.userName}}--{{item.dnzwText}}</label>
+	                  </div>
+	              </div>
+	          </div>
+	      </div>
+	      <div class="col-sm-3">
+            <div class="p-md" style="border: 1px solid #b3b1b1; border-radius: 6px; height: 400px; overflow-y: auto;">
+                <span class="block m-b-sm" ng-repeat="items in person.setList track by $index">
+                    <span ng-if="items.dnzwText==''">{{items.userName}}</span><!---{{items.dnzwText}}-->
+                    <span ng-if="items.dnzwText!=''">{{items.userName}}--{{items.dnzwText}}</span>
+                    <span ng-click="delChecked($index)"><i class="fa fa-close"></i></span>
+                </span>
+            </div>
+        </div>
+	    </div>
+	    <div class="form-group text-center">
+          <button class="btn btn-primary m-r-20 p-lr-20" id="submit" ng-disabled="btnState">{{btnInfo}}</button>
+          <button type="button" class="btn btn-default p-lr-20" id="cancel" ng-click="cancel()">取消</button>
+      </div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,66 @@
+'use strict';
+
+angular.module('app')
+	.controller('loginController', ['$scope', '$http', '$state', '$timeout', function ($scope, $http, $state, $timeout) {
+	    $scope.user = {};
+	    $scope.allFun = {};
+	    var returnUrl = unescape($state.params.returnUrl);
+	    $scope.login = function () {
+	        $scope.allFun.formMessage('正在登录...', 'succeed');
+	        $('.login-content').css('margin-bottom', '80px');
+	        $.ajax({
+	            type: 'POST',
+	            dataType: 'json',
+	            contentType: 'application/json;charset=UTF-8',
+	            url: '/iBase4J-SYS-Web/login',
+	            data: angular.toJson($scope.user)
+	        }).then(function (result) {
+	            if (result.httpCode == 200) {
+
+	                $scope.allFun.formMessage('登陆成功...', 'succeed')
+	                if (returnUrl != "" && returnUrl != undefined) {
+	                    $timeout(function () {
+	                        window.location.href = returnUrl;
+	                    }, 800);
+	                } else $timeout(function () {
+	                    $state.go('main.commynity.info');
+	                }, 800);
+
+	            } else {
+
+	                $scope.allFun.formMessage(result.msg, 'error');
+	            }
+
+	        });
+	    }
+
+	    // 点击改变登录方式
+	    $scope.allFun.changeMode = function (id) {
+	        if (id == 'ewm') {
+	            $('div.t-c-show').removeClass('show').addClass('hide');
+	            $('div.t-c-hide').removeClass('hide').addClass('show');
+	        } else if (id == 'account') {
+	            $('div.t-c-show').removeClass('hide').addClass('show');
+	            $('div.t-c-hide').removeClass('show').addClass('hide');
+	        } else if (id == 'forgetPass') {  // 忘记密码
+	            layer.alert("功能暂未开通，请联系客服重置密码。", { icon: 0, skin: 'layer-add' });
+	        }
+	    }
+
+	    $scope.allFun.formMessage = function (msg, type) {
+	        $('.form-message').show().html('');
+	        $('.form-message').append('<div class="form-' + type + '-text">' + msg + '</div>');
+	    }
+	    // 回车键
+	    $scope.myKeyup = function (e) {
+	        var keycode = window.event ? e.keyCode : e.which;
+	        if (keycode == 13) {
+	            var btlogin = document.getElementById("btlogin");
+	            btlogin.focus();
+	            btlogin.click();
+	        }
+	    };
+
+
+	}]);
+

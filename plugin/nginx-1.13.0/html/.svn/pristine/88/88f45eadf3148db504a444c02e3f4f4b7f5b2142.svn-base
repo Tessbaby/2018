@@ -1,0 +1,28 @@
+<toaster-container toaster-options="{'position-class': 'toast-center', 'close-button':true}"></toaster-container>
+<!-- 内容区域 -->
+<!-- 数据显示 -->
+<div class="wrapper-data" style="width: 550px;">
+  <div class="panel panel-default">
+  <!-- 数据表格 -->
+		<div class="row org-m-t20 m-l-none m-r-none">
+			<div class="table-responsive">
+					<table class="table table-striped b-t b-light text-center">
+						<thead>
+							<tr>
+								<th>二维码边长(cm)</th>
+								<th>建议扫描距离(m)</th>
+								<th>下载链接</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in pageInfo.data">
+								<td>{{ item.id }}</td>
+								<td>{{ item.lxr }}</td>
+								<td> <a href="#" class="icon icon-download"></a> </td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+		</div>
+	</div>
+</div>

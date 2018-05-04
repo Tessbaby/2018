@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <script src="jquery.js"></script>
+    <script type="text/javascript" src="http://malsup.github.io/jquery.form.js"></script>
+</head>
+
+<body style="height: 100%">
+    <body>
+
+        <button id="login">登录</button>
+
+        <button id="edept">党组织导出</button>
+        党组织导入：
+   <form action="" method="post" enctype="multipart/form-data" id="addDept">
+       上传文件 
+       <input type="file" name="file" /><br />
+       姓名    
+       <input type="text" name="parentId" /><br />
+       <input type="button" onclick="sub()" value="确定" />
+   </form>
+        <button id="euser">党员导出</button>
+        党员导入：
+   <form action="" method="post" enctype="multipart/form-data" id="addUser">
+       上传文件 
+       <input type="file" name="file" /><br />
+       姓名    
+       <input type="text" name="parentId" /><br />
+       <input type="button" onclick="subs()" value="确定" />
+   </form>
+        <div id="textalert" style="border: 1px solid #000; height: 400px; width: 400px; color: red; font-size: 23px;"></div>
+
+        <input type="text" id="userid">
+        <button id="delete">删除用户</button>
+    </body>
+    <script>
+        $("#login").click(function () {
+            var url = "/iBase4J-SYS-Web/login";
+            var data = { "ACCOUNT": 'admin', "PASSWORD": "111" };
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json;charset=UTF-8',
+                url: url,
+                data: JSON.stringify(data),
+                success: function (data) {//ajax返回的数据
+                    //alert(JSON.stringify(data));
+                    $("#textalert").html(JSON.stringify(data));
+                }
+            });
+        });
+
+
+        $("#delete").click(function () {
+            var url = "/iBase4J-SYS-Web/user/delete";
+            var userid = $("#userid").val();
+            var data = { "id": userid };
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json;charset=UTF-8',
+                url: url,
+                data: JSON.stringify(data),
+                success: function (data) {//ajax返回的数据
+                    //alert(JSON.stringify(data));
+                    $("#textalert").html(JSON.stringify(data));
+                }
+            });
+        });
+
+        $("#euser").click(function () {
+            var url = "/iBase4J-SYS-Web/user/update/exportUser";
+            var data = {};
+            $.ajax({
+                type: 'put',
+                dataType: 'json',
+                contentType: 'application/json;charset=UTF-8',
+                url: url,
+                data: JSON.stringify(data),
+                success: function (data) {//ajax返回的数据
+                    // alert(JSON.stringify(data));
+                    ////////////////////////////////////////////////
+                    //$("#textalert").html(JSON.stringify(data)); //
+                    ////////////////////////////////////////////////
+                    // location.href=;
+                    $("#textalert").html(JSON.stringify(data));
+                }
+            });
+        });
+        $("#edept").click(function () {
+            var url = "/iBase4J-SYS-Web/dept/read/exportDeptExcel";
+            var data = {};
+            $.ajax({
+                type: 'put',
+                dataType: 'json',
+                contentType: 'application/json;charset=UTF-8',
+                url: url,
+                data: JSON.stringify(data),
+                success: function (data) {//ajax返回的数据
+                    /////////////////////////////////
+                    //alert(JSON.stringify(data)); //
+                    /////////////////////////////////
+                    // alert(data.data);
+                    //
+                    //location.href=data.data;
+
+                    $("#textalert").html(JSON.stringify(data));
+                }
+            });
+        });
+
+
+        function sub() {
+            var requestUrl = "/iBase4J-SYS-Web/dept/read/addExcel";
+            $("#addDept").ajaxSubmit({
+                type: 'post',
+                url: requestUrl,
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                clearForm: "true",
+                success: function (data) {
+                    // alert(JSON.stringify(data));
+                    //需要刷新页面
+                    $("#textalert").html(JSON.stringify(data));
+
+                }
+            });
+        }
+        function subs() {
+            var requestUrl = "/iBase4J-SYS-Web/user/update/addUser";
+            $("#addUser").ajaxSubmit({
+                type: 'post',
+                url: requestUrl,
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                clearForm: "true",
+                success: function (data) {
+                    // alert(JSON.stringify(data));
+                    //需要刷新页面
+                    $("#textalert").html(JSON.stringify(data));
+                }
+            });
+        }
+
+
+    </script>
+
+
+</body>
+</html>
+
+

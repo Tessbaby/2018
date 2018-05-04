@@ -1,0 +1,359 @@
+'use strict';
+
+angular.module('app')
+	.controller('partyMemberController', ['$rootScope', '$scope', '$http', '$state',
+	 function ($rootScope, $scope, $http, $state) {
+	 	$scope.title = '党员情况统计';
+	 	$scope.showDay = true;
+	 	$scope.near1 = true;
+	 	$scope.near2 = false;
+	 	$scope.near3 = false;
+	 	$scope.countNone = false;
+	 	$scope.devNone = false;
+	 	$scope.bindNone = false;
+	 	$scope.increNone = false;
+	 	$scope.reduceNone = false;
+	 	$scope.param = {};
+
+	 	var date = {}; //存储全部tab日期
+		date.todayBefore = $rootScope.baseFun.calcDate(-1); // 到昨天
+		date.sevenDayBefore = $rootScope.baseFun.calcDate(-8); // 最近七天
+		date.fifteenDayBefore = $rootScope.baseFun.calcDate(-16); // 最近15天
+		date.thirtyDayBefore = $rootScope.baseFun.calcDate(-31); // 最近30天
+		date.thisMonthBefore = $rootScope.baseFun.calcMonth(-1); // 到上个月
+		date.threeMonthBefore = $rootScope.baseFun.calcMonth(-3);// 最近三个月
+		date.sixMonthBefore = $rootScope.baseFun.calcMonth(-6);	 // 最近六个月
+		date.twelveMonthBefore = $rootScope.baseFun.calcMonth(-12);// 最近12个月
+
+		$scope.param.startTime = date.sevenDayBefore;
+		$scope.param.endTime = date.todayBefore;
+		console.log(date);
+
+		// 设置时间插件
+		laydate({ // 按日查询开始时间
+        elem: '#startTime',
+        format: 'YYYY-MM-DD',
+        max: date.todayBefore,
+        choose: function (dates) {
+            var bigger, thBefore;
+						$scope.near1 = false;
+						$scope.near2 = false;
+						$scope.near3 = false;
+						$scope.param.startTime = dates;
+						bigger = $rootScope.baseFun.compareDate($scope.param.startTime, $scope.param.endTime); // 如果第一个大
+						thBefore = $rootScope.baseFun.calcDate(90, $scope.param.startTime); // 3个月后的日期
+						if (bigger) {
+							layer.msg('开始时间不能大于结束时间', { icon: 2 });
+							$scope.param.startTime = '';
+							$('#startTime').val('');
+						} else {
+							bigger = $rootScope.baseFun.compareDate($scope.param.endTime, thBefore); // 如果第一个大(3个月后的日期小，则超出范围)
+							if (bigger) {
+								layer.msg('最多不能超过三个月', { icon: 2 });
+								$scope.param.startTime = '';
+								$('#startTime').val('');
+							}
+						}
+        }
+    });
+    laydate({ // 按月查询开始时间
+        elem: '#startTime1',
+        format: 'YYYY-MM',
+        type: 'month',
+        max: date.thisMonthBefore,
+        choose: function (dates) {
+            var bigger, thBefore;
+						$scope.near1 = false;
+						$scope.near2 = false;
+						$scope.near3 = false;
+						$scope.param.startTime = dates;
+						bigger = $rootScope.baseFun.compareDate($scope.param.startTime, $scope.param.endTime); // 如果第一个大
+						if ($scope.param.endTime) {
+							if (bigger) {
+								layer.msg('开始时间不能大于结束时间', { icon: 2 });
+								$scope.param.startTime = '';
+								$('#startTime').val('');
+							} else {
+								var eYear = new Date($scope.param.endTime).getFullYear();
+								var sYear = new Date($scope.param.startTime).getFullYear();
+								if (eYear - sYear > 3) {
+									layer.msg('最多不能超过三年', { icon: 2 });
+									$scope.param.startTime = '';
+									$('#startTime').val('');
+							  }
+							}
+						}
+        }
+    });
+    laydate({ // 按日查询结束时间
+        elem: '#endTime',
+        format: 'YYYY-MM-DD',
+        max: date.todayBefore,
+        choose: function (dates) {
+            var bigger, thBefore;
+						$scope.near1 = false;
+						$scope.near2 = false;
+						$scope.near3 = false;
+						$scope.param.endTime = dates;
+						bigger = $rootScope.baseFun.compareDate($scope.param.startTime, $scope.param.endTime); // 如果第一个大
+						thBefore = $rootScope.baseFun.calcDate(-90, $scope.param.endTime); // 3个月前的日期
+						if (bigger) {
+							layer.msg('开始时间不能大于结束时间', { icon: 2 });
+							$scope.param.endTime = '';
+							$('#endTime').val('');
+						} else {
+							bigger = $rootScope.baseFun.compareDate(thBefore, $scope.param.startTime); // 如果第一个大(3个月后的日期小，则超出范围)
+							if (bigger) {
+								layer.msg('最多不能超过三个月', { icon: 2 });
+								$scope.param.endTime = '';
+								$('#endTime').val('');
+							}
+						}
+        }
+    });
+    laydate({ // 按月查询结束时间
+        elem: '#endTime1',
+        format: 'YYYY-MM',
+        type: 'month',
+        max: date.thisMonthBefore,
+        choose: function (dates) {
+	        	console.log(dates);
+        		var bigger, thBefore;
+						$scope.near1 = false;
+						$scope.near2 = false;
+						$scope.near3 = false;
+						$scope.param.endTime = dates;
+            bigger = $rootScope.baseFun.compareDate($scope.param.startTime, $scope.param.endTime); // 如果第一个大
+						if ($scope.param.endTime) {
+							if (bigger) {
+								layer.msg('开始时间不能大于结束时间', { icon: 2 });
+								$scope.param.endTime = '';
+								$('#endTime1').val('');
+							} else {
+								var eYear = new Date($scope.param.endTime).getFullYear();
+								var sYear = new Date($scope.param.startTime).getFullYear();
+								if (eYear - sYear > 3) {
+									layer.msg('最多不能超过三年', { icon: 2 });
+									$scope.param.endTime = '';
+									$('#endTime1').val('');
+								}
+							}
+						}
+        }
+    });
+
+    var increase = echarts.init(document.getElementById('increase'));
+    var reduce = echarts.init(document.getElementById('reduce'));
+    var inOption, reOption;
+	 	var base = {}; // 图形配置
+	 	base.getMemberCount = function () {
+	 		$.ajax({ // 党员情况统计
+	      url: '/iBase4J-SYS-Web/count/getUserOwn',
+	      type: 'get',
+	      contentType: 'application/json;charset=UTF-8',
+	      data: ''
+	    }).then(function (result) {
+	      if (result.httpCode == 200) {
+	      	$scope.infoList = result.data;
+	      } else {
+	      	layer.alert(result.msg, { icon: 2 });
+	      }
+	      $scope.$apply();
+	    });
+	 	}
+	 	base.pieOption = {
+	 		title: {
+        text: '',
+        left: '30',
+        top: '10'
+      },
+			tooltip: {
+				show: true,
+				formatter: "{b} : {c} ({d}%)"
+			},
+			legend: {
+				top: '20%',
+				right: '10',
+				orient: 'vertical',
+				formatter: '{name}',
+				data: []
+			},
+			series: [{
+				type: 'pie',
+				radius: '55%',
+				center: ['30%', '50%'],
+				legendHoverLink: false,
+				hoverAnimation: false,
+				selectedMode: 'single',
+				label: {
+					normal: {
+						show: false,
+					}
+				},
+				data: []
+			}]
+	 	};
+	 	base.barOption = {
+			title: {
+				text: '',
+				left: '30',
+				top: '10'
+			},
+			tooltip: {
+				trigger: 'axis',
+				axisPointer: { // 坐标轴指示器，坐标轴触发有效
+					type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+				},
+				formatter: '{a}<br> {b}: {c} 人'
+			},
+			grid: {
+				left: '3%',
+				right: '4%',
+				bottom: '3%',
+				containLabel: true
+			},
+			xAxis: [{
+				type: 'category',
+				data: [/*'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'*/],
+				axisTick: {
+					alignWithLabel: true
+				}
+			}],
+			yAxis: [{
+				type: 'value'
+			}],
+			series: [{
+				name: '党员新增',
+				type: 'bar',
+				barWidth: '60%',
+				data: [/*10, 52, 200, 334, 390, 330, 220*/]
+			}]
+	 	};
+	 	base.getPieData = function () {
+	 		$.ajax({ // 党员情况统计
+	      url: '/iBase4J-SYS-Web/count/getUserLower',
+	      type: 'get',
+	      contentType: 'application/json;charset=UTF-8',
+	      data: ''
+	    }).then(function (result) {
+	      if (result.httpCode == 200) {
+	      	var _data = result.data;
+	      	if (_data.bindUser) { // 党员绑定
+	      		var bind = angular.copy(base.pieOption);
+	      		var memberBind = echarts.init(document.getElementById('memberBind'));
+	      		bind.title.text = '已绑定党员';
+            bind.legend.data = _data.bindUser.legend;
+            bind.series[0].data = _data.bindUser.series;
+            memberCount.setOption(bind);
+	      	} else {
+	      		$scope.bindNone = true;
+	      	}
+	      	if (_data.developUser) {
+	      		var develop = angular.copy(base.pieOption);
+	      		var memberDev = echarts.init(document.getElementById('memberDev'));
+	      		develop.title.text = '发展党员';
+            develop.legend.data = _data.developUser.legend;
+            develop.series[0].data = _data.developUser.series;
+            memberDev.setOption(develop);
+	      	} else {
+	      		$scope.devNone = true;
+	      	}
+	      	if (_data.formalUser) {
+	      		var formal = angular.copy(base.pieOption);
+	      		var memberCount = echarts.init(document.getElementById('memberCount'));
+	      		formal.title.text = '党员';
+            formal.legend.data = _data.formalUser.legend;
+            formal.series[0].data = _data.formalUser.series;
+            memberCount.setOption(formal);
+	      	} else {
+	      		$scope.countNone = true;
+	      	}
+	      } else {
+	      	layer.alert(result.msg, { icon: 2 });
+	      }
+	      $scope.$apply();
+	    });
+	 	};
+	 	base.getBarData = function () {
+	 		$.ajax({ // 党员情况统计
+	      url: '/iBase4J-SYS-Web/count/getUserLowerChange',
+	      type: 'get',
+	      contentType: 'application/json;charset=UTF-8',
+	      data: $scope.param
+	    }).then(function (result) {
+	    	console.log(result);
+	      if (result.httpCode == 200) {
+	      	var _data = result.data;
+	      	if (_data.formalUserIncrease) { // 党员减少
+	      		inOption = angular.copy(base.barOption);
+	      		inOption.title.text = '党员减少';
+	      		inOption.xAxis[0].data = _data.formalUserIncrease.xAxis;
+	      		inOption.series[0].data = _data.formalUserIncrease.series;
+	      		increase.setOption(inOption);
+	      	} else {
+	      		$scope.increNone = true;
+	      	}
+	      	if (_data.formalUserReduce) { // 党员减少
+	      		reOption = angular.copy(base.barOption);
+	      		reOption.title.text = '党员新增';
+	      		reOption.xAxis[0].data = _data.formalUserReduce.xAxis;
+	      		reOption.series[0].data = _data.formalUserReduce.series;
+	      		reduce.setOption(reOption);
+	      	} else {
+	      		$scope.reduceNone = true;
+	      	}
+	      } else {
+	      	layer.alert(result.msg, { icon: 2 });
+	      }
+	      $scope.$apply();
+	    })
+	 	}
+	 	base.getMemberCount();
+	 	base.getPieData();
+	 	base.getBarData();
+
+	 	/* 日期选择 */
+	 	// tab切换
+	 	$scope.changeTab = function (val) {
+ 			$scope.near1 = true; //切换时默认为第一个
+			$scope.near2 = false;
+			$scope.near3 = false;
+
+			if (val == 1) { // 按日查询
+				$scope.showDay = true;
+				$scope.param.startTime = date.sevenDayBefore;
+				$scope.param.endTime = date.todayBefore;
+			} else { // 按月查询
+				$scope.showDay = false;
+				$scope.param.startTime = date.threeMonthBefore;
+				$scope.param.endTime = date.thisMonthBefore;
+			}
+		 	base.getBarData();
+	 	}
+	 	/* 切换按条件选择 */
+		$scope.changeNear = function (val) {
+			if (val == 1) { //按七天、三个月
+				$scope.near1 = true;
+				$scope.near2 = false;
+				$scope.near3 = false;
+				$scope.param.startTime = $scope.showDay ? date.sevenDayBefore : date.threeMonthBefore;
+			} else if (val == 2) { // 按15天、6个月
+				$scope.near1 = false;
+				$scope.near2 = true;
+				$scope.near3 = false;
+				$scope.param.startTime = $scope.showDay ? date.fifteenDayBefore : date.sixMonthBefore;
+			} else { // 按30天、12个月
+				$scope.near1 = false;
+				$scope.near2 = false;
+				$scope.near3 = true;
+				$scope.param.startTime = $scope.showDay ? date.thirtyDayBefore : date.twelveMonthBefore;
+			}
+			base.getBarData();
+		}
+
+		/* 查询 */
+		$scope.search = function () {
+			base.getBarData();
+		}
+
+	 }])

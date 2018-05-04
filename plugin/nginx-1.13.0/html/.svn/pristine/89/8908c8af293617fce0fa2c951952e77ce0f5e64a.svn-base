@@ -1,0 +1,51 @@
+<toaster-container toaster-options="{'position-class': 'toast-center', 'close-button':true}"></toaster-container>
+<style> 
+	.input { width: 380px; display: inline-block; margin-left: 20px; }
+</style>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+  <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+    <li><a ui-sref="main.commynity.info"><i class="fa fa-home"></i>首页</a></li>
+    <li class="active" ng-bind="title"></li>
+  </ul>
+</div>
+
+<div class="wrapper-md content" style="width: 580px;">
+  <div class="panel panel-default">
+    <!--表单-->
+    <div class="panel-body">
+      <form class="form-horizontal"  name="organize_form">
+      
+			
+				<div class="form-group">
+          <label class="w110 control-label text-right" for=""><span class="text-danger wrapper-sm">*</span>原密码</label>
+          <div class="input">
+            <input type="text" class="form-control" id="oldpassword" name="oldpassword" placeholder="请输入原密码" ng-model="record.oldpassword">
+            <span class="help-block m-b-none"></span>
+          </div>
+        </div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+
+				<div class="form-group">
+          <label class="w110 control-label text-right" for=""><span class="text-danger wrapper-sm">*</span>新密码</label>
+          <div class="input">
+            <input type="password" class="form-control" id="newpassword1" name="newpassword1" placeholder="请输入新密码" ng-model="record.newpassword1">
+            <span class="help-block m-b-none"></span>
+          </div>
+        </div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+				<div class="form-group">
+          <label class="w110 control-label text-right" for=""><span class="text-danger wrapper-sm">*</span>确认密码</label>
+          <div class="input">
+            <input type="password" class="form-control" id="newpassword2" name="newpassword2" placeholder="请再次输入密码" ng-model="record.newpassword2">
+            <span class="help-block m-b-none"></span>
+          </div>
+        </div>
+        <div class="form-group text-center">
+					<button class="btn btn-primary m-r-20 p-lr-20" id="submit" ng-disabled="btnState">{{btnInfo}}</button>
+					<button class="btn btn-default p-lr-20" type="button" id="cancel" ng-click="cancel()">取消</button>
+				</div>
+			</form>
+  	</div>
+  </div>
+</div>

@@ -1,0 +1,54 @@
+<style>
+	.bread-crumb { margin-top: 0; }
+</style>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+  <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+    <li><a><i class="fa fa-home">&nbsp;</i>党员</a></li>
+    <li class="active" ng-bind="title"></li>
+  </ul>
+</div>
+
+<div class="wrapper-md content">
+	<div class="wrapper-data">
+		<div class="panel-body white-bg">
+			<form class="form-horizontal" name="organize_form">
+				<div class="form-group m-b-md m-t-sm row" ng-repeat="item in infoList">
+	          <div class="col-sm-8 col-sm-offset-2">
+	              <div class="col-sm-5 text-center" style="padding-top: 15px; font-size: 16px;" ng-bind="item.name">
+	                  
+	              </div>
+	              <div class="col-sm-5 p-t-10">
+	                  <button class="btn btn-primary m-r-20 col-sm-3" ng-click="editName(item.id)" ng-if="hasUpdate">编辑名称</button>
+	                  <button class="btn btn-primary m-r-20 col-sm-3" ng-click="goMemberList(item.id)" ng-if="hasUserList">人员列表</button>
+	                  <button class="btn btn-primary col-sm-3" ng-click="cancel(item.id)" ng-if="hasDelete">删除</button>
+	              </div>
+	          </div>
+	      </div>
+	      <!-- <div class="form-group m-b-md m-t-sm row">
+	          <div class="col-sm-8 col-sm-offset-2">
+	              <div class="col-sm-5 text-center" style="padding-top: 15px; font-size: 16px;">
+	                  党委1组
+	              </div>
+	              <div class="col-sm-5 p-t-10">
+	                  <button class="btn btn-primary m-r-20 col-sm-3" ng-click="editName()">编辑名称</button>
+	                  <button class="btn btn-primary m-r-20 col-sm-3" ng-click="goMemberList()">人员列表</button>
+	                  <button class="btn btn-primary col-sm-3" ng-click="cancel()">删除</button>
+	              </div>
+	          </div>
+	      </div> -->
+	      <div class="form-group text-center" style="margin-top: 40px;" ng-if="hasUpdate">
+	          <button type="button" class="btn btn-primary m-r-20 p-lr-20" id="" ng-click="editName()">添加分组</button>
+	      </div>
+	    </form>
+		</div>
+	</div>
+</div>
+
+<div style="height: 1px; overflow: hidden">
+	<div id="editName">
+		<div class="form-group" style="padding: 10px;">
+			<textarea name="" rows="3" style="width: 100%; font-size: 16px;" ng-model="record.name" placeholder="请输入名称"></textarea>
+		</div>
+	</div>
+</div>

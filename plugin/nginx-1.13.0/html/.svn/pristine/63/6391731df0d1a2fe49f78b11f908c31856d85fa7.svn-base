@@ -1,0 +1,105 @@
+'use strict';
+
+angular.module('app')
+	.controller('memPartController', ['$rootScope', '$scope', '$http', '$state',
+	  function ($rootScope, $scope, $http, $state) {
+
+	      $scope.userId = $state.params.id;
+	      $scope.record = {};
+	      $scope.btnInfo = '确定';
+	      $scope.btnState = false;
+	      $scope.title = '角色';
+
+	      // 获取选中CheckBox
+	      $scope.selected = [];
+	      var obj = {};
+	      obj.userId = $scope.userId;
+	      var m = []; // 参数数组
+
+	      getPart($scope.userId);
+
+	      function getPart(userId) {
+	          $.ajax({
+	              type: 'put',
+	              url: '/iBase4J-SYS-Web/user/partyner/role',
+	              dataType: 'json',
+	              contentType: 'application/json;charset=UTF-8',
+	              data: angular.toJson({ userid: userId })
+	          }).then(function (result) {
+	              if (result.httpCode == 200) {
+	                  $scope.result = result.data.roleList;
+	                  $scope.user = result.data.userName;
+	                  $.each($scope.result, function (index, item) {
+	                      if (item.isselected == 1) {
+	                          $scope.selected.push(item.id);
+	                          var newObj = angular.copy(obj);
+	                          newObj.roleId = item.id;
+	                          m.push(newObj);
+	                      }
+	                  })
+	              } else {
+	                  alertDialog(result.msg, 2);
+	              }
+	              $scope.$apply();
+	          });
+	      }
+
+	      // 获取CheckBox值
+	      $scope.isSelecteds = function (id) {
+	          return $scope.selected.indexOf(id) >= 0;
+	      }
+
+	      $scope.updateSelection = function ($event, id) {
+	          var checkbox = $event.target;
+	          var action = checkbox.checked ? 'add' : 'remove';
+	          updateSelected(action, id);
+	      }
+
+	      var updateSelected = function (action, id) {
+	          if (action == 'add' && $scope.selected.indexOf(id) == -1) {
+	              $scope.selected.push(id);
+	              var newObj = angular.copy(obj);
+	              newObj.roleId = id;
+	              m.push(newObj);
+	          }
+	          if (action == 'remove' && $scope.selected.indexOf(id) != -1) {
+	              var idx = $scope.selected.indexOf(id);
+	              $scope.selected.splice(idx, 1);
+	              m.splice(idx, 1);
+	          }
+	      }
+	      // 获取CheckBox值 end
+
+	      // 退出编辑
+	      $scope.cancel = function () {
+	      	layer.confirm('您确认放弃本次编辑吗？' ,function (index) {
+		     		layer.close(index);
+		     		history.go(-1);
+		     	})
+	      }
+
+	      $scope.submit = function () {
+	          $scope.btnInfo = '提交中...';
+	          $scope.btnState = true;
+	          if (m.length == 0) {
+	          	m.push(obj);
+	          }
+	          $.ajax({
+	              type: 'post',
+	              dataType: 'json',
+	              url: '/iBase4J-SYS-Web/user/update/role',
+	              contentType: 'application/json;charset=UTF-8',
+	              data: angular.toJson(m)
+	          }).then(function (result) {
+	              if (result.httpCode == 200) {
+	                  tipDialog("保存成功", 1, 0.8 * 1000, function () {
+	                      history.go(-1);
+	                  });
+	              } else {
+	                  alertDialog(result.msg, 2);
+	              }
+	              $scope.btnInfo = '确定';
+	              $scope.btnState = false;
+	          });
+	      }
+	  }])

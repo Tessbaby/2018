@@ -1,0 +1,158 @@
+'use strict';
+
+angular.module('app')
+    .controller('updateController', ['$rootScope', '$scope', '$http', '$state',
+             function ($rootScope, $scope, $http, $state) {
+
+                 /*初始化页面*/
+                 var title = "添加汇报";
+                 var defaultAva = $rootScope.defaultAvatar;
+                 $scope.thumb = [];
+                 $scope.record = {};
+                 //控制按钮显示状态
+                 $scope.btnInfo = '添加';
+                 $scope.btnState = false;
+                 validate();
+                 $scope.title = $rootScope.title = title;
+
+
+                 //文本框剩余字数
+                 //$scope.count = 0;
+                 //$scope.tolCount = function () {
+
+                 //    $scope.count = $scope.record.content.length;
+                 //}
+
+                 // 获取汇报类型
+                 var getReportList = function () {
+                     var postData = {
+                         enable: 1,
+                         type: 'REPORTTYPE'
+                     };
+                     $.ajax({
+                         type: 'PUT',
+                         url: '/iBase4J-SYS-Web/dic/read/list',
+                         dataType: 'json',
+                         contentType: 'application/json;charset=UTF-8',
+                         data: angular.toJson(postData)
+                     }).then(function (result) {
+                         $scope.reportList = result.data;
+                         $scope.record.type = $scope.reportList[0].code;
+                         $scope.$apply();
+                     });
+                 }
+                 getReportList();
+
+                 //百度编辑器
+                 var myEditor = UE.getEditor("myEditor", {
+                     topOffset: 0,
+                     autoFloatEnabled: false,
+                     autoHeightEnabled: false,
+                     wordCount: false,
+                     autotypeset: {
+                         removeEmptyline: true
+                     },
+                     toolbars: [
+                         [
+                             //'source', //源代码
+                             'bold', //加粗
+                             'forecolor', //字体颜色
+                             'indent', //首行缩进
+                             'italic', //斜体
+                             'underline', //下划线
+                             //'simpleupload', //单图上传
+                             //'inserttable', //插入表格
+                             'link', //超链接
+                             'removeformat',//清除格式
+                             'huodong',
+
+                         ]
+                     ]
+                 });
+                 //提交表单
+                 $scope.submit = function () {
+
+                     saveData();
+                 };
+
+                 function saveData() {
+                     $scope.loading = true;
+                     $scope.btnInfo = '提交中...';
+                     $scope.btnState = true;
+                     $scope.record.content = myEditor.getContent();
+                     $.ajax({
+                         type: 'POST',
+                         url: '/iBase4J-SYS-Web/report/updateReport',
+                         dataType: 'json',
+                         contentType: 'application/json;charset=UTF-8',
+                         data: angular.toJson($scope.record)
+                     }).then(function (result) {
+                         $scope.loading = false;
+                         if (result.httpCode == 200) {//成功
+                             tipDialog("删除成功", 1, 0.8 * 1000, function () {
+                                 $state.go('main.party.hb');
+                             });
+                         } else {
+                             $scope.btnInfo = '提交汇报';
+                             $scope.btnState = false;
+                             alertDialog(result.msg, 2);
+                           
+                         }
+                     });
+                 }
+
+
+
+                 //表单验证
+                 function validate() {
+                     var validator = jQuery('form').validate({
+                         ignore: "",
+                         rules: {
+                             title: {
+                                 required: true,
+                                 maxlength: 128
+                             },
+                             //content: {
+                             //    required: true
+                             //},
+                             myEditor: {
+                                 required: true
+                               
+                             }
+
+                         },
+                         messages: {
+                             title: {
+                                 required: '请输入标题',
+                                 maxLength: "标题不得超过128个字符"
+                             },
+                             //content: {
+                             //    required: '汇报内容不能为空'
+                             //},
+                             myEditor: {
+                                 required: '汇报内容不能为空',
+                               
+                             }
+                         },
+                         submitHandler: function () {
+                             $scope.submit();
+                         }
+                     });
+                     validator.focusInvalid = function () {
+                         if (this.settings.focusInvalid) {
+                             try {
+                                 var toFocus = $(this.findLastActive() || this.errorList.length && this.errorList[0].element || []);
+                                 if (toFocus.is("textarea")) {
+                                     UE.getEditor('myEditor').focus()
+                                 } else {
+                                     toFocus.filter(":visible").focus();
+                                 }
+                             } catch (e) {
+                             }
+                         }
+                     }
+
+                 }
+
+
+             }]);

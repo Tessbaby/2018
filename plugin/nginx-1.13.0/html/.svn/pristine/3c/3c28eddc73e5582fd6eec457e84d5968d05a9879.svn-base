@@ -1,0 +1,142 @@
+<style>
+    .tree-select {
+        width: 220px;
+        background-color: #fff !important;
+        color: #34495e !important;
+    }
+</style>
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="src/app/sys/partyners/trainingController.js"></script>
+<div ng-controller="trainingController">
+    <!--培养发展-->
+    <div class="wrapper-md content m-n">
+        <div class="panel panel-default">
+            <!-- 头部 -->
+            <div class="panel-heading font-bold"></div>
+            <!--表单-->
+            <div class="panel-body">
+                <form class="form-horizontal" name="organize_form">
+                    <!-- <div class="form-group m-b-md m-t-sm font-bold" style="font-size: 20px;">
+                        <span class="col-lg-2 col-sm-1 text-right">姓名</span>
+                        <span class="col-sm-3" ng-bind="model.userName"></span>
+                        <span class="col-lg-2 col-sm-1 text-right">党组织：</span>
+                        <span class="col-sm-5" ng-bind="model.deptName"></span>
+                    </div> -->
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="deptId"><span class="text-danger wrapper-sm">*</span>所在支部</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control tree-select" name="deptId" ng-model="model.deptText" id="deptName" ng-click="showMenu()" readonly>
+                            <div id="depContent" class="depContent" style="display: none; position: absolute; z-index: 10">
+                                <ul id="depTree" class="ztree"></ul>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>入党申请日期</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control r-inline add-date laydate-icon" readonly name="joinApplyDate" id="joinApplyDate" ng-model="model.joinApplyDate" placeholder="请选择日期">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="">列为积极分子日期</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control r-inline add-date laydate-icon" readonly name="setAcitveDate" id="setAcitveDate" ng-model="model.setAcitveDate" placeholder="请选择日期">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="">列为发展对象日期</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control r-inline add-date laydate-icon" readonly name="setDevelopDate" id="setDevelopDate" ng-model="model.setDevelopDate" placeholder="请选择日期">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="">入党介绍人</label>
+                        <div class="col-sm-6">
+
+                            <input type="text" class="form-control tree-select" name="joinIntroducerNames" ng-model="model.joinIntroducerNames" ng-click="showJoinNames()" readonly>
+                            <input id="joinIntroducerIds" type="hidden">
+                            <div id="joinNamesContent" class="joinNamesContent" style="display: none; position: absolute; z-index: 10">
+                                <ul id="treeJoinNames" class="ztree"></ul>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="">培养介绍人</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control tree-select" name="trainingNames" ng-model="model.joinTrainNames" ng-click="showTrainingNames()" readonly>
+                            <div id="trainingContent" class="trainingContent" style="display: none; position: absolute; z-index: 10">
+                                <ul id="treetrainingNames" class="ztree"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="">上级批准日期</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control r-inline add-date laydate-icon" readonly name="approvalDate" id="approvalDate" ng-model="model.approvalDate" placeholder="请选择日期">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="">支部大会通过日期</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control r-inline add-date laydate-icon" readonly name="meetingApprovalDate" id="meetingApprovalDate" ng-model="model.meetingApprovalDate" placeholder="请选择日期">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="">培训情况</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="trainIssue" placeholder="请输入培训情况" ng-model="model.trainIssue">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="">最近培训日期</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control r-inline add-date laydate-icon" readonly name="trainLastDate" id="trainLastDate" ng-model="model.trainLastDate" placeholder="请选择日期">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="">最近培训结果</label>
+                        <div class="col-sm-6">
+                            <select class="form-control add-select" ng-model="model.trainLastResult" name="trainLastResult">
+                                <option value="">请选择</option>
+                                <option ng-repeat="item in dropdowmList.trainLastResultList" value="{{item.code}}">{{item.codeText}}</option>
+                                <!--<option ng-repeat="item in dropdowmList.partyDutyList" value="{{item.code}}">{{item.codeText}}</option>-->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group text-center">
+                        <button class="btn btn-primary m-r-20 p-lr-20" type="submit" ng-show="showSubmit">{{btnInfo}}</button>
+                      
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

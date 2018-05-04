@@ -1,0 +1,518 @@
+<toaster-container toaster-options="{'position-class': 'toast-center', 'close-button':true}"></toaster-container>
+
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+
+<!-- <link rel="stylesheet" href="/res/css/awesome-bootstrap-checkbox.css"> -->
+
+<!--是否置顶按钮插件-->
+
+
+
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><span><i class="fa fa-home"></i>党务办公</span></li>
+        <li><a ui-sref="main.party.vote({typeId: infoList.type})" ng-bind="typeName"></a></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+<div class="wrapper-md content">
+    <div class="panel panel-default">
+        <!-- 头部 -->
+        <div class="panel-heading font-bold">
+            {{title}}
+			<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.party.vote({typeId: infoList.type})"><i class="text-md fa fa-times text-muted"></i></a>
+        </div>
+        <!--表单-->
+        <div class="panel-body">
+            <form class="form-horizontal" name="form">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="noticeTitle"><span class="text-danger wrapper-sm">*</span>标题</label>
+                        <div class="col-sm-6">
+
+                            <input type="text" class="form-control" id="qtitle" name="qtitle" placeholder="请输入标题" ng-model="infoList.qtitle">
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="noticeTitle"><span class="text-danger wrapper-sm"></span>描述</label>
+                        <div class="col-sm-6">
+                            <textarea id="remark" name="remark" rows="3" class="form-control" ng-model="infoList.remark"></textarea>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="noticeTitle"><span class="text-danger wrapper-sm">*</span>投票时间</label>
+                        <div class="col-sm-6">
+                             <input type="text" class="form-control laydate-icon inline" style="width: 220px;"  name="startTime" id="startTime" ng-model="infoList.startTime" placeholder="开始时间">
+         
+            <input type="text"  class="form-control laydate-icon inline" style="width: 220px;" name="endTime" id="endTime" ng-model="infoList.endTime" placeholder="结束时间">
+                         <!--   <input type="text" class="form-control laydate-icon inline" style="width: 220px;" onclick="laydate({ istime: true, format: 'YYYY-MM-DD hh:mm:ss' })" name="startTime" id="startTime" ng-model="infoList.startTime">
+                            <input type="text" class="form-control laydate-icon inline" style="width: 220px;" onclick="laydate({ istime: true, format: 'YYYY-MM-DD hh:mm:ss' })" name="endTime" id="endTime" ng-model="infoList.endTime">-->
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="noticeTitle"><span class="text-danger wrapper-sm"></span>投票是否公开</label>
+                        <div class="col-sm-6 p-t-sm">
+                            <span class="inline" style="position: relative; top: 5px;">
+                                <switch id="isPublic" name="isPublic" ng-model="param.isPublic" class="green"></switch>
+                            </span>
+                            <span>（默认只有本组织的人可以投票，开启后系统内的所有人都可以进行投票）</span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="noticeTitle"><span class="text-danger wrapper-sm"></span>结果是否公开</label>
+                        <div class="col-sm-6">
+                            <span class="inline" style="position: relative; top: 5px;">
+                                <switch id="ispuslish" name="ispuslish" ng-model="param.ispuslish" class="green"></switch>
+                            </span>
+                            <span>（默认所有人都可以查看结果，关闭后只有本组织的人可以查看结果）</span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="noticeTitle"><span class="text-danger wrapper-sm"></span>选择类型</label>
+                        <div class="col-sm-6">
+                            <button type="button" class="btn btn-public" id="addRadio" ng-click="addSubject(1)"><i class="fa fa-check-circle-o"></i>添加单选</button>
+                            <button type="button" class="btn btn-submit" id="addCheckbox" ng-click="addSubject(2)"><i class="fa fa-check-square-o"></i>添加多选</button>
+                            <div class="m-t">
+                                <label for="type1" class="m-r-sm">
+                                    <input type="radio" value="1" id="type1" ng-model="infoType" ng-checked="true" />
+                                    文本</label>
+                                <label for="type2" class="m-r-sm">
+                                    <input type="radio" value="2" id="type2" ng-model="infoType" />
+                                    图片</label>
+                                <label for="type3" class="m-r-sm">
+                                    <input type="radio" value="3" id="type3" ng-model="infoType" />
+                                    外链</label>
+                                <!-- <label for="type4" class="m-r-sm"><input type="radio" value="4" id="type4" ng-model="infoType" /> 视频</label> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="noticeTitle"><span class="text-danger wrapper-sm">*</span>编辑题目</label>
+                        <div class="col-sm-8">
+                            <div class="panel panel-default p-sm" id="addContent" style="width: 100%; min-height: 300px;">
+                                <div id="addType">
+                                    <div id="addType">
+
+                                        <div class="add-type radio-type gray-bg m-l m-r p-sm m-b" ng-repeat="item in infoList.contentlist">
+                                            <div ng-if="item.optiontype==1">
+                                                <div ng-if="item.type==1">
+                                                    <!-- 纯文本type=1 -->
+                                                    <div class="form-group m-b-none">
+                                                        <label class="col-sm-2 col-md-3 control-label p-t-xss">标题</label>
+                                                        <div class="col-sm-8 col-md-6">
+                                                            <input type="text" placeholder="请输入单选标题" name="voteName" class="form-control title" ng-model="item.title" />
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="form-group m-b-none m-t-sm" ng-repeat="info in item.options">
+                                                            <div class="col-sm-2 col-md-3 control-label">
+                                                                <div class="radio m-r-none p-t-none" style="padding-top: 0;">
+                                                                    <input type="radio" value="1" name="radioInline" style="margin: 10px 0 0;" ng-disabled="isDisabled" />
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-8 col-md-6">
+                                                                <input type="text" class="form-control item" name="voteName" placeholder="单选名称" ng-model="info.qkey" />
+                                                            </div>
+                                                            <div class="col-sm-1 col-md-1 p-n">&nbsp;</div>
+                                                            <div class="col-sm-1 col-md-2">
+                                                                <button type="button" class="btn btn-public" name="minTypeBtn" ng-click="removeOptions($parent.$index, info.qvalue);">
+                                                                    <i class="fa fa-minus fa-x"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group m-b-none ">
+                                                        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 ">
+                                                            <button type="button" class=" btn btn-public m-t-sm m-r-sm" name="addRadioBtn" ng-click="addOptions($index);">
+                                                                <i class="fa fa-plus fa-x"></i>添加一个选项
+                                                            </button>
+                                                            <button type="button" class="btn btn-delet m-t-sm" name="deleteBtn" ng-click="removeSubject($index);">
+                                                                <i class="fa fa-minus fa-x"></i>删除这个题目
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div ng-if="item.type==2">
+                                                    <!-- 图片type=2 -->
+                                                    <div class="form-group m-b-none">
+                                                        <label class="col-sm-2 col-md-3 control-label p-t-xss">标题</label>
+                                                        <div class="col-sm-8 col-md-6">
+                                                            <input type="text" placeholder="请输入单选标题" name="voteName" class="form-control title" ng-model="item.title" />
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="form-group m-b-none m-t-sm" ng-repeat="info in item.options">
+                                                            <div class="col-sm-2 col-md-3 control-label">
+                                                                <div class="radio m-r-none p-t-none" style="padding-top: 0;">
+                                                                    <input type="radio" value="1" name="radioInline" style="margin: 10px 0 0;" ng-disabled="isDisabled" />
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-8 col-md-6">
+                                                                <input type="text" class="form-control item" name="voteName" placeholder="单选名称" ng-model="info.qkey" />
+                                                            </div>
+                                                            <div class="col-sm-1 col-md-1 p-n m-t" id="upload">
+                                                                <input type="file" class="uploadFiles" style="position: absolute; top: 5px; left: -5px; width: 30px; height: 30px; opacity: 0;" ng-model="info.img" id="file_{{$parent.$index}}_{{info.qvalue}}" onchange="angular.element(this).scope().file_upload(this)" />
+                                                                <img ng-if="info.img == ''" class="openUpload" src="http://otostatic.dev.cotlife.cn//Content/Common/Images/img_1.png" width="20" />
+                                                                <img ng-if="info.img != ''" class="openUpload" src="http://otostatic.dev.cotlife.cn//Content/Common/Images/img_2.png" width="20" />
+                                                            </div>
+                                                            <div class="col-sm-1 col-md-2">
+                                                                <button type="button" class="btn btn-public" name="minTypeBtn" ng-click="removeOptions($parent.$index, info.qvalue);">
+                                                                    <i class="fa fa-minus fa-x"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group m-b-none ">
+                                                        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 ">
+                                                            <button type="button" class=" btn btn-public m-t-sm m-r-sm" name="addRadioBtn" ng-click="addOptions($index);">
+                                                                <i class="fa fa-plus fa-x"></i>添加一个选项
+                                                            </button>
+                                                            <button type="button" class="btn btn-delet m-t-sm" name="deleteBtn" ng-click="removeSubject($index);">
+                                                                <i class="fa fa-minus fa-x"></i>删除这个题目
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div ng-if="item.type==3">
+                                                    <!-- 外链type=3 -->
+                                                    <div class="form-group m-b-none">
+                                                        <label class="col-sm-2 col-md-3 control-label p-t-xss">标题</label>
+                                                        <div class="col-sm-8 col-md-6">
+                                                            <input type="text" placeholder="请输入单选标题" name="voteName" class="form-control title" ng-model="item.title" />
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="form-group m-b-none m-t-sm" ng-repeat="info in item.options">
+                                                            <div class="col-sm-2 col-md-3 control-label">
+                                                                <div class="radio m-r-none p-t-none" style="padding-top: 0;">
+                                                                    <input type="radio" value="1" name="radioInline" style="margin: 10px 0 0;" ng-disabled="isDisabled" />
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-8 col-md-6">
+                                                                <input type="text" class="form-control item" name="voteName" placeholder="单选名称" ng-model="info.qkey" />
+                                                            </div>
+                                                            <div class="col-sm-1 col-md-1 p-n m-t" ng-click="addLink($parent.$index, info.qvalue);">
+                                                                <i class="fa fa-link fa-x font16" ng-class="{true:'text-orange-color',false:''}[info.img != '']"></i>
+                                                            </div>
+                                                            <div class="col-sm-1 col-md-2">
+                                                                <button type="button" class="btn btn-public" name="minTypeBtn" ng-click="removeOptions($parent.$index, info.qvalue);">
+                                                                    <i class="fa fa-minus fa-x"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group m-b-none ">
+                                                        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 ">
+                                                            <button type="button" class=" btn btn-public m-t-sm m-r-sm" name="addRadioBtn" ng-click="addOptions($index);">
+                                                                <i class="fa fa-plus fa-x"></i>添加一个选项
+                                                            </button>
+                                                            <button type="button" class="btn btn-delet m-t-sm" name="deleteBtn" ng-click="removeSubject($index);">
+                                                                <i class="fa fa-minus fa-x"></i>删除这个题目
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div ng-if="item.type==4">
+                                                    <!-- 视频type=4 -->
+                                                    <div class="form-group m-b-none">
+                                                        <label class="col-sm-2 col-md-3 control-label p-t-xss">标题</label>
+                                                        <div class="col-sm-8 col-md-6">
+                                                            <input type="text" placeholder="请输入单选标题" name="voteName" class="form-control title" ng-model="item.title" />
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="form-group m-b-none m-t-sm" ng-repeat="info in item.options">
+                                                            <div class="col-sm-2 col-md-3 control-label">
+                                                                <div class="radio m-r-none p-t-none" style="padding-top: 0;">
+                                                                    <input type="radio" value="1" name="radioInline" style="margin: 10px 0 0;" ng-disabled="isDisabled" />
+                                                                    <label></label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-8 col-md-6">
+                                                                <input type="text" class="form-control item" name="voteName" placeholder="单选名称" ng-model="info.qkey" />
+                                                            </div>
+                                                            <div class="col-sm-1 col-md-1 p-n m-t"><i class="fa fa-video-camera fa-x font16"></i></div>
+                                                            <div class="col-sm-1 col-md-2">
+                                                                <button type="button" class="btn btn-public" name="minTypeBtn" ng-click="removeOptions($parent.$index, info.qvalue);">
+                                                                    <i class="fa fa-minus fa-x"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group m-b-none ">
+                                                        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 ">
+                                                            <button type="button" class=" btn btn-public m-t-sm m-r-sm" name="addRadioBtn" ng-click="addOptions($index);">
+                                                                <i class="fa fa-plus fa-x"></i>添加一个选项
+                                                            </button>
+                                                            <button type="button" class="btn btn-delet m-t-sm" name="deleteBtn" ng-click="removeSubject($index);">
+                                                                <i class="fa fa-minus fa-x"></i>删除这个题目
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div ng-if="item.optiontype==2">
+                                                <div ng-if="item.type==1">
+                                                    <!-- 纯文本type=1 -->
+                                                    <div class="form-group m-b-none">
+                                                        <label class="col-sm-2 col-md-3 control-label p-t-xss">
+                                                            标题
+                                                        </label>
+                                                        <div class="col-sm-8 col-md-6">
+                                                            <input type="text" placeholder="请输入多选标题" name="voteName" class="form-control title" ng-model="item.title" />
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="form-group m-b-none m-t-sm" ng-repeat="info in item.options">
+                                                            <div class="col-sm-2 col-md-3 control-label">
+                                                                <div class="checkbox m-r-none p-t-none">
+                                                                    <input type="checkbox" value="2" name="checkboxInline" style="margin: 10px 0 0;" ng-disabled="isDisabled" />
+                                                                    <label>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-8 col-md-6">
+                                                                <input type="text" class="form-control item" name="voteName" placeholder="多选名称" ng-model="info.qkey" />
+                                                            </div>
+                                                            <div class="col-sm-1 col-md-1 p-n">&nbsp;</div>
+                                                            <div class="col-sm-1 col-md-2">
+                                                                <button type="button" class="btn btn-public" name="minTypeBtn" ng-click="removeOptions($parent.$index, info.qvalue);">
+                                                                    <i class="fa fa-minus fa-x"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group m-b-none ">
+                                                        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 ">
+                                                            <button type="button" class="btn btn-public m-t-sm m-r-sm" name="addRadioBtn" ng-click="addOptions($index);">
+                                                                <i class="fa fa-plus fa-x"></i>添加一个选项
+                                                            </button>
+                                                            <button type="button" class="btn btn-delet m-t-sm" name="deleteBtn" ng-click="removeSubject($index);">
+                                                                <i class="fa fa-minus fa-x"></i>删除这个题目
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div ng-if="item.type==2">
+                                                    <!-- 图片type=2 -->
+                                                    <div class="form-group m-b-none">
+                                                        <label class="col-sm-2 col-md-3 control-label p-t-xss">
+                                                            标题
+                                                        </label>
+                                                        <div class="col-sm-8 col-md-6">
+                                                            <input type="text" placeholder="请输入多选标题" name="voteName" class="form-control title" ng-model="item.title" />
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="form-group m-b-none m-t-sm" ng-repeat="info in item.options">
+                                                            <div class="col-sm-2 col-md-3 control-label">
+                                                                <div class="checkbox m-r-none p-t-none">
+                                                                    <input type="checkbox" value="2" name="checkboxInline" style="margin: 10px 0 0;" ng-disabled="isDisabled" />
+                                                                    <label>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-8 col-md-6">
+                                                                <input type="text" class="form-control item" name="voteName" placeholder="多选名称" ng-model="info.qkey" />
+                                                            </div>
+                                                            <div class="col-sm-1 col-md-1 p-n m-t" id="upload">
+                                                                <input type="file" class="uploadFiles" style="position: absolute; top: 5px; left: -5px; width: 30px; height: 30px; opacity: 0;" ng-model="info.img" id="file_{{$parent.$index}}_{{info.qvalue}}" onchange="angular.element(this).scope().file_upload(this)" />
+                                                                <img ng-if="info.img == ''" class="openUpload" src="http://otostatic.dev.cotlife.cn//Content/Common/Images/img_1.png" width="20" />
+                                                                <img ng-if="info.img != ''" class="openUpload" src="http://otostatic.dev.cotlife.cn//Content/Common/Images/img_2.png" width="20" />
+                                                            </div>
+                                                            <div class="col-sm-1 col-md-2">
+                                                                <button type="button" class="btn btn-public" name="minTypeBtn" ng-click="removeOptions($parent.$index, info.qvalue);">
+                                                                    <i class="fa fa-minus fa-x"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group m-b-none ">
+                                                        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 ">
+                                                            <button type="button" class="btn btn-public m-t-sm m-r-sm" name="addRadioBtn" ng-click="addOptions($index);">
+                                                                <i class="fa fa-plus fa-x"></i>添加一个选项
+                                                            </button>
+                                                            <button type="button" class="btn btn-delet m-t-sm" name="deleteBtn" ng-click="removeSubject($index);">
+                                                                <i class="fa fa-minus fa-x"></i>删除这个题目
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div ng-if="item.type==3">
+                                                    <!-- 外链type=3 -->
+                                                    <div class="form-group m-b-none">
+                                                        <label class="col-sm-2 col-md-3 control-label p-t-xss">
+                                                            标题
+                                                        </label>
+                                                        <div class="col-sm-8 col-md-6">
+                                                            <input type="text" placeholder="请输入多选标题" name="voteName" class="form-control title" ng-model="item.title" />
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="form-group m-b-none m-t-sm" ng-repeat="info in item.options">
+                                                            <div class="col-sm-2 col-md-3 control-label">
+                                                                <div class="checkbox m-r-none p-t-none">
+                                                                    <input type="checkbox" value="2" name="checkboxInline" style="margin: 10px 0 0;" ng-disabled="isDisabled" />
+                                                                    <label>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-8 col-md-6">
+                                                                <input type="text" class="form-control item" name="voteName" placeholder="多选名称" ng-model="info.qkey" />
+                                                            </div>
+                                                            <div class="col-sm-1 col-md-1 p-n  m-t" ng-click="addLink($parent.$index, info.qvalue);"><i class="fa fa-link fa-x font16"></i></div>
+                                                            <div class="col-sm-1 col-md-2">
+                                                                <button type="button" class="btn btn-public" name="minTypeBtn" ng-click="removeOptions($parent.$index, info.qvalue);">
+                                                                    <i class="fa fa-minus fa-x"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group m-b-none ">
+                                                        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 ">
+                                                            <button type="button" class="btn btn-public m-t-sm m-r-sm" name="addRadioBtn" ng-click="addOptions($index);">
+                                                                <i class="fa fa-plus fa-x"></i>添加一个选项
+                                                            </button>
+                                                            <button type="button" class="btn btn-delet m-t-sm" name="deleteBtn" ng-click="removeSubject($index);">
+                                                                <i class="fa fa-minus fa-x"></i>删除这个题目
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div ng-if="item.type==4">
+                                                    <!-- 视频type=4 -->
+                                                    <div class="form-group m-b-none">
+                                                        <label class="col-sm-2 col-md-3 control-label p-t-xss">
+                                                            标题
+                                                        </label>
+                                                        <div class="col-sm-8 col-md-6">
+                                                            <input type="text" placeholder="请输入多选标题" name="voteName" class="form-control title" ng-model="item.title" />
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="form-group m-b-none m-t-sm" ng-repeat="info in item.options">
+                                                            <div class="col-sm-2 col-md-3 control-label">
+                                                                <div class="checkbox m-r-none p-t-none">
+                                                                    <input type="checkbox" value="2" name="checkboxInline" style="margin: 10px 0 0;" ng-disabled="isDisabled" />
+                                                                    <label>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-8 col-md-6">
+                                                                <input type="text" class="form-control item" name="voteName" placeholder="多选名称" ng-model="info.qkey" />
+                                                            </div>
+                                                            <div class="col-sm-1 col-md-1 p-n"><i class="fa fa-video-camera fa-x font16"></i></div>
+                                                            <div class="col-sm-1 col-md-2">
+                                                                <button type="button" class="btn btn-public" name="minTypeBtn" ng-click="removeOptions($parent.$index, info.qvalue);">
+                                                                    <i class="fa fa-minus fa-x"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group m-b-none ">
+                                                        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 ">
+                                                            <button type="button" class="btn btn-public m-t-sm m-r-sm" name="addRadioBtn" ng-click="addOptions($index);">
+                                                                <i class="fa fa-plus fa-x"></i>添加一个选项
+                                                            </button>
+                                                            <button type="button" class="btn btn-delet m-t-sm" name="deleteBtn" ng-click="removeSubject($index);">
+                                                                <i class="fa fa-minus fa-x"></i>删除这个题目
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="line line-dashed b-b line-lg pull-in"></div>
+                        <div class="form-group text-center">
+                            <button class="btn btn-primary m-r-20 p-lr-20" type="submit" ng-disabled="isSubDisabled">发布</button>
+                            <a class="btn btn-default p-lr-20" ng-click="confirmCancel()" id="cancel">取消</a>
+                        </div>
+
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- <link href="lib/webuploader/webuploader.css" rel="stylesheet" />
+<link href="lib/webuploader/style.css" rel="stylesheet" />
+<script src="lib/webuploader/webuploader.js"></script>
+
+<div id="upId">
+<form enctype="multipart/form-data">
+    <div id="wrapper">
+        <div id="container">
+            <div id="uploader">
+                <div class="queueList">
+                    <div id="dndArea" class="placeholder">
+                        <div id="filePicker"></div>
+                        <p>或将照片拖到这里，最多可选3张</p>
+                    </div>
+                </div>
+                <div class="statusBar" style="display: none;">
+                    <div class="progress">
+                        <span class="text">0%</span>
+                        <span class="percentage"></span>
+                    </div>
+                    <div class="info"></div>
+                    <div class="btns">
+                        <div id="filePicker2"></div>
+                        <div class="uploadBtn">开始上传</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <div style="text-align:right;padding-right:20px;"><div class="webuploader-pick" id="btnSave">&nbsp;&nbsp;&nbsp;&nbsp;确认使用&nbsp;&nbsp;&nbsp;&nbsp;</div></div>
+    <input type="hidden" id="path" />
+</form>
+
+</div>
+
+<script src="lib/webuploader/upload.js"></script> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

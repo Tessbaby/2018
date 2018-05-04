@@ -1,0 +1,16 @@
+'use strict';
+
+angular.module('app')
+	.controller('demoModuleController', ['$rootScope', '$scope', '$http', '$state', '$timeout',
+    function ($rootScope, $scope, $http, $state, $timeout) {
+    	$scope.title = '评议规则设置';
+
+    	$scope.showModule = function () {
+    		layer.open({
+    			type: 1,
+    			title: '民主评议党员测评表预览',
+    			area: ['80%', '500px'],
+    			content: $('#moduleTable')
+    		})
+    	}
+    }])

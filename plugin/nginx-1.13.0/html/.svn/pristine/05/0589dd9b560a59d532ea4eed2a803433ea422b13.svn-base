@@ -1,0 +1,371 @@
+<!-- <link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<style>
+    .img-style {
+        border: 1px solid #f1f1f1;
+        padding: 10px;
+    }
+
+    /*@media screen and (min-width: 1500px) {
+        .img-style {
+            position: absolute;
+            left: 60%;
+            top: 120px;
+        }
+    }
+
+    @media screen and (max-width: 1500px) {
+        .img-style {
+            margin-left: 18%;
+            margin-top: 20px;
+        }
+    }*/
+</style>
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><span><i class="fa fa-home">&nbsp;</i> {{menuName}}</span></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+<div class="wrapper-md content">
+    <div class="panel panel-default">
+        <div class="panel-heading font-bold">
+            {{title}}
+					<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.article.list2({typeCode:record.typeCode})" ng-show="{{isForm2}}"><i class="text-md fa fa-times text-muted"></i></a>
+            <a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.article.list({typeCode:record.typeCode})" ng-show="{{!isForm2}}"><i class="text-md fa fa-times text-muted"></i></a>
+        </div>
+        <div class="panel-body">
+
+            <form class="form-horizontal" name="user_form" id="user_form">
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="articleTitle"><span class="text-danger wrapper-sm">*</span>标题</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="articleTitle" id="articleTitle" placeholder="请输入标题" ng-model="record.title">
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="articleKey"><span class="text-danger wrapper-sm">*</span>关键字</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="articleKey" id="articleKey" placeholder="请输入关键字" ng-model="record.key">
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div ng-if="param.mId != ''">
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="articleCategory"><span class="text-danger wrapper-sm">*</span>类型</label>
+                        <div class="col-sm-6">
+                            <select class="form-control r-inline add-select" ng-model="record.categoryId" id="categoryId">
+                                <option ng-repeat="item in typeList" value="{{item.id}}">{{item.name}}</option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                </div>
+
+                <div class="form-group" >
+                    <label class="col-lg-2 col-sm-3 control-label" for="userLogoPic">宣传图</label>
+
+                    <div class="col-sm-4 col-xs-10">
+
+                        <div class="m-b upload-pic-box inline">
+                            <a href="javascript:void(0);" class="btn btn-default btn-addon">
+                                <i class="fa fa-upload"></i>上传图片
+                            </a>
+                        </div>
+                        <div class="m-b inline" ng-show="imgSrc!='res/img/np.png'" ng-click="img_del($index)">
+                            <a href="javascript:void(0);" class="btn btn-danger btn-addon">删除</a>
+                        </div>
+
+                        <input type="file" id="uploadImg" accept="image/png,image/jpg,image/jpeg" class="fileInput" ng-hide="1" />
+                        <div class="col">
+                            <div class="inline bg-white wrapper-sm b-a">
+                                <div class="bg-light" style="position: relative; overflow: hidden; width: {{ xcImg.xctParentWidth }}px; height: {{ xcImg.xctParentHeight }}px">
+                                    <ui-cropper image="myImage" area-type="rectangle" ng-aspect-ratio="{{xcImg.sf}}" result-image="myCroppedImage" 
+                                        ng-result-image-size='{w: {{ xcImg.xctChildWidth }},h: {{ xcImg.xctChildHeight }}'></ui-cropper>
+                                 
+                                </div>
+                            </div>
+                        </div>
+                        <span class="help-block m-b-none">题图尺寸要求宽度*高度为 {{ xcImg.xctWidth }} px * {{ xcImg.xctHeight }} px。图片格式支持jpg,png</span>
+                    </div>
+                    <div class=" col-sm-4 col-xs-4">
+                        <div class=" img-style" ng-if="myCroppedImage">
+                            <img ng-src="{{myCroppedImage}}" />
+                            <span class="help-block m-b-none">使用当前图片</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="articleConType"><span class="text-danger wrapper-sm">*</span>内容形式</label>
+                    <div class="col-sm-6">
+                        <select class="form-control r-inline add-select" id="type" ng-model="param.linksType">
+                            <option value="1">自定义文章内容</option>
+                            <option value="2">文章链接</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="m-l-xl m-r-xl panel-heading" ng-show="param.linksType == '1'">
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="noticeTitle"><span class="text-danger wrapper-sm">*</span>文章内容</label>
+                        <div class="col-sm-9">
+                            <script type="text/javascript" charset="utf-8" src="lib/ueditor/ueditor.config.js"></script>
+                            <script type="text/javascript" charset="utf-8" src="lib/ueditor/ueditor.all.min.js"> </script>
+                            <script type="text/javascript" charset="utf-8" src="lib/ueditor/lang/zh-cn/zh-cn.js"></script>
+                            <textarea id="myEditor" name="myEditor" style="width: 100%; height: 210px; position: relative; z-index: 0;"></textarea>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="userLogoPic">上传附件</label>
+                        <div class="col-sm-6">
+                            <div class="m-b upload-file-box">
+                                <a href="javascript:void(0);" class="btn btn-default btn-addon">
+                                    <i class="fa fa-upload"></i>上传
+                                </a>
+                                <small class="block">（支持扩展名：.rar/.zip/.doc/.docx/.xls/.xlsx/.ppt/.pptx/.pdf/.txt/.png/.jpg/.jpeg/.gif；最多上传5个附件，文件大小不超过2M）
+                                </small>
+                            </div>
+                            <input type="file" id="uploadFiles" class="fileInput" ng-hide="1" />
+                            <div>
+                                <div class="m-t-sm" ng-repeat="item in param.filePath">
+                                    <span>{{item.fileName}}</span>
+                                    <span class="inline " ng-click="file_del($index)"><i class="text-md fa fa-times text-muted"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="m-l-xl m-r-xl panel-heading" ng-show="param.linksType == '2'">
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="articleLink"><span class="text-danger wrapper-sm">*</span>文章链接</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" value="" name="articleLink" id="articleLink" placeholder="请输入链接地址" ng-model="record.links">
+                        </div>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="articleIsTop"><span class="text-danger wrapper-sm"></span>置顶</label>
+                    <div class="col-sm-6">
+                        <span class="inline" style="position: relative; top: 5px;">
+                            <switch id="isTop" name="isTop" ng-model="param.isTop" class="green"></switch>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group text-center">
+                    <button class="btn btn-primary m-r-20 p-lr-20" type="submit" ng-disabled="isDisabled">保存</button>
+                    <a ui-sref="main.article.list2({typeCode:record.typeCode})" class="btn btn-default p-lr-20" id="cancel" ng-show="{{isForm2}}">取消</a>
+                    <a ui-sref="main.article.list({typeCode:record.typeCode})" class="btn btn-default p-lr-20" id="cancel" ng-show="{{!isForm2}}">取消</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> -->
+
+
+
+
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<style>
+    .img-style {
+        border: 1px solid #f1f1f1;
+        padding: 10px;
+    }
+
+    /*@media screen and (min-width: 1500px) {
+        .img-style {
+            position: absolute;
+            left: 60%;
+            top: 120px;
+        }
+    }
+
+    @media screen and (max-width: 1500px) {
+        .img-style {
+            margin-left: 18%;
+            margin-top: 20px;
+        }
+    }*/
+</style>
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><span><i class="fa fa-home">&nbsp;</i> {{menuName}}</span></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+<div class="wrapper-md content">
+    <div class="panel panel-default">
+        <div class="panel-heading font-bold">
+            {{title}}
+                    <a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.article.list2({typeCode:record.typeCode})" ng-show="{{isForm2}}"><i class="text-md fa fa-times text-muted"></i></a>
+            <a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.article.list({typeCode:record.typeCode})" ng-show="{{!isForm2}}"><i class="text-md fa fa-times text-muted"></i></a>
+        </div>
+        <div class="panel-body">
+
+            <form class="form-horizontal" name="user_form" id="user_form">
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="articleTitle"><span class="text-danger wrapper-sm">*</span>标题</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="articleTitle" id="articleTitle" placeholder="请输入标题" ng-model="record.title">
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="articleKey"><span class="text-danger wrapper-sm">*</span>关键字</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="articleKey" id="articleKey" placeholder="请输入关键字" ng-model="record.key">
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div ng-if="param.mId != ''">
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="articleCategory"><span class="text-danger wrapper-sm">*</span>类型</label>
+                        <div class="col-sm-6">
+                            <select class="form-control r-inline add-select" ng-model="record.categoryId" id="categoryId">
+                                <option ng-repeat="item in typeList" value="{{item.id}}">{{item.name}}</option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                </div>
+
+                <div class="form-group" ng-show="xcImg.showXCT">
+                    <label class="col-lg-2 col-sm-3 control-label" for="userLogoPic">宣传图</label>
+
+                    <div class="col-sm-4 col-xs-10">
+
+                        <div class="m-b upload-pic-box inline">
+                            <a href="javascript:void(0);" class="btn btn-default btn-addon">
+                                <i class="fa fa-upload"></i>上传图片
+                            </a>
+                        </div>
+                        <div class="m-b inline" ng-show="imgSrc!='res/img/np.png'" ng-click="img_del($index)">
+                            <a href="javascript:void(0);" class="btn btn-danger btn-addon">删除</a>
+                        </div>
+
+                        <input type="file" id="uploadImg" accept="image/png,image/jpg,image/jpeg" class="fileInput" ng-hide="1" />
+                        <div class="col" ng-show="style == 1 || style == 4">
+                            <div class="inline bg-white wrapper-sm b-a">
+                                <div class="bg-light" style="width: 248px; height: 248px; position: relative; overflow: hidden;">
+                                    <ui-cropper image="myImage" area-type="rectangle" aspect-ratio="1" result-image="myCroppedImage" result-image-quality="1" result-image-size='{w: 124,h: 124}'></ui-cropper>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col" ng-show="style == 3">
+                            <div class="inline bg-white wrapper-sm b-a">
+                                <div class="bg-light" style="width: 314px; height: 314px; position: relative; overflow: hidden;">
+                                    <ui-cropper image="myImage" area-type="rectangle" aspect-ratio="1" result-image="myCroppedImage" result-image-quality="1" result-image-size='{w: 314,h: 314}'></ui-cropper>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col" ng-show="style == 5">
+                            <div class="inline bg-white wrapper-sm b-a">
+                                <div class="bg-light" style="width: 480px; height: 320px; position: relative; overflow: hidden;">
+                                    <ui-cropper image="myImage" area-type="rectangle" aspect-ratio="1.5" result-image="myCroppedImage" result-image-quality="1" result-image-size='{w: 720,h: 480}'></ui-cropper>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="help-block m-b-none">题图尺寸要求宽度*高度为 {{xcImg.xctWidth}}px * {{ xcImg.xctHeight }}px。图片格式支持jpg,png</span>
+                    </div>
+                    <div class="col-sm-10 col-sm-offset-2">
+                        <div class="inline img-style" ng-if="myCroppedImage">
+                            <img ng-show="style == 3" ng-src="{{myCroppedImage}}" style="width: 314px; height: 314px;"/>
+                            <img ng-show="style == 1 || style == 4" ng-src="{{myCroppedImage}}" style="width: 248px; height: 248px;"/>
+                            <img ng-show="style == 5" ng-src="{{myCroppedImage}}" style="width: 720px; height: 480px;"/>
+                            <span class="help-block m-b-none">使用当前图片</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in" ng-show="xcImg.showXCT"></div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="articleConType"><span class="text-danger wrapper-sm">*</span>内容形式</label>
+                    <div class="col-sm-6">
+                        <select class="form-control r-inline add-select" id="type" ng-model="param.linksType">
+                            <option value="1">自定义文章内容</option>
+                            <option value="2">文章链接</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="m-l-xl m-r-xl panel-heading" ng-show="param.linksType == '1'">
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="noticeTitle"><span class="text-danger wrapper-sm">*</span>文章内容</label>
+                        <div class="col-sm-9">
+                            <script type="text/javascript" charset="utf-8" src="lib/ueditor/ueditor.config.js"></script>
+                            <script type="text/javascript" charset="utf-8" src="lib/ueditor/ueditor.all.min.js"> </script>
+                            <script type="text/javascript" charset="utf-8" src="lib/ueditor/lang/zh-cn/zh-cn.js"></script>
+                            <textarea id="myEditor" name="myEditor" style="width: 100%; height: 210px; position: relative; z-index: 0;"></textarea>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="userLogoPic">上传附件</label>
+                        <div class="col-sm-6">
+                            <div class="m-b upload-file-box">
+                                <a href="javascript:void(0);" class="btn btn-default btn-addon">
+                                    <i class="fa fa-upload"></i>上传
+                                </a>
+                                <small class="block">（支持扩展名：.rar/.zip/.doc/.docx/.xls/.xlsx/.ppt/.pptx/.pdf/.txt/.png/.jpg/.jpeg/.gif；最多上传5个附件，文件大小不超过2M）
+                                </small>
+                            </div>
+                            <input type="file" id="uploadFiles" class="fileInput" ng-hide="1" />
+                            <div>
+                                <div class="m-t-sm" ng-repeat="item in param.filePath">
+                                    <span>{{item.fileName}}</span>
+                                    <span class="inline " ng-click="file_del($index)"><i class="text-md fa fa-times text-muted"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="m-l-xl m-r-xl panel-heading" ng-show="param.linksType == '2'">
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="articleLink"><span class="text-danger wrapper-sm">*</span>文章链接</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" value="" name="articleLink" id="articleLink" placeholder="请输入链接地址" ng-model="record.links">
+                        </div>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="articleIsTop"><span class="text-danger wrapper-sm"></span>置顶</label>
+                    <div class="col-sm-6">
+                        <span class="inline" style="position: relative; top: 5px;">
+                            <switch id="isTop" name="isTop" ng-model="param.isTop" class="green"></switch>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group text-center">
+                    <button class="btn btn-primary m-r-20 p-lr-20" type="submit" ng-disabled="isDisabled">保存</button>
+                    <a ui-sref="main.article.list2({typeCode:record.typeCode})" class="btn btn-default p-lr-20" id="cancel" ng-show="{{isForm2}}">取消</a>
+                    <a ui-sref="main.article.list({typeCode:record.typeCode})" class="btn btn-default p-lr-20" id="cancel" ng-show="{{!isForm2}}">取消</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+

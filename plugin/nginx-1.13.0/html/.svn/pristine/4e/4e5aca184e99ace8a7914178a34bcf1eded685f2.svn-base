@@ -1,0 +1,155 @@
+'use strict';
+
+angular.module('app')
+	.controller('articleListController', ['$rootScope', '$scope', '$http', '$state', 'toaster',
+	                                function($rootScope, $scope, $http, $state, toaster) {
+		$scope.title = '文章';
+		$scope.loading = false;
+		$scope.param = {};
+		$scope.param.typeCode = $state.params.typeCode;
+		$scope.url = $rootScope.baseUrl+'/article/list';
+		$scope.categoryId = '0';
+		//$scope.mId = '';
+		
+		//判断是否有专题与分类
+		$.ajax({
+			type: 'PUT',
+			dataType: 'json',
+			async:false,
+			contentType: 'application/json;charset=UTF-8',
+			url: $rootScope.baseUrl+'/articleType/query',
+			data: angular.toJson({"code":$scope.param.typeCode})
+		}).then(function (result) {
+			if (result.httpCode == 200) {
+				console.log(result.data);
+				$scope.cateAndImg = result.data;
+				//$scope.mId = $scope.cateAndImg.isSpecial == 1?$scope.cateAndImg.id:'';
+				
+			} else {
+			    toaster.clear('*');
+			    toaster.pop('error', '', result.msg);
+			}
+			//$scope.$apply();
+		});
+		
+		//分类		
+		if($scope.cateAndImg.isCategory == 1){
+			$.ajax({
+				type: 'PUT',
+				dataType: 'json',
+				async:false,
+				contentType: 'application/json;charset=UTF-8',
+				url: $rootScope.baseUrl+'/articleCategory/list',
+				data: angular.toJson({"typeId":$scope.param.typeCode})
+			}).then(function (result) {
+				if (result.httpCode == 200) {
+					$scope.typeList = result.data;
+				} else {
+				    toaster.clear('*');
+				    toaster.pop('error', '', result.msg);
+				}
+				//$scope.$apply();
+			});
+		}
+		
+		
+		
+		$scope.clearSearch = function() {
+			$scope.param.keyword= null;
+			$rootScope.search($scope.url, $scope.param);
+		}
+		
+		// 翻页 - 排序翻页数据与此一致
+		$scope.pagination = function (page) {
+		  $scope.param.pageNum = page;
+		  $scope.param.asc = $rootScope.changeAsc();
+		  $rootScope.search($scope.url, $scope.param);
+		};
+
+		$rootScope.pageInfo = []; // 请求数据前清空
+		$rootScope.search($scope.url, $scope.param);
+		console.log($rootScope.pageInfo);
+		
+		//删除
+		$scope.delete = function(id) {
+			
+		    if (confirm('确认要删除？')) {
+		        $scope.loading = true;
+				$.ajax({
+				    type: 'delete',				
+					url: '/iBase4J-SYS-Web/article',
+					data: angular.toJson({"id":id})
+				}).then(function(result) {
+					$scope.loading = false;
+					//console.log(result);
+					if (result.httpCode == 200) {
+					    toaster.clear('*');
+					    toaster.pop('success', '', "删除成功");
+                        //如果当前删除数据是第11条，意味着当前页码为2，删除后继续请求第二页数据会返回空数据
+						if ($rootScope.pageInfo.data.length == 1 && $scope.param.pageNum > 1) {
+						    $scope.param.pageNum = $scope.param.pageNum - 1;
+						}
+						$rootScope.search($scope.url, $scope.param);
+					} else {
+					    toaster.clear('*');
+					    toaster.pop('error', '', result.msg);
+					}
+					$scope.$apply();
+				});
+			}
+		}
+		
+		
+		$scope.changeType = function(categoryId){
+			if(categoryId == '0'){
+				$scope.param.categoryId = '';
+			} else {				
+				$scope.param.categoryId = categoryId;
+			}
+			$rootScope.search($scope.url, $scope.param);
+		}
+	
+		//置顶
+		$scope.changeIsTop = function(id, topId){
+			$.ajax({
+				type: 'post',
+				dataType: 'json',
+				async:false,
+				contentType: 'application/json;charset=UTF-8',
+				url: $rootScope.baseUrl+'/article/top',
+				data: angular.toJson({"id":id,"isTop":topId,"typeCode":$scope.param.typeCode})
+			}).then(function (result) {
+				//console.log(result);
+				if (result.httpCode == 200) {
+					toaster.clear('*');
+					toaster.pop('success', '', "操作成功");
+					//console.log("ss");
+					$rootScope.search($scope.url, $scope.param);
+				} else if(result.httpCode == 20510){
+				    toaster.clear('*');
+				    toaster.pop('error', '', result.msg);
+				} else {
+				    toaster.clear('*');
+				    toaster.pop('error', '', result.msg);
+				}
+				//$scope.$apply();
+			});
+		}
+		
+		//添加提示
+		$scope.addInfo = function(){
+			if($scope.cateAndImg.isCategory == 1){//有分类
+				var typeLength = $scope.typeList.length;
+				if(typeLength > 0){
+					$state.go('main.article.form',{typeCode:$scope.param.typeCode,id:'',mId:$scope.cateAndImg.id});
+				} else {
+					toaster.clear('*');
+					toaster.pop('error', '', '请先添加分类');
+				}
+			} else {
+				$state.go('main.article.form',{typeCode:$scope.param.typeCode,id:'',mId:''});
+			}
+			
+			
+		}
+} ]);

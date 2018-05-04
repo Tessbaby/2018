@@ -1,0 +1,178 @@
+'use strict';
+
+angular.module('app')
+	.controller('meetingDetailController', [ '$rootScope', '$scope', '$http', '$state','toaster','$timeout',
+	  function($rootScope, $scope, $http, $state, toaster, $timeout) {
+
+	  	
+	  	$scope.id = $state.params.id;
+	  	$scope.qdShow = true; // 用户为管理员时显示
+	  	$scope.qdUserList = []; // 签到人员详情列表数据
+	  	$scope.record = {};
+
+	  	if($state.includes('**.lifes.meetingUpdate')){ //编辑
+	  		$scope.title='编辑';
+	  		$scope.inputShow = true;
+	  		$scope.labelShow = false;
+	  		$scope.readonly = false;
+        //validate(id);
+	    }else if($state.includes('**.lifes.meetingDetail')){ // 详情
+	    	$scope.title='详情';
+	    	$scope.inputShow = false;
+	  		$scope.labelShow = true;
+	  		$scope.readonly = true;
+
+	    }
+	    activate($scope.id);
+	    getUserId($scope.id);
+	    validate();
+
+	    /*  编辑 */
+	    function activate(id) {
+	    	$.ajax({
+	    		type: 'PUT',
+					url : '/iBase4J-SYS-Web/sysMeeting/read/preUpdateDetail',
+	        dataType: 'json',
+					contentType:'application/json;charset=UTF-8',
+					data: angular.toJson({id: $scope.id})
+				}).then(function (result) {
+					console.log(result);
+					$scope.result = result.data;
+		      // editor(添加默认数据)
+		      if(result.data.mcontent != '') {
+		      	var ueHtml = '<p>' + result.data.mcontent + '</p>';
+			      myEditor.setContent(ueHtml);
+		      }
+		      
+					$scope.$apply();
+				})
+	    }
+
+	    function getUserId (id) {
+	    	$.ajax({
+	    		type: 'PUT',
+					url : '/iBase4J-SYS-Web/sysMeetingUser/read/list',
+	        dataType: 'json',
+					contentType:'application/json;charset=UTF-8',
+					data: angular.toJson({id: $scope.id})
+				}).then(function (result) {
+					$scope.qdUser = result;
+					$scope.qdUserList = result.data;
+				})
+	    }
+
+	    $scope.showDetail = function () {
+	    	var html = '';
+	    	var qd = '';
+	    	var fColor = '';
+	    	$.each($scope.qdUserList, function (index, item) {
+
+	    		if(item.qdstatus == -1) { 
+	    			qd = '未签';
+	    			fColor = 'red';
+	    		} else if (item.qdstatus == 1) {
+	    			qd = '已签';
+	    			fColor = 'green';
+	    		} else if (item.qdstatus == 1) {
+	    			qd = '迟到';
+	    			fColor = 'yellow';
+	    		}
+	    		html += '<div class="form-group" style="height: 20px;">'
+	    						+ '<span class="col-xs-3 col-md-3 text-center" style="color:' + fColor + '">' + qd + '</span>'
+	    						+ '<span class="col-xs-3 col-md-3">' + (item.username ? item.username : ' ')  + '</span>'
+	    						+ '<span class="col-xs-6 col-md-6">' + (item.duty ? item.duty : ' ') + '</span></div>'
+	    	})
+	    	layer.open({
+	    		type: 1, //page层
+					shade: 0.5, //遮罩透明度
+					moveType: 1, //拖拽风格，0是默认，1是传统拖动
+					shift: 1, //0-6的动画形式，-1不开启
+					area: ['550px', '300px'],
+					skin: 'layer-add',
+					content: html
+	    	})
+	    }
+
+	    //百度编辑器
+			var myEditor = UE.getEditor("myEditor", {
+				topOffset: 0,
+				autoFloatEnabled: false,
+				autoHeightEnabled: false,
+				wordCount: false,
+				autotypeset: {
+					removeEmptyline: true
+				},
+				readonly: $scope.readonly,
+				toolbars: [
+					[
+						'source', //源代码
+						'bold', //加粗
+						'indent', //首行缩进
+						'italic', //斜体
+						'underline', //下划线
+						'simpleupload', //单图上传
+						'inserttable', //插入表格
+						'link', //超链接
+						'removeformat',//清除格式
+						'huodong'
+					]
+				]
+			});
+
+			$scope.cancel = function () {
+				if(confirm('确定退出编辑？')) {
+					history.go(-1);
+					// $state.go('main.life.meeting');
+				}
+			}
+			/*  编辑 END */
+
+			// 表单验证
+	    function validate(){
+	      jQuery('form').validate({
+	        rules: {
+	        	remark: { maxlength: 500 },
+	        	missue: {	maxlength: 500 },
+	        	myEditor: { maxlength: 500 }
+	        },
+	        messages: {
+	        	remark: { maxlength: '长度不能超过500个字符' },
+	        	missue: {	maxlength: '长度不能超过500个字符' },
+	        	myEditor: { maxlength: '长度不能超过500个字符' }
+	        },
+	        submitHandler: function() {
+	          $scope.submit();
+	        }
+	      })
+	    }
+			// 提交
+			$scope.submit = function () {
+				if ($scope.result.allowEdit == 1) {
+					var html = myEditor.getContent();
+					$scope.record.mcontent = $(html).text();
+					$scope.record.id = $scope.id;
+					$.ajax({
+		    		type: 'post',
+						url : '/iBase4J-SYS-Web/sysMeeting/update/remark',
+		        dataType: 'json',
+						contentType:'application/json;charset=UTF-8',
+						data: angular.toJson($scope.record)
+					}).then(function (result) {
+						if(result.httpCode == 200) {
+							toaster.clear('*');
+							toaster.pop('success', '', '提交成功');
+							$state.go('main.life.meeting');
+						} else {
+							toaster.clear('*');
+							toaster.pop('error', '', result.msg);
+						}
+					}) 
+				} else {
+					toaster.clear('*');
+					toaster.pop('error', '', '不允许编辑');
+				}
+				
+			}
+			
+
+	  }])

@@ -1,0 +1,68 @@
+
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><span><i class="fa fa-home">&nbsp;</i> 栏目管理</span></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+<div class="wrapper-md content">
+    <div class="panel panel-default">
+        <!-- 头部 -->
+        <div class="panel-heading font-bold">{{title}}
+					<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.article.list2({typeCode:param.typeCode})" ng-show="{{isTopic2}}"><i class="text-md fa fa-times text-muted"></i></a>
+					<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.article.list({typeCode:param.typeCode})" ng-show="{{!isTopic2}}"><i class="text-md fa fa-times text-muted"></i></a>
+        </div>
+        <!--表单-->
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="col-lg-2 col-sm-3 control-label" for="userLogoPic">专题图片</label>
+				<div class="col-sm-6">
+					<div class="m-b upload-file-box">
+						<a href="javascript:void(0);" class="btn btn-default btn-addon">
+							<i class="fa fa-upload"></i>上传
+						</a>
+					</div>
+					<input type="file" id="uploadFiles" class="fileInput" accept="image/png,image/jpg,image/jpeg" ng-hide="1" />
+					<div>
+						<div class="m-t-sm" ng-repeat="item in param.specialImg">
+							<div class="bg-light" style="width:360px;height:200px;position:relative;overflow:hidden;">
+								<img ng-src="{{item.fileUrlPath}}" style="width:100%;text-align:center;" />
+							</div>
+							 <div class="m-b inline" ng-show="item.fileUrlPath!=''" ng-click="file_del($index)">
+								<a href="javascript:void(0);" class="btn btn-danger btn-addon">删除</a>
+							</div>
+							<!-- <span>{{item.filename}}</span>
+							<span class="inline " ng-click="file_del($index)"><i class="text-md fa fa-times text-muted"></i></span> -->
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+		</div>
+		<div class="form-group text-center">
+			<button class="btn btn-primary m-r-20 p-lr-20" type="submit" ng-click="submit()" ng-disabled="isDisabled">保存</button>
+			<a ui-sref="main.article.list2({typeCode:param.typeCode})" class="btn btn-default p-lr-20" id="cancel" ng-show="{{isTopic2}}">取消</a>
+			<a ui-sref="main.article.list({typeCode:param.typeCode})" class="btn btn-default p-lr-20" id="cancel" ng-show="{{!isTopic2}}">取消</a>
+		</div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+

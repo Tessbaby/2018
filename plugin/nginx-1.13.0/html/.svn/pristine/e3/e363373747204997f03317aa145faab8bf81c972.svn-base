@@ -1,0 +1,70 @@
+<toaster-container toaster-options="{'position-class': 'toast-center', 'close-button':true}"></toaster-container>
+
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><span><i class="fa fa-home"></i> 党的建设</span></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+<div class="wrapper-md content">
+    <div class="panel panel-default m-b-xl">
+        <!-- 头部 -->
+        <div class="panel-heading font-bold">{{title}}
+			<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.article.list({typeCode:param.typeCode})"><i class="text-md fa fa-times text-muted"></i></a>
+        </div>
+        <!--表单-->
+		<div class="panel-body">
+			<div class="form-group">
+				
+				<div class="col-sm-6 col-sm-offset-2">
+					<div class="form-group m-b-none m-t-sm row" ng-repeat="item in info">
+						
+						<div class="col-sm-8 col-md-6">
+							<input type="text" class="form-control item" name="categoryName" placeholder="分类名称" id="{{item.id}}" ng-model="item.name">
+						</div>
+						<div class="col-sm-4 col-md-6 p-t-10">
+							<button type="button" class="btn btn-public m-r-sm" name="minTypeBtn" ng-click="removeOptions($index)">
+								<i class="fa fa-minus fa-x"></i>
+							</button>
+							<span class="pointer" ng-click="removeUp($index)">&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-long-arrow-up fa-x" ></i>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+							<span class="pointer" ng-click="removeDown($index)">&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-long-arrow-down fa-x" ></i>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						</div>
+						<div class="col-sm-1 col-md-2 p-t-10">
+							
+						</div>
+					</div>
+					<div class="form-group m-n">
+						
+							<button type="button" class=" btn btn-public m-t-xl m-r-sm full-width" name="addRadioBtn" ng-click="addOptions();">
+								<i class="fa fa-plus fa-x"></i>添加
+							</button>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group text-center m-b-xl">
+			<button class="btn btn-primary m-r-20 p-lr-20" type="submit" ng-click="submit()" ng-disabled="isDisabled">保存</button>
+			<a ui-sref="main.article.list({typeCode:param.typeCode})" class="btn btn-default p-lr-20" id="cancel">取消</a>
+		</div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+

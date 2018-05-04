@@ -1,0 +1,84 @@
+'use strict';
+
+angular.module('app')
+	.controller('activityAddController', [ '$rootScope', '$scope', '$http', '$state','toaster',
+	  function($rootScope, $scope, $http, $state,toaster) {
+	  	$scope.title = '活动发布';
+	  	$scope.openSign = false;
+	  	$scope.isEnd = false;
+	  	$scope.activity = {};
+	  	validate();
+
+	  	var start = {
+	  	    elem: '#begintime',
+	  	    format: 'YYYY/MM/DD hh:mm',
+	  	    //min: laydate.now(0, "YYYY/MM/DD hh:mm:00"), //设定最小日期为当前日期
+	  	    max: '2099-06-16 23:59:', //最大日期
+	  	    istime: true,
+	  	    istoday: true, //是否显示今天
+	  	    issure: true, //是否显示确认
+	  	    festival: true, //是否显示节日
+	  	    choose: function (datas) {
+	  	        var time = new Date(datas);
+	  	        time.setMinutes(time.getMinutes() + 5, time.getSeconds(), 0);
+	  	        //timeStamp2String(time);
+	  	        // console.log(timeStamp2String(time));
+	  	        end.min = timeStamp2String(time); //开始日选好后，重置结束日的最小日期
+	  	        end.start = datas;//将结束日的初始值设定为开始日
+	  	        $scope.activity.begintime = datas;
+
+	  	        console.log(new Date(datas));
+	  	    }
+	  	};
+	  	var end = {
+	  	    elem: '#endtime',
+	  	    format: 'YYYY/MM/DD hh:mm',
+	  	    //min: laydate.now(0, "YYYY/MM/DD hh:mm:00"),
+	  	    max: '2099-06-16 23:59:59',
+	  	    istime: true,
+	  	    istoday: false,
+	  	    choose: function (datas) {
+	  	        start.max = datas; //结束日选好后，重置开始日的最大日期
+
+	  	        $scope.activity.endtime = datas;
+	  	    }
+	  	};
+	  	laydate(start);
+	  	laydate(end);
+	  	function submit() {
+
+	  	}
+
+	      // 表单验证
+	  	function validate() {
+  	    jQuery('form').validate({
+	        rules: {
+            aname: { required: true, maxlength: 500 },
+            begintime: { required: true, date: true },
+            endtime: { required: true, date: true },
+            place: { required: true, maxlength: 200 },
+            mcontent: { maxlength: 1000 }
+
+	        },
+	        messages: {
+            aname: { required: '请填写活动名称', maxlength: '长度不能超过500个字符' },
+            begintime: { required: '开始时间为必填', date: '日期格式不正确' },
+            endtime: { required: '结束时间为必填', date: '日期格式不正确' },
+            place: { required: '请填写活动地点', maxlength: '活动地点不能超过200字' },
+            mcontent: { maxlength: '不能超过1000字' }
+	        },
+	        submitHandler: function () {
+
+            var current = new Date();
+            var begintime = $scope.activity.begintime;
+            var d1 = new Date(begintime.replace(/\-/g, "\/"));
+            if (begintime != "" && current != "" && d1 < current) {
+                if (confirm('活动开始时间小于当前时间，添加后活动会自动进入【进行中】状态，是否确认发布？')) {
+                    submit();
+                }
+            }
+
+	        }
+  	    })
+	  	}
+	  }])

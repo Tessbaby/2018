@@ -1,0 +1,65 @@
+<!-- list -->
+<link href="http://at.alicdn.com/t/font_2u4e5fhq21grdx6r.css" rel="stylesheet" type="text/css" />
+<ul class="nav" ng-controller="navCtrl">
+    <!-- <li  ng-repeat="menu in menuList " ng-class="{active: $state.includes('{{menu.permission}}')}"> -->
+    <li  ng-repeat="menu in menuList " data-pId="{{menu.id}}">
+        <!-- 判断是否有子集：有 -->
+        <a href ng-if="menu.children.length != 0" class="auto" ng-class="{active: $state.includes('{{menu.permission}}')}">
+            <span class="pull-right text-muted">
+                <i class="fa fa-fw fa-angle-right text"></i>
+                <i class="fa fa-fw fa-angle-down text-active"></i>
+            </span>
+            <i class="{{menu.iconcls}}"></i>
+            <span>{{menu.menuName}}</span>
+        </a>
+
+        <!-- <a href ng-if="menu.children.length == 0" class="auto" ui-sref="{{menu.permission}}" ng-class="{active: $state.includes('{{menu.permission}}')}">
+            <span class="pull-right text-muted">
+                <i class="fa fa-fw fa-angle-right text"></i>
+                <i class="fa fa-fw fa-angle-down text-active"></i>
+            </span>
+            <i class="{{menu.iconcls}}"></i>
+            <span>{{menu.menuName}}</span>
+        </a> -->
+
+        <!-- 判断是否有子集：没有; 判断request，有值跳转至链接 -->
+        <a href="{{menu.request}}" ng-if="menu.children.length == 0 && menu.request != ''" class="auto" ui-sref="{{menu.request}}" target="_blank">
+            <span class="pull-right text-muted">
+                <i class="fa fa-fw fa-angle-right text"></i>
+                <i class="fa fa-fw fa-angle-down text-active"></i>
+            </span>
+            <i class="{{menu.iconcls}}"></i>
+            <span>{{menu.menuName}}</span>
+        </a>
+
+        <a ng-if="menu.children.length == 0 && menu.request == ''" class="auto" ui-sref="{{menu.permission}}" ng-class="{active: $state.includes('{{menu.permission}}')}">
+            <span class="pull-right text-muted">
+                <i class="fa fa-fw fa-angle-right text"></i>
+                <i class="fa fa-fw fa-angle-down text-active"></i>
+            </span>
+            <i class="{{menu.iconcls}}"></i>
+            <span>{{menu.menuName}}</span>
+        </a>
+
+        <!-- 子集菜单 -->
+        <ul ng-if="menu.children.length != 0" class="nav nav-sub dk">
+            <!--<li ng-repeat="rm in menu.children" ng-class="{active: $state.includes('{{rm.permission}}')}">
+	        <a ui-sref="{{rm.permission}}"  ng-class="{active: $state.includes('{{rm.permission}}')}">
+	        	  
+	          	<span>{{rm.menuName}}</span>
+	        </a>
+	      </li> -->
+            <!-- 如果有permissions说明这个路径中有参数(解决有路径有参数时，active无效的问题) -->
+            <li ng-repeat="rm in menu.children" ng-class="{active: (rm.permissions ? $state.includes('{{rm.permissions}}', rm.param) : $state.includes('{{rm.permission}}'))}">
+                <a ui-sref="{{rm.permission}}" ng-class="{active: (rm.permissions ? $state.includes('{{rm.permissions}}', rm.param) : $state.includes('{{rm.permission}}'))}" data-id="{{rm.parentId}}">
+                    <span>{{rm.menuName}}</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+
+<!-- list
+<ul class="nav" id="nav" ng-controller="navCtrl">
+</ul> -->

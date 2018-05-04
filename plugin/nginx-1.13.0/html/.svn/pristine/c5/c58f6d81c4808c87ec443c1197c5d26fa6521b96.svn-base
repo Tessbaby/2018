@@ -1,0 +1,80 @@
+'use strict';
+
+angular.module('app')
+	.controller('listController', [ '$rootScope', '$scope', '$http', '$state','toaster',
+	                                function($rootScope, $scope, $http, $state, toaster) {
+		$scope.title = '文章';
+		$scope.loading = false;
+		$scope.param = {};
+		$scope.param.typeCode = $state.params.typeCode;
+		$scope.url = $rootScope.baseUrl+'/article/list';
+		$scope.categoryId = '0';
+		
+		//分类		
+		$.ajax({
+			type: 'PUT',
+			dataType: 'json',
+			contentType: 'application/json;charset=UTF-8',
+			url: $rootScope.baseUrl+'/articleCategory/list',
+			data: angular.toJson({"typeId":$scope.param.typeCode})
+		}).then(function (result) {
+			if (result.httpCode == 200) {
+				$scope.typeList = result.data;
+			} else {
+				$scope.msg = result.msg;
+			}
+			$scope.$apply();
+		});
+		
+		
+		$scope.clearSearch = function() {
+			$scope.param.keyword= null;
+			$rootScope.search($scope.url, $scope.param);
+		}
+		
+		// 翻页 - 排序翻页数据与此一致
+		$scope.pagination = function (page) {
+		  $scope.param.pageNum = page;
+		  $scope.param.asc = $rootScope.changeAsc();
+		  $rootScope.search($scope.url, $scope.param);
+		};
+
+		$rootScope.search($scope.url, $scope.param);
+		console.log($rootScope.pageInfo);
+		
+		//删除
+		$scope.delInfo = function(id) {
+			
+			if(confirm('确认要删除？')){
+				$.ajax({
+					type: 'post',
+					dataType: 'json',
+					contentType:'application/json;charset=UTF-8',
+					url : '/iBase4J-SYS-Web/notice/deleteNotice',
+					data: angular.toJson({"id":id,"enable":"-1"})
+				}).then(function(result) {
+					$scope.loading = false;
+					//console.log(result);
+					if (result.httpCode == 200) {
+						toaster.pop('success', '', "删除成功");
+						//$scope.search();
+						$rootScope.search($scope.url, $scope.param);
+					} else {
+						$scope.msg = result.msg;
+					}
+					$scope.$apply();
+				});
+			}
+		}
+		
+		
+		$scope.changeType = function(categoryId){
+			if(categoryId == '0'){
+				$scope.param.categoryId = '';
+			} else {				
+				$scope.param.categoryId = categoryId;
+			}
+			$rootScope.search($scope.url, $scope.param);
+		}
+		
+} ]);

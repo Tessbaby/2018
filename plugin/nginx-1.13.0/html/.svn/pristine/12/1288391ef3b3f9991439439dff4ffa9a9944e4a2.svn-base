@@ -1,0 +1,42 @@
+<!-- list -->
+<link href="http://at.alicdn.com/t/font_2u4e5fhq21grdx6r.css" rel="stylesheet" type="text/css" />
+<ul class="nav" ng-controller="navCtrl" >
+	<li ng-repeat="menu in menuList " ng-class="{active: $state.includes('main.{{menu.permission}}')}">
+	    <a href ng-if="menu.children.length != 0" class="auto" ng-class="{active: $state.includes('main.{{menu.permission}}')}">
+	      <span class="pull-right text-muted">
+	        <i class="fa fa-fw fa-angle-right text"></i>
+	        <i class="fa fa-fw fa-angle-down text-active"></i>
+	      </span>
+	      <i class="{{menu.iconcls}}"></i>
+		  	<span>{{menu.menuName}}</span>
+	    </a>
+
+	    <a href ng-if="menu.children.length == 0" class="auto" ui-sref="main.{{menu.permission}}"  ng-class="{active: $state.includes('main.{{menu.permission}}')}">
+	      <span class="pull-right text-muted">
+	        <i class="fa fa-fw fa-angle-right text"></i>
+	        <i class="fa fa-fw fa-angle-down text-active"></i>
+	      </span>
+	      <i class="{{menu.iconcls}}"></i>
+		  	<span>{{menu.menuName}}</span>
+	    </a>
+
+	    <ul ng-if="menu.children.length != 0" class="nav nav-sub dk">
+	      <li ng-repeat="rm in menu.children" ng-class="{active: $state.includes('main.{{rm.permission}}')}">
+	        <a ui-sref="main.{{rm.permission}}"  ng-class="{active: $state.includes('main.{{rm.permission}}')}">
+	        	  <!--<i class="{{rm.iconcls}}"></i> -->
+	          	<span>{{rm.menuName}}</span>
+	        </a>
+	      </li>
+	      <!-- <li ng-repeat="rm in menu.children" ng-class="{active: $state.includes('main.{{rm.permissions}}', rm.param)}">
+	        <a ui-sref="main.{{rm.permission}}"  ng-class="{active: $state.includes('main.{{rm.permissions}}', rm.param)}">
+	          	<span>{{rm.menuName}}</span>
+	        </a>
+	      </li> -->
+	    </ul>
+	</li>
+</ul>
+
+
+ <!-- list
+<ul class="nav" id="nav" ng-controller="navCtrl">
+</ul> -->

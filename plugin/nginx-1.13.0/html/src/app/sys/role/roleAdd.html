@@ -1,0 +1,74 @@
+<toaster-container toaster-options="{'position-class': 'toast-center', 'close-button':true}"></toaster-container>
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<style> 
+ .input-check { vertical-align: bottom; margin-bottom: -4px!important; }
+ textarea { font-size: 15px; }
+</style>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+  <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+    <li><a ui-sref="main.role"><i class="fa fa-home">&nbsp;</i>角色管理</a></li>
+    <li class="active" ng-bind="title"></li>
+  </ul>
+</div>
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+  <!-- 数据显示 -->
+  <div class="wrapper-data">
+    <div class="panel panel-default">
+      <!-- 头部 -->
+      <div class="panel-heading font-bold">{{title}}
+				<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.roles"><i class="text-md fa fa-times text-muted"></i></a>
+      </div>
+
+      <div class="panel-body">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label class="col-lg-2 col-sm-3 control-label" for="roleName"><span class="text-danger wrapper-sm">*</span>名称</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" name="roleName" id="roleName" placeholder="请输入名称" ng-model="parts.roleName">
+              <span class="help-block m-b-none">
+                  <!-- 组织名称不得超过60个字。 -->
+              </span>
+            </div>
+          </div>
+          <div class="line line-dashed b-b line-lg pull-in"></div>
+
+          <div class="form-group">
+            <label for="" class="col-lg-2 col-sm-3 control-label"><span class="text-danger wrapper-sm">*</span>描述: </label>
+            <div class="col-sm-6">
+              <textarea id="remark" name="remark" rows="5" style="width: 100%;" ng-model="parts.remark"></textarea>
+            </div>
+          </div>
+          <div class="line line-dashed b-b line-lg pull-in"></div>
+
+          <div class="form-group">
+            <div class="col-lg-2 col-sm-3"></div>
+            <div class="col-sm-4 col-lg-4">
+              <div style="border: 1px solid #000; border-bottom: 0; width: 220px; margin-bottom: -10px; background: #f0f6e4; padding: 10px 15px;">
+                <span>菜单权限</span>
+              </div>
+              <ul id="menuRole" class="ztree"></ul>
+            </div>
+
+            <div class="col-sm-4 col-lg-4">
+              <div style="border: 1px solid #000; border-bottom: 0; width: 220px; margin-bottom: -10px; background: #f0f6e4; padding: 10px 15px;">
+                <span>部门权限</span>
+              </div>
+              <ul id="deptRole" class="ztree"></ul>
+            </div>
+          </div>
+          <div class="form-group text-center m-t-10">
+            <button class="btn btn-primary m-r-20 p-lr-20" id="submit" ng-click="submit()" ng-disabled="btnState" ng-show="hasUpdate">{{btnInfo}}</button>
+            <button type="button" class="btn btn-default p-lr-20" id="cancel" ng-click="cancel()">取消</button>
+	        </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

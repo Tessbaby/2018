@@ -1,0 +1,115 @@
+<toaster-container toaster-options="{'position-class': 'toast-center', 'close-button':true}"></toaster-container>
+<style>
+.notice-head h4{color:red;margin-top:10px;margin-bottom:10px;}
+.notice-star{position:relative;height:3px;background:#ff0000;width:100%;margin: 20px 0;}
+.notice-star div{position:absolute;top:-13px;left:50%;margin-left:-40px;width:80px;background:#fff;color:#ff0000;font-size:24px;text-align:center;line-height:1;font-weight:bold;}
+.tree-select { width: 220px; background-color: #fff !important;	color: #34495e !important; }
+</style>
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+  <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+    <li><a ui-sref="main"><i class="fa fa-home"></i> 组织生活</a></li>
+    <li><a ui-sref="main.commynity.info">会议管理</a></li>
+    <li class="active" ng-bind="title"></li>
+  </ul>
+</div>
+
+<div class="wrapper-md content">
+  <div class="panel panel-default">
+    <!-- 头部 -->
+    <div class="panel-heading font-bold">{{title}}
+			<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.life.meeting"><i class="text-md fa fa-times text-muted"></i></a>
+    </div>
+
+    <!--表单-->
+    <div class="panel-body">
+      <form class="form-horizontal"  name="organize_form">
+      	<div class="form-group">
+          <label class="col-lg-2 col-sm-3 control-label" for="">会议主题</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" name="mname" id="mname" ng-model="record.mname" placeholder="请输入会议主题" >
+            <span class="help-block m-b-none"><!-- 组织名称不得超过60个字。 --></span>
+          </div>
+        </div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+
+				<div class="form-group">
+			    <label class="col-lg-2 col-sm-3 control-label" for="mtype">会议类型</label>
+			    <div class="col-sm-6">
+            <select class="form-control r-inline add-select ng-pristine ng-valid ng-empty valid ng-touched" ng-model="record.mtype">
+              <option ng-repeat="x in mtypeList" value="{{x.code}}">{{x.codeText}}</option>
+	          </select>
+					</div>
+					<span class="help-block m-b-none"><!-- 组织名称不得超过60个字。 --></span>
+			  </div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+
+				<div class="form-group">
+          <label class="col-lg-2 col-sm-3 control-label" for="">会议时间</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control r-inline add-date laydate-icon" readonly id="startdate" name="startdate" ng-model="record.startdate" placeholder="请选择日期">
+            ——
+            <input type="text" class="form-control r-inline add-date laydate-icon" id="enddate" readonly name="enddate" ng-model="record.enddate" placeholder="请选择日期">
+            <span class="help-block m-b-none"><!-- 组织名称不得超过60个字。 --></span>
+          </div>
+        </div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+
+				<div class="form-group">
+          <label class="col-lg-2 col-sm-3 control-label" for="">会议地点</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" name="mplace" id="mplace" ng-model="record.mplace" placeholder="请输入会议地点" >
+            <span class="help-block m-b-none"><!-- 组织名称不得超过60个字。 --></span>
+          </div>
+        </div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+
+				<div class="form-group">
+          <label class="col-lg-2 col-sm-3 control-label" for="mcontent">会议内容</label>
+          <div class="col-sm-6">
+            <textarea class="form-control r-inline" id="mcontent" name="mcontent" ng-model="record.mcontent" rows="5" ></textarea>
+            <span class="help-block m-b-none"><!-- 组织名称不得超过60个字。 --></span>
+          </div>
+        </div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+
+				<div class="form-group">
+          <label class="col-lg-2 col-sm-3 control-label" for="userids">与会人员</label>
+         
+					<div class="col-sm-3">
+						<div style="border:1px solid #b3b1b1;border-radius:6px;height:400px;overflow-y:auto;">
+							<ul id="treeDemo" class="ztree " style="margin-left:auto;margin-right:auto;"></ul>
+						</div>
+					</div>
+					<div class="col-sm-3" >
+						<div style="border:1px solid #b3b1b1;border-radius:6px;height:400px;overflow-y:auto;">
+							<div class="font7 m-md m-b-sm" ng-click="checkAll()"><input type="checkbox" id="checkAll" value="" ng-checked="isSelected" /><label for="checkAll"> 全选/取消全选</label></div>
+							<div class="m-md font7">
+								<div class="m-b-sm" ng-repeat="item in info.data" ng-click="checkInfo($index)">
+									<input type="checkbox" id="{{item.id}}" value="{{item.id}}" /><label for="{{item.id}}"> {{item.userName}}-{{item.dnzwText}}</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-3">
+						<div class="p-md" style="border:1px solid #b3b1b1;border-radius:6px;height:400px;overflow-y:auto;">
+							<span class="block m-b-sm" ng-repeat="items in checkdList track by $index">
+								<span>{{items.userName}}-{{items.dnzwText}}</span>
+								<span ng-click="delChecked($index)"><i class="fa fa-close"></i></span>
+							</span>
+						</div>
+					</div>
+        </div>
+
+        <div class="form-group text-center">
+					<button class="btn btn-primary m-r-20 p-lr-20" id="submit">确定</button>
+					<button class="btn btn-default p-lr-20" id="cancel" ng-click="cancel()">取消</button>
+				</div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,225 @@
+
+<script type="text/javascript" charset="utf-8" src="lib/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="lib/ueditor/ueditor.all.min.js"> </script>
+<script type="text/javascript" charset="utf-8" src="lib/ueditor/lang/zh-cn/zh-cn.js"></script>
+<style type="text/css">
+</style>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><a><i class="fa fa-home">&nbsp;</i>组织生活</a></li>
+        <li><a ui-sref="main.life.activity({typeId: type})" ng-bind="typeName"></a></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+    <!-- 数据显示 -->
+    <div class="wrapper-data">
+        <div class="panel panel-default">
+            <!-- 头部 -->
+            <div class="panel-heading font-bold">{{title}}
+              <a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.life.activity({typeId: type})"><i class="text-md fa fa-times text-muted"></i></a>
+            </div>
+
+            <div class="panel-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>活动名称</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="aname" id="aname" placeholder="请输入活动名称" ng-model="activity.aname">
+                            <span class="help-block m-b-none">
+                                <!-- 组织名称不得超过60个字。 -->
+                            </span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="coverPic">封面图</label>
+                        <div class="col-sm-6">
+                            <input type="file" id="uploadCover" accept="image/png,image/jpg,image/jpeg" class="fileInput" ng-hide="1" />
+                            <div class="col">
+                                <div class="inline bg-white wrapper-sm b-a">
+                                    <div class="bg-light" style="width: 230px; height: 410px; position: relative; overflow: hidden;">
+                                        <img ng-src="{{coverSrc}}" style="width: 100%; text-align: center;" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <span class="help-block m-b-none">文件大小请在1M以内，仅支持jpg,png,jpeg格式，建议上传图片尺寸为230px * 410px</span>
+                            <div class="m-b upload-pic-box inline">
+                                <a href="javascript:void(0);" class="btn btn-default btn-addon">
+                                    <i class="fa fa-upload"></i>上传图片
+                                </a>
+                            </div>
+                            <div class="m-b inline" ng-show="coverSrc!='res/img/np.png'" ng-click="cover_del($index)">
+                                <a href="javascript:void(0);" class="btn btn-danger btn-addon">删除</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="listPic"><span class="text-danger wrapper-sm">*</span>列表宣传图</label>
+                        <div class="col-sm-6">
+                            <input type="file" id="uploadList" accept="image/png,image/jpg,image/jpeg" class="fileInput" ng-hide="1" />
+                            <div class="col">
+                                <div class="inline bg-white wrapper-sm b-a">
+                                    <div class="bg-light" style="width: 697px; height: 260px; position: relative; overflow: hidden;">
+                                        <img ng-src="{{listSrc}}" style="width: 100%; text-align: center;" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <span class="help-block m-b-none">文件大小请在1M以内，仅支持jpg,png,jpeg格式，建议上传图片尺寸为697px * 260px</span>
+                            <div class="m-b upload-pic-box2 inline">
+                                <a href="javascript:void(0);" class="btn btn-default btn-addon">
+                                    <i class="fa fa-upload"></i>上传图片
+                                </a>
+                            </div>
+                            <div class="m-b inline" ng-show="listSrc!='res/img/np.png'" ng-click="list_del($index)">
+                                <a href="javascript:void(0);" class="btn btn-danger btn-addon">删除</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>活动时间</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control r-inline add-date laydate-icon" readonly id="begintime" name="begintime" ng-model="activity.begintime" placeholder="开始时间">
+                            ——
+	            <input type="text" class="form-control r-inline add-date laydate-icon" id="endtime" readonly name="endtime" ng-model="activity.endtime" placeholder="请选择日期">
+                            <span class="help-block m-b-none">
+                                <!-- 组织名称不得超过60个字。 -->
+                            </span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>活动地址</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="place" id="place" placeholder="请输入活动地址" ng-model="activity.place">
+                            <span class="help-block m-b-none">
+                                <!-- 组织名称不得超过60个字。 -->
+                            </span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>是否公开活动</label>
+                        <div class="col-sm-6 p-t-sm">
+                            <span class="inline" style="position: relative; top: 5px;">
+                                <switch id="isPublic" name="isPublic" ng-model="activity.isPublic" class="green"></switch>
+                            </span>
+                            <span>（公开活动所有人都可见，不公开活动只有本组织的人可见）</span>
+                        </div>
+                    </div>
+                    <!--      <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>是否公开活动</label>
+                        <div class="col-sm-6">
+                            <div class="radio r-inline add-radio" id="isOpenAct">
+                                <label>
+                                    <input type="radio" name="isOpenAct" value="1">公开</label>
+                                <label>
+                                    <input type="radio" name="isOpenAct" value="2" checked="true">不公开</label>
+                            </div>
+                            <span class="help-block m-b-none">(公开活动所有人都可见，不公开活动只有本组织的人可见)
+                            </span>
+                        </div>
+                    </div-->
+                    
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>是否开启报名</label>
+                        <div class="col-sm-6 p-t-sm">
+                            <span ng-show="isOpenShow" class="inline" style="position: relative; top: 5px;">
+                                <switch id="Switch1" ng-change="signChange()" name="allowsign" ng-model="activity.allowsign" class="green"></switch>
+                            </span>
+                            <!-- 已结束的会议不能报名 -->
+                            <span style="line-height: 40px;" ng-show="!isOpenShow" class="col-sm-7 m-n">不开启</span>
+                        </div>
+                    </div>
+
+                    <!-- 开启报名时显示 -->
+                    <div ng-show="openSign">
+                        <div class="form-group">
+                            <label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>报名限制</label>
+                            <div class="col-sm-6 p-t-sm">
+                              <div class="radio r-inline add-radio" id="">
+		                            <label>
+		                              <input type="radio" name="sign" value="1" ng-model="activity.allowsign">
+		                              仅允许党员报名
+		                            </label>
+		                            <label>
+		                              <input type="radio" name="sign" value="2" ng-model="activity.allowsign">
+		                              允许群众报名
+		                            </label>
+		                          </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>报名截止时间</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control r-inline add-date laydate-icon" name="signendtime" id="signendtime" ng-model="activity.signendtime" readonly placeholder="请选择日期">
+                                <span class="help-block m-b-none"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-2 col-sm-3 control-label" for="">报名须知</label>
+                            <div class="col-sm-8">
+                                <textarea class="form-control r-inline" id="signknowage" name="signknowage" rows="3" ng-model="activity.signknowage"></textarea>
+                                <span class="help-block m-b-none">提醒用户报名时需要提供的信息，并在备注出填写和提交</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 报名时显示 END -->
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group" style="height: 560px">
+                        <label for="" class="col-lg-2 col-sm-3 control-label"><span class="text-danger wrapper-sm">*</span>活动描述: </label>
+                        <div class="col-sm-8">
+                            <textarea id="remark" name="remark" rows="15" cols="80" style="width: 100%; height: 300px;position:relative;z-index:0;" ng-model="activity.remark"></textarea>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="">推荐置顶</label>
+                         <div class="col-sm-6 p-t-sm">
+                                <span class="inline" style="position: relative; top: 5px;">
+                                    <switch id="Switch2" name="allowsign" ng-model="activity.remandtop" class="green"></switch>
+                                </span>
+                            </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <!-- 活动风采 会议已结束时显示 -->
+                    <div class="form-group" style="height: 560px" ng-show="isEnd">
+                        <label for="" class="col-lg-2 col-sm-3 control-label">活动风采: </label>
+                        <div class="col-sm-8">
+                            <textarea id="activeEditor" name="activeEditor" rows="15" cols="80" style="width: 100%; height: 300px;position:relative;z-index:0;" ng-model="activity.mcontent"></textarea>
+                        </div>
+                    </div>
+                    <!-- 活动风采 会议已结束时显示 END -->
+
+                    <div class="form-group text-center">
+                        <button class="btn btn-primary m-r-20 p-lr-20" id="submit" ng-click="submit()" ng-disabled="btnState">{{btnInfo}}</button>
+                        <button type="button" class="btn btn-default p-lr-20" id="cancel" ng-click="cancel()">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+

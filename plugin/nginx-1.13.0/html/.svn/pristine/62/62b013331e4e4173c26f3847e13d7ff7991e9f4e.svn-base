@@ -1,0 +1,38 @@
+'use strict';
+
+angular.module('app')
+	.controller('partyApplyOperateListController', ['$rootScope', '$scope', '$http', '$state',
+    function ($rootScope, $scope, $http, $state) {
+
+
+        var userId = $state.params.userId;
+        console.log("userId=" + userId);
+
+        $scope.baseInfoTab = 'src/app/sys/partyners/baseInfoAdd.html'; // 基本信息添加
+        $scope.partyInfoTab = 'src/app/sys/partyApply/partyInfoAdd.html'; // 培养发展
+        $scope.orgRelationShipTab = 'src/app/sys/partyners/orgRelationShip.html'; // 组织关系列表
+        $scope.activeTab = 1;
+        $scope.currentTab = $scope.baseInfoTab;
+
+        $scope.onClickTab = function (tab) {
+            switch (tab) {
+                case 1:
+                    $scope.activeTab = 1;
+                    $scope.currentTab = $scope.baseInfoTab;
+                    break;
+                case 2:
+                    $scope.activeTab = 2;
+                    $scope.currentTab = $scope.partyInfoTab;
+                    break;
+                case 3:
+                    $scope.activeTab = 3;
+                    $scope.currentTab = $scope.orgRelationShipTab;
+                    break;
+
+                default:
+
+            }
+            console.log(tab);
+        }
+       
+    }])

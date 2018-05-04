@@ -1,0 +1,63 @@
+<toaster-container toaster-options="{'position-class': 'toast-center', 'close-button':true}"></toaster-container>
+<style> 
+	.p-l-none { padding-left: 0; }
+	.m-t-50 { margin-top: 50px; }
+</style>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+  <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+    <li><a ui-sref="main.partyner"><i class="fa fa-home"></i> 党员</a></li>
+    <li class="active" ng-bind="title"></li>
+  </ul>
+</div>
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+  <!-- 数据显示 -->
+  <div class="wrapper-data">
+  	<div class="add-content white-bg">
+  		<form class="form-horizontal"  name="organize_form"> 
+  			<div class="form-group">
+					<label for="" class="p-r-20 w140 text-right">姓名: </label>
+					<span ng-bind="user"></span>
+				</div>
+
+				<div class="form-group">
+					<label for="" class="col-sm-2 p-r-20 w140 text-right"></label>
+					<div class="col-sm-9 p-l-none">
+						<div class="radio r-inline add-radio p-l-none" id="">
+							<label ng-repeat="item in result" for="{{item.id}}">
+								<input type="checkbox" name="{{item.deptName}}" id="{{item.id}}" ng-checked="isSelected(item.id)" ng-click="updateSelection($event,item.id)">
+								{{ item.roleName }}
+							</label>
+							<!-- <label>
+								<input type="checkbox" name="position">
+								党委管理员
+							</label>
+							<label>
+								<input type="checkbox" name="position">
+								党支部管理员
+							</label>
+							<label>
+								<input type="checkbox" name="position">
+								普通用户
+							</label>
+							<label>
+								<input type="checkbox" name="position">
+								党总支管理员
+							</label>
+							<label>
+								<input type="checkbox" name="position">
+								党小组管理员
+							</label> -->
+						</div>
+					</div>
+				</div>
+				<div class="form-group text-center m-t-50">
+					<button class="btn btn-primary m-r-20 p-lr-20" id="submit" ng-click="submit()" ng-disabled="btnState">{{btnInfo}}</button>
+					<button class="btn btn-default p-lr-20" id="cancel" ng-click="cancel()">返回</button>
+				</div>
+  		</form>
+  	</div>
+  </div>
+</div>

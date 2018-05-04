@@ -1,0 +1,41 @@
+<style>
+	.border-red { border: 1px solid #e60912; }
+	.bg-red { background-color: #e60912 }
+	.p-xl { padding: 40px; }
+	.vMiddle { height: 22%; justify-content: center; align-items: center;display: flex; }  /* 使不定宽高元素垂直居中 */
+</style>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><span><i class="fa fa-home">&nbsp;</i>数据一览</span></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+
+<div class="wrapper-md content">
+  <!-- 数据显示 -->
+  <div class="wrapper-data">
+    <div class="panel panel-default" style="padding: 50px 10px 50px 10px">
+			<a ui-sref="main.system.partyMember">
+				<div class="border-radius3 border-red" style="height: 250px; width: 450px; margin: 0 auto">
+					<div class="text-center p-tb-20" style="height: 78%">
+						<img src="/res/img/look/list_1.png" alt="" style="height: 100%">
+					</div>
+					<div class="bg-red text-center vMiddle">
+						<strong class="text-white font8">党员情况统计</strong>
+					</div>
+				</div>
+			</a>
+			<a ui-sref="main.system.usage">
+				<div class="border-radius3 border-red" style="height: 250px; width: 450px; margin: 50px auto 0 auto">
+					<div class="text-center p-tb-20" style="height: 78%">
+						<img src="/res/img/look/list_2.png" alt="" style="height: 100%">
+					</div>
+					<div class="bg-red text-center vMiddle">
+						<strong class="text-white font8">功能使用统计</strong>
+					</div>
+				</div>
+			</a>
+    </div>
+  </div>
+</div>

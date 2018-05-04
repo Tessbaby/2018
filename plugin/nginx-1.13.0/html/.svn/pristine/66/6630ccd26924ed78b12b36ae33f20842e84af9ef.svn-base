@@ -1,0 +1,120 @@
+<toaster-container toaster-options="{'position-class': 'toast-center', 'close-button':true}"></toaster-container>
+<!-- <script type="text/javascript" src="./lib/bootstrap-table.js"></script>
+<script type="text/javascript" src="./lib/bootstrap-table-zh-CN.js"></script> -->
+
+<style> 
+ .p-l-none { padding-left: 0; }
+</style>
+
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+  <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+    <li><a ui-href="main"><i class="fa fa-home"></i> 党员</a></li>
+    <li class="active" ng-bind="title"></li>
+  </ul>
+</div>
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+  <!-- 数据显示 -->
+  <div class="wrapper-data">
+  	<div class="add-content white-bg">
+  		<form class="form-horizontal"  name="organize_form">
+	  		<div class="form-group">
+					<label for="" class="p-r-20 w140 text-right">姓名: </label>
+					<span>{{ result.userName }}</span>
+				</div>
+				<div class="form-group">
+					<label for="" class="p-r-20 w140 text-right">性别: </label>
+					<span>{{ result.sexText }}</span>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-6 p-l-none">
+						<label for="" class="p-r-20 w140 text-right">出生日期: </label>
+						<span>{{ result.birthDay }}</span>
+					</div>
+					<div class="col-sm-6 p-l-none">
+						<label for="" class="p-r-20 w140 text-right">参加工作时间: </label>
+						<span>{{ result.worktdate }}</span>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-6 p-l-none">
+						<label for="" class="p-r-20 w140 text-right">入党时间: </label>
+						<span>{{ result.rddate }}</span>
+					</div>
+					<div class="col-sm-6 p-l-none">
+						<label for="" class="p-r-20 w140 text-right">转正时间: </label>
+						<span>{{ result.zzdate }}</span>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-6 p-l-none">
+						<label for="" class="p-r-20 w140 text-right">民族: </label>
+						<span>{{ result.nationText }}</span>
+					</div>
+					<div class="col-sm-6 p-l-none">
+						<label for="" class="p-r-20 w140 text-right">文化程度: </label>
+						<span>{{ result.whcd }}</span>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-6 p-l-none">
+						<label for="" class="p-r-20 w140 text-right">所属组织: </label>
+						<span>{{ result.deptName }}</span>
+					</div>
+					<div class="col-sm-6 p-l-none">
+						<label for="" class="p-r-20 w140 text-right">党内职务: </label>
+						<span>{{ result.dnzwText }}</span>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="" class="p-r-20 w140 text-right">分管工作: </label>
+					<span>{{ result.staff }}</span>
+				</div>
+				<div class="form-group">
+					<label for="" class="p-r-20 w140 text-right">手机号码: </label>
+					<span>{{ result.phone }}</span>
+				</div>
+				<div class="form-group">
+					<label for="" class="p-r-20 w140 text-right">微信号码: </label>
+					<span>{{ result.wxNumber }}</span>
+				</div>
+				<div class="form-group">
+					<label for="" class="p-r-20 w140 text-right">身份证号: </label>
+					<span>{{ result.identifienumber }}</span>
+				</div>
+				<div class="form-group">
+					<label for="" class="p-r-20 w140 text-right">家庭住址: </label>
+					<span>{{ result.address }}</span>
+				</div>
+				<div class="form-group">
+					<label for="" class="p-r-20 w140 text-right">邮箱地址: </label>
+					<span>{{ result.email }}</span>
+				</div>
+
+				<div class="form-group">
+					<label for="" class="p-r-20 w140 text-right col-sm-6">简介: </label>
+	        <div class="col-sm-6 p-l-none">
+	          <textarea class="form-control r-inline" id="remark" rows="5" readonly> 
+	          	{{ result.remark }}
+	          </textarea>
+	          <span class="help-block m-b-none"></span>
+	        </div>
+				</div>
+
+				<div class="form-group text-center m-t-10">
+					<button class="btn btn-primary m-r-20 p-lr-20" id="" ui-sref="main.partyners.update({id: id})" >编辑</button>
+					<button class="btn btn-primary m-r-20 p-lr-20" id="">迁出</button>
+					<button class="btn btn-primary m-r-20 p-lr-20" id="">认定</button>
+					<button class="btn btn-primary m-r-20 p-lr-20" id="" ui-sref="main.partyners.part({id: id})" >角色</button>
+					<button class="btn btn-default m-r-20 p-lr-20" id="" ui-sref="main.partyner" >返回</button>
+				</div>
+			</form>
+  	</div>
+  </div>
+</div>

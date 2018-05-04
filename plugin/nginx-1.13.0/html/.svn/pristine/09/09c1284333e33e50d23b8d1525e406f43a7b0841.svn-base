@@ -1,0 +1,176 @@
+<toaster-container toaster-options="{'position-class': 'toast-center', 'close-button':true}"></toaster-container>
+<style>
+.notice-head h4{color:red;margin-top:10px;margin-bottom:10px;}
+.notice-star{position:relative;height:3px;background:#ff0000;width:100%;margin: 20px 0;}
+.notice-star div{position:absolute;top:-13px;left:50%;margin-left:-40px;width:80px;background:#fff;color:#ff0000;font-size:24px;text-align:center;line-height:1;font-weight:bold;}
+</style>
+
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+  <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+    <li><a ui-href="main"><i class="fa fa-home"></i> 系统设置</a></li>
+    <li><a ui-sref="main.setting.baseinfo">基本信息</a></li>
+    <li class="active" ng-bind="title"></li>
+  </ul>
+</div>
+
+<div class="wrapper-md content">
+  <div class="panel panel-default">
+    <!-- 头部 -->
+    <div class="panel-heading font-bold">{{title}}
+			<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.setting.baseinfo"><i class="text-md fa fa-times text-muted"></i></a>
+    </div>
+    <!--表单-->
+    <div class="panel-body">
+      <form class="form-horizontal"  name="organize_form">
+
+				<!--用户名-->
+        <div class="form-group">
+          <label class="col-lg-2 col-sm-3 control-label" for="userLogoPic">组织Logo</label>
+          <div class="col-sm-6">
+
+            <div class="m-b upload-pic-box inline">
+              <a href="javascript:void(0);" class="btn btn-default btn-addon">
+                <i class="fa fa-upload"></i>上传图片
+              </a>
+            </div>
+            <div class="m-b inline" ng-show="imgSrc!='res/img/np.png'" ng-click="img_del($index)">
+              <a href="javascript:void(0);" class="btn btn-danger btn-addon">删除</a>
+            </div>
+      
+            <input type="file" id="uploadImg" accept="image/png,image/jpg,image/jpeg" class="fileInput" ng-hide="1"  />
+            <div class="col">
+              <div class="inline bg-white wrapper-sm b-a">
+                <div class="bg-light" style="width:360px;height:200px;position:relative;overflow:hidden;">
+                  <img ng-src="{{imgSrc}}" style="width:100%;text-align:center;" />
+                </div>
+              </div>
+            </div>
+            <span class="help-block m-b-none">组织Logo尺寸要求宽度*高度为360px*200px。图片格式支持jpg,png</span>
+          </div>
+        </div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+
+				<div class="form-group">
+					<label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>组织名称</label>
+          <div class="col-sm-6" style="line-height: 40px;">{{ record.deptName }}</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>组织类别</label>
+          <div class="col-sm-6" style="line-height: 40px;">{{ record.deptType }}</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>上级组织</label>
+          <div class="col-sm-6" style="line-height: 40px;">{{ record.parentId }}</div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>所在单位</label>
+          <div class="col-sm-6" style="line-height: 40px;">{{ record.toUnit }}</div>
+				</div>
+
+				<div class="form-group">
+          <label class="col-lg-2 col-sm-3 control-label" for="dept_proper">组织性质</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" name="dept_proper" id="dept_proper" placeholder="请输入组织性质" ng-model="record.dept_proper">
+            <span class="help-block m-b-none"><!-- 组织名称不得超过60个字。 --></span>
+          </div>
+        </div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+
+				<div class="form-group">
+          <label class="col-lg-2 col-sm-3 control-label" for="deptCreatedate">建立日期</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control r-inline add-date laydate-icon" name="deptCreatedate" id="deptCreatedate" ng-model="record.deptCreatedate" readonly placeholder="请选择日期">
+            <span class="help-block m-b-none"><!-- 组织名称不得超过60个字。 --></span>
+          </div>
+        </div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+
+				<div class="form-group">
+          <label class="col-lg-2 col-sm-3 control-label" for="lxr">联系人</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" name="lxr" id="lxr" placeholder="请输入联系人" ng-model="record.lxr">
+            <span class="help-block m-b-none"><!-- 组织名称不得超过60个字。 --></span>
+          </div>
+        </div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+
+				<div class="form-group">
+          <label class="col-lg-2 col-sm-3 control-label" for="mobile">联系电话</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" name="mobile" id="mobile" placeholder="请输入联系电话" ng-model="record.mobile">
+            <span class="help-block m-b-none"><!-- 组织名称不得超过60个字。 --></span>
+          </div>
+        </div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+
+				<div class="form-group">
+          <label class="col-lg-2 col-sm-3 control-label" for="lxPhone">手机号码</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" name="lxPhone" id="lxPhone" placeholder="请输入手机号码" ng-model="record.lxPhone">
+            <span class="help-block m-b-none"><!-- 组织名称不得超过60个字。 --></span>
+          </div>
+        </div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+
+				<div class="form-group">
+          <label class="col-lg-2 col-sm-3 control-label" for="address">通讯地址</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" name="address" id="address" placeholder="请输入通讯地址" ng-model="record.address">
+            <span class="help-block m-b-none"><!-- 组织名称不得超过60个字。 --></span>
+          </div>
+        </div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+
+				<div class="form-group">
+          <label class="col-lg-2 col-sm-3 control-label" for="email">email</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" name="email" id="email" placeholder="请输入email" ng-model="record.email">
+            <span class="help-block m-b-none"><!-- 组织名称不得超过60个字。 --></span>
+          </div>
+        </div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+
+				<div class="form-group">
+          <label class="col-lg-2 col-sm-3 control-label" for="userQZPic">签章</label>
+          <div class="col-sm-6">
+
+            <div class="m-b upload-qz-box inline">
+              <a href="javascript:void(0);" class="btn btn-default btn-addon">
+                <i class="fa fa-upload"></i>上传图片
+              </a>
+            </div>
+            <div class="m-b inline" ng-show="qzSrc!='res/img/np.png'" ng-click="qz_del($index)">
+              <a href="javascript:void(0);" class="btn btn-danger btn-addon">删除</a>
+            </div>
+      
+            <input type="file" id="qzUpload" accept="image/png,image/jpg,image/jpeg" class="fileInput" ng-hide="1"  />
+            <div class="col">
+              <div class="inline bg-white wrapper-sm b-a">
+                <div class="bg-light" style="width:200px;height:200px;position:relative;overflow:hidden;">
+                  <img ng-src="{{qzSrc}}" style="width:100%;text-align:center;" />
+                </div>
+              </div>
+            </div>
+            <span class="help-block m-b-none">请传背景为透明的图片</span>
+          </div>
+        </div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+
+				<div class="form-group">
+          <label class="col-lg-2 col-sm-3 control-label" for="remark">简介</label>
+          <div class="col-sm-6">
+            <textarea class="form-control r-inline" id="remark" name="remark" rows="5" ng-model="record.remark"></textarea>
+            <span class="help-block m-b-none"><!-- 组织名称不得超过60个字。 --></span>
+          </div>
+        </div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+
+        <div class="form-group text-center">
+					<button class="btn btn-primary m-r-20 p-lr-20" id="submit" ng-disabled="btnState">{{btnInfo}}</button>
+					<button class="btn btn-default p-lr-20" id="cancel" ng-click="cancel()" ui-sref="main.setting.baseinfo">取消</button>
+				</div>
+      </form>
+    </div>
+  </div>
+</div>

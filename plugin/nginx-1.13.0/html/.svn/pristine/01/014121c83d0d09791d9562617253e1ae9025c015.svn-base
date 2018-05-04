@@ -1,0 +1,481 @@
+'use strict';
+
+angular.module('app')
+	.controller('orgAddController', [ '$rootScope', '$scope', '$http', '$state', '$timeout', 'toaster',
+	 function($rootScope, $scope, $http, $state, $timeout, toaster) {
+		
+	     var zNodes ;
+	     var title = '';
+	     var funInit = {};		
+	     $scope.myImage='';
+	     $scope.record = {};
+			
+			
+	     //图片处理所需
+	     $scope.imgData = [];
+	     $scope.imgUpFlag = true;
+	     //自定义上传标题图
+	     $scope.reader = new FileReader();  //创建一个FileReader接口
+	     $scope.imgSrc = 'res/img/np.png';
+	     $scope.img_upload = function(evt) {    //单次提交图片的函数
+	         var fileInfo=evt.currentTarget.files[0];
+	         var index = fileInfo.name.indexOf('.') + 1;
+	         var imgType = fileInfo.name.substr(index,fileInfo.name.length-1 );
+	         if (imgType.toUpperCase() == 'PNG' || imgType.toUpperCase() == 'JPG' || imgType.toUpperCase() == 'JPEG') {
+
+	             $scope.guid = (new Date()).valueOf();
+	             $scope.reader.readAsDataURL(fileInfo); //FileReader的方法，把图片转成base64
+	             $scope.reader.onload = function(ev) {
+	                 $scope.$apply(function(){
+	                     $scope.imgSrc = ev.target.result;
+	                     $scope.imgData.push({
+	                         file:ev.target.result,
+	                         filename:fileInfo.name
+	                     });
+	                 });
+	             };
+	         } else {
+	             layer.msg('文件格式错误');
+	             return false;
+	         }
+	     };
+	     angular.element(document.querySelector('#uploadImg')).on('change',$scope.img_upload);
+	     $('.upload-pic-box a').click(function() {
+	         $('#uploadImg').click();
+	     });		
+ 
+	     $scope.img_del = function(key) {  //删除，删除的时候thumb和form里面的图片数据都要删除，避免提交不必要的
+	         $scope.imgData = [];
+	         $scope.imgSrc = 'res/img/np.png';
+	         $scope.record.imgpath ='';
+	     };
+		
+		
+	     // 获取数据字典-组织类别
+	     funInit.getDeptType = function () {
+	         var m = {
+	             enable: 1,
+	             keyword: '',
+	             type: 'DEPTTYPE'
+	         };
+	         $.ajax({
+	             type: 'PUT',
+	             url : '/iBase4J-SYS-Web/dic/read/list',
+	             dataType: 'json',
+	             contentType:'application/json;charset=UTF-8',
+	             async: false,
+	             data: angular.toJson(m)
+	         }).then(function (result) {
+	             $scope.deptType = result;
+			
+	             if($scope.deptType.data.length>0){
+	                 $scope.record.deptType = $scope.deptType.data[0].code; // 给组织类别添加组织默认值
+	             }
+				
+	         });
+	     }
+	     // 获取数据字典-组织性质
+	     funInit.depPropertyList = function () {
+	         var m = {
+	             enable: 1,
+	             keyword: '',
+	             type: 'ORGPROPERTY'
+	         };
+	         $.ajax({
+	             type: 'PUT',
+	             url : '/iBase4J-SYS-Web/dic/read/list',
+	             dataType: 'json',
+	             contentType:'application/json;charset=UTF-8',
+	             async: false,
+	             data: angular.toJson(m)
+	         }).then(function (result) {
+	             $scope.depPropertyList = result.data;
+	             if($scope.depPropertyList.length>0){
+	                 $scope.record.dept_proper=$scope.depPropertyList[0].code;
+	             }
+					
+	         });
+	     }
+
+	     // 获取党组织树 dept/read/treelist
+	     funInit.getTreeList = function () {
+	         $.ajax({
+	             type: 'PUT',
+	             url : '/iBase4J-SYS-Web/dept/read/treelist',
+	             dataType: 'json',
+	             contentType:'application/json;charset=UTF-8',
+	             //async: false,
+	             data: angular.toJson({})
+	         }).then(function (result) {
+	             zNodes = result.dept;
+	             $.fn.zTree.init($('#treeDemo'), setting, zNodes);
+					
+					
+	         });
+	     }
+
+	     funInit.getDeptType();
+	     funInit.getTreeList();
+	     funInit.depPropertyList();
+	
+	     // $scope.myCroppedImage=$scope.myCroppedImage ;
+	     var btnStateMessage="";
+	     //$scope.myCroppedImage = '';
+	     if($state.includes('**.commynity.update')){
+	         title='编辑';
+	         btnStateMessage="提交修改"
+	         var id = $state.params.id;
+	         activate(id);
+			
+	     }else if($state.includes('**.commynity.create')){
+	         title='添加';
+	         btnStateMessage="添加组织"
+	     }
+		
+	     //控制按钮显示状态
+	     $scope.btnInfo=btnStateMessage;
+	     $scope.btnState=false;		
+	     validate();
+	     $scope.title = $rootScope.title = title;
+	     $scope.loading = true;
+
+	     // 日期
+	     laydate({
+	         elem: '#deptCreatedate',
+	         format: 'YYYY-MM-DD',
+	         choose: function (dates) {
+	             $scope.record.deptCreatedate = dates;
+	         }
+	     })
+
+	     var setting = {
+	         view: {
+	             dblClickExpand: false
+	         },
+	         data: {
+	             key : {
+	                 id : 'id',
+	                 children : 'children',
+	                 name : 'deptName'
+	             }
+	         },
+	         callback: {
+	             onClick: onClick
+	         },
+	         view: {
+	             showIcon: false
+	         }
+	     };
+
+	     function onClick(e, treeId, treeNode) { // 选择元素触发
+	         var zTree = $.fn.zTree.getZTreeObj('treeDemo'),
+             nodes = zTree.getSelectedNodes(),
+             v = '',
+             ids = '';
+	         nodes.sort(function compare(a,b){return a.id-b.id;});
+
+	         for (var i=0, l=nodes.length; i<l; i++) {
+	             v += nodes[i].deptName + ',';
+	             ids += nodes[i].id + ',';
+	         }
+
+	         if (v.length > 0 ) v = v.substring(0, v.length-1);
+	         var idObj = $('#parentId');
+	         idObj.attr('value', v);
+
+	         // 将选中的id放到隐藏的文本域中
+	         if (ids.length > 0 ){
+	             ids = ids.substring(0, ids.length-1);
+	         } 
+	         var treeids = $('#treeids');
+	         treeids.attr('value', ids);
+	         $scope.record.parentId = ids;
+	     }
+
+	     $scope.showMenu = function () {
+	         var idObj = $('#parentId');
+	         var idOffset = $('#parentId').offset();
+	         $('#menuContent').slideDown('fast');
+	         $('body').bind('mousedown', onBodyDown);
+	     }
+
+	     $scope.hideMenu = function () {
+	         $('#menuContent').fadeOut('fast');
+	         $('body').unbind('mousedown', onBodyDown);
+	     }
+
+	     function onBodyDown(event) {
+	         if (!event.target.id == 'menuContent' || $(event.target).parents('#menuContent').length==0) {
+	             if (event.target.id != 'parentId') {
+	                 $scope.hideMenu();
+	             }
+	         }
+	     }
+
+	     //点击上传图片
+	     angular.element(document.querySelector('#imgInput')).on('change',handleFileSelect);
+	     $('.upload-pic-box a').click(function() {
+	         $('#imgInput').click();
+	     });
+
+	     var handleFileSelect = function(evt) {
+	         var file=evt.currentTarget.files[0];
+	         if(!/image\/\w+/.test(file.type)){
+	             return false;
+	         }
+	         var reader = new FileReader();
+	         reader.onload = function (evt) {
+	             $scope.$apply(function($scope){
+	                 $scope.myImage=evt.target.result;
+	             });
+	         };
+	         reader.readAsDataURL(file);
+	     };
+
+	     //初始化验证
+	     //validate($scope);
+	     $scope.submit = function(){
+	         $scope.loading = true;
+	         /*$.ajax({
+                 type: 'POST',
+                     url : '/upload/imageData',
+                     data: {fileData:$scope.myCroppedImage},
+                 }).then(function(result){
+             if(result && result.httpCode ==200){//成功
+                 // $scope.record['avatar'] =result.fileNames[0];
+                 $scope.record['imgpath'] =result.fileNames[0];
+                 saveData();
+             }else if(result && result.httpCode ==400){
+                 saveData();
+             }
+             });*/
+	         if($scope.imgData.length > 0){
+	             $scope.imgUpFlag = false;
+	             $.ajax({
+	                 type: 'POST',
+	                 url : 'http://118.190.172.83:8011/wx/djuploadFile',
+	                 async: false,
+	                 contentType:'application/json;charset=UTF-8',
+	                 data:angular.toJson($scope.imgData)
+	             }).then(function(result){
+	                 // var resultNew = $.parseJSON(result);
+	                 var resultNew = result;
+	                 if(resultNew && resultNew.httpCode ==200){//成功
+	                     $scope.record.imgpath = resultNew.data[0].fileUrlPath;
+	                     //"picUrl": "http://sg.cotlife.cn:8006/appstreetsjz/upload/20170527042823.jpg",
+	                     // console.log(resultNew);
+	                     $scope.imgUpFlag = true;
+	                     //$scope.record['avatar'] =result.fileNames[0];
+	                     //saveData();
+	                 }else if(resultNew && resultNew.httpCode ==400){
+	                     //saveData();
+	                 }
+	             });
+	         }
+	         if ($scope.imgUpFlag ){
+	             saveData();
+	         }
+    	
+	     };
+
+	     function saveData(){ // 提交数据
+	         $scope.record.parentId = $scope.record.parentId - 0;
+	         $scope.record.remark=myEditor.getContent();
+	         var m = $scope.record;
+	         if(m){
+      
+	             $scope.btnInfo='提交中...';
+	             $scope.btnState=true;
+	             $.ajax({
+	                 type: 'POST',
+	                 url : '/iBase4J-SYS-Web/dept',
+	                 dataType: 'json',
+	                 contentType:'application/json;charset=UTF-8',
+	                 data: angular.toJson(m)
+	             }).then(callback);
+	         }
+	         function callback(result){
+	             $scope.loading = false;
+	             if(result.httpCode ==200){//成功
+	                 toaster.clear('*');
+	                 toaster.pop('success', '', '保存成功');
+	                 $timeout(function(){
+	                     $state.go('main.commynity.info');
+	                 },1000);
+	             }else{
+	                 toaster.clear('*');
+	                 toaster.pop('error', '', result.msg);
+	                 $scope.btnInfo=btnStateMessage;
+	                 $scope.btnState=false;
+	             }
+       
+	         }
+	     }
+	     //百度编辑器
+	     var myEditor = UE.getEditor("myEditor", {
+	         topOffset: 0,
+	         autoFloatEnabled: false,
+	         autoHeightEnabled: false,
+	         wordCount: false,
+	         autotypeset: {
+	             removeEmptyline: true
+	         },
+	         toolbars: [
+                 [
+                     //'source', //源代码
+                     'bold', //加粗
+                     'forecolor', //字体颜色
+                     'indent', //首行缩进
+                     'italic', //斜体
+                     'underline', //下划线
+                     //'simpleupload', //单图上传
+                     //'inserttable', //插入表格
+                     'link', //超链接
+                     'removeformat',//清除格式
+                     'huodong',
+
+                 ]
+	         ]
+	     });
+	     function validate(){
+   
+	         var validator = jQuery('form').validate({
+	             rules: {
+	                 deptName: {
+	                     required: true,
+	                     maxlength: 50
+	                 },
+	                 deptType: {
+	                     required: true
+	                 },        	
+			
+	                 parentId: {
+	                     required: true
+	                 },
+	                 toUnit: {        		
+	                     maxlength: 200
+	                 },
+	                 lxr: {
+        		
+	                     maxlength: 100
+	                 },
+	                 lxPhone:{
+				
+	                     isTel: true
+	                 },
+	                 mobile: {
+                      
+	                     isMobile: true
+	                 },
+	                 email:{
+	                     email:true
+	                 },
+	                 address:{
+	                     maxlength: 200
+	                 },
+	                 remark:{
+	                     maxLengthB: [1024]
+	                 },
+	                 myEditor: {
+	                     maxLengthB: [1024]
+                               
+	                 }
+			
+	             },
+	             messages: {
+	                 deptName: {
+	                     required: '请填写组织名称',
+	                     maxLengthB:'组织名称不得超过50个字符'
+	                 },
+	                 deptType: {
+	                     required: '选择组织类别'
+	                 },
+	                 parentId: {
+	                     required: '选择所属组织'
+	                 },
+	                 toUnit: {        		
+	                     maxlength: '所在单位不得超过200个字符'
+	                 },
+	                 lxr: {        		
+	                     maxlength: '联系人不得超过100个字符'
+	                 },
+			
+	                 email:{
+	                     email:'请输入正确的Email地址(xx@xx.xx)'
+	                 },
+	                 address:{
+	                     maxlength: '地址不得超过200字符'
+	                 },
+	                 remark:{
+	                     maxlength: '简介不得超过200字符' 
+	                 },
+	                 myEditor: {
+	                     maxLengthB: "简介不得超过{0}个字符"
+
+	                 }
+	             },
+	             submitHandler: function() {
+	                 $scope.submit();
+	             }
+	         });
+	         validator.focusInvalid = function () {
+	             if (this.settings.focusInvalid) {
+	                 try {
+	                     var toFocus = $(this.findLastActive() || this.errorList.length && this.errorList[0].element || []);
+	                     if (toFocus.is("textarea")) {
+	                         UE.getEditor('myEditor').focus()
+	                     } else {
+	                         toFocus.filter(":visible").focus();
+	                     }
+	                 } catch (e) {
+	                 }
+	             }
+	         }
+	     }
+
+	     // 初始化页面 - 编辑时
+	     function activate(id) {
+	         $scope.loading = true;
+	         $.ajax({
+	             type: 'PUT',
+	             url : '/iBase4J-SYS-Web/dept/read/detail',
+	             dataType: 'json',
+	             contentType:'application/json;charset=UTF-8',
+	             data: angular.toJson({'id': id})
+	         }).then(function(result) {
+				
+	             $scope.loading = false;
+	             if (result.httpCode == 200) {
+	                $scope.record = result.data;
+	                $('#parentId').attr('value', $scope.record.parentName);
+	                $('#treeids').attr('value', $scope.record.parentId);
+	                $scope.imgSrc =  $scope.record.imgpath;
+	                if ($scope.record.remark!="") {
+                    myEditor.ready(function () {//编辑器初始化完成再赋值  
+                        myEditor.setContent($scope.record.remark);  //赋值给UEditor  
+                    });
+	                }
+	             } else {
+	                 $scope.msg = result.msg;
+	             }
+	             $scope.$apply();
+				
+	         });
+	     }
+
+	     // 取消编辑
+	     $scope.cancel = function () {
+	         /* layer.open({
+               type   : 1,
+               area   : ['420px', '240px'],
+               content: '',
+               scope  : $scope
+             });*/
+	         if(confirm('确定要退出吗？')) {
+	             $state.go('main.commynity.info');
+	             toaster.clear('*');
+	         }
+			
+	     }
+
+	 }]);

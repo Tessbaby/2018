@@ -1,0 +1,75 @@
+'use strict';
+
+angular.module('app')
+	.controller('bindListController', ['$rootScope', '$scope', '$http', '$state', '$timeout',
+	    function ($rootScope, $scope, $http, $state, $timeout) {
+
+	        $scope.title = '事件负责人';
+	        $scope.param = {};
+
+
+
+	        //=======================================验证权限 statr===================================
+	        //权限模块代码
+	        //$scope.permissionCode = $state.$current.name;
+	        //$scope.hasQuery = $.inArray($scope.permissionCode + '.query', $rootScope.permissionList) != -1;
+	        //$scope.hasUpdate = $.inArray($scope.permissionCode + '.update', $rootScope.permissionList) != -1;
+	        //$scope.hasDelete = $.inArray($scope.permissionCode + '.delete', $rootScope.permissionList) != -1;
+
+	        //if (!$scope.hasQuery) {
+	        //    layer.alert("未经授权，禁止访问！", { icon: 2 });
+	        //    return false;
+	        //}
+	        //=======================================验证权限 end===================================
+
+
+
+	        //==================================执行查询 start==================================
+
+	        $scope.url = '/iBase4J-SYS-Web/issueUser/list';
+	        $rootScope.pageInfo = []; // 请求数据前清空
+	        $rootScope.search($scope.url, $scope.param);
+
+
+
+	        $scope.clearSearch = function () {
+	            $scope.param.keyword = null;
+	            $rootScope.search($scope.url, $scope.param);
+	        }
+
+
+	        // 翻页 - 排序翻页数据与此一致
+	        $scope.pagination = function (page) {
+	            $scope.param.pageNum = page;
+	            $scope.param.asc = $rootScope.changeAsc();
+	            $rootScope.search($scope.url, $scope.param);
+	        };
+
+	        //==================================执行查询 end==================================
+
+	        $scope.del = function (id) {
+
+	            var postData = { meetid: id };
+	            layer.confirm('确认要删除？', function () {
+	                $.ajax({
+	                    url: '/iBase4J-SYS-Web/sysMeeting',
+	                    type: 'delete',
+	                    data: angular.toJson(postData)
+	                }).then(function (result) {
+	                    $scope.loading = false;
+	                    if (result.httpCode == 200) {
+	                        tipDialog("删除成功", 1, 0.8 * 1000, function () {
+	                            if ($rootScope.pageInfo.data.length == 1 && $scope.param.pageNum > 1) {
+	                                $scope.param.pageNum = $scope.param.pageNum - 1;
+	                            }
+	                            $rootScope.search($scope.url, $scope.param);
+	                        });
+	                    } else {
+	                        alertDialog(result.msg, 2);
+	                    }
+	                    $scope.$apply();
+	                })
+	            })
+	        }
+
+	    }]);

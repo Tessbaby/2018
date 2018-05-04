@@ -1,0 +1,307 @@
+'use strict';
+
+	angular.module('app')
+		.controller('formController', [ '$rootScope', '$scope', '$http', '$state', 'toaster',
+										function($rootScope, $scope, $http, $state, toaster) {
+					
+		/*初始化页面*/
+		//console.log($state.params.typeCode);return;
+		$scope.param = {};
+		$scope.param.typeCode = $state.params.typeCode;
+		$scope.param.id = $state.params.id;
+		if($scope.param.id){
+			$scope.title = "编辑";
+			getInitData();
+		} else {
+			$scope.title = "发布";
+		}
+		
+		$scope.record = {};
+		$scope.record.isTop = false;
+		
+		
+		
+		
+		
+		
+        
+		$scope.imgData = [];
+		$scope.imgUpFlag = true;
+		validate();
+		
+        $scope.loading = true;
+		
+		//自定义上传标题图
+		$scope.reader = new FileReader();  //创建一个FileReader接口
+		$scope.imgSrc = 'res/img/np.png';
+		$scope.img_upload = function(evt) {    //单次提交图片的函数
+			var fileInfo=evt.currentTarget.files[0];
+			$scope.guid = (new Date()).valueOf();
+			$scope.reader.readAsDataURL(fileInfo); //FileReader的方法，把图片转成base64
+			$scope.reader.onload = function(ev) {
+				$scope.$apply(function(){
+					$scope.imgSrc = ev.target.result;
+					$scope.imgData.push({
+						file:ev.target.result,
+						filename:fileInfo.name
+					});
+				});
+			};
+		};
+		angular.element(document.querySelector('#uploadImg')).on('change',$scope.img_upload);
+		$('.upload-pic-box a').click(function() {
+			$('#uploadImg').click();
+		});		
+ 
+		$scope.img_del = function(key) {  //删除，删除的时候thumb和form里面的图片数据都要删除，避免提交不必要的
+			$scope.imgData = [];
+			$scope.imgSrc = 'res/img/np.png';
+		};
+		
+		
+		
+		//提交表单
+        $scope.submit= function(){
+            $scope.loading = true;
+			//内容
+			$scope.record.content = myEditor.getContent();
+			//是否正式文件日期
+			if($scope.record.type == 1){
+				$scope.record.noticeTime = $("#noticeTime").val();
+			} else {
+				$scope.record.num = '';
+				$scope.record.headerTitle = '';
+				$scope.record.headerShortTitle = '';
+				$scope.record.inscribe = '';
+				$scope.record.titleNum = '';
+				$scope.record.noticeTime = '';
+			}
+			//是否开启阅读提醒日期
+			if($scope.record.isUnread == 1){
+				$scope.record.intervalStartTime = $("#intervalStartTime").val();
+				$scope.record.intervalEndTime = $("#intervalEndTime").val();
+			if(!$scope.record.intervalStartTime || !$scope.record.intervalEndTime){
+					alert("开启未读提醒后，开始结束时间不能为空");
+					return;
+				}
+				if(!$scope.record.intervalHour && !$scope.record.intervalMinute){
+					alert("开启未读提醒后，时间间隔不能为空");
+					return;
+				}
+				
+			} else {
+				$scope.record.intervalStartTime = '';
+				$scope.record.intervalEndTime = '';
+				$scope.record.intervalHour = '';
+				$scope.record.intervalMinute = '';
+			}
+			
+			if($scope.imgData.length > 0){
+				$scope.imgUpFlag = false;
+				$.ajax({
+					type: 'POST',
+					url : 'http://118.190.172.83:8011/wx/djuploadFile',
+					async: false,
+					contentType:'application/json;charset=UTF-8',
+					data:angular.toJson($scope.imgData)
+				}).then(function(result){
+						console.log(result);
+						//var resultNew = $.parseJSON(result);
+						var resultNew = result;
+						if(resultNew && resultNew.httpCode ==200){//成功
+							$scope.record.picUrl = resultNew.data[0].fileUrlPath;
+							  //"picUrl": "http://sg.cotlife.cn:8006/appstreetsjz/upload/20170527042823.jpg",
+							console.log(resultNew);
+							$scope.imgUpFlag = true;
+							//$scope.record['avatar'] =result.fileNames[0];
+							//saveData();
+						}else if(resultNew && resultNew.httpCode ==400){
+							//saveData();
+						}
+				});
+			}
+			
+			if($scope.thumb.length > 0){
+				$scope.fileUpFlag = false;
+				$.ajax({
+					type: 'POST',
+					url : 'http://118.190.172.83:8011/wx/djuploadFile',
+					async: false,
+					contentType:'application/json;charset=UTF-8',
+					data:angular.toJson($scope.thumb)
+				}).then(function(result){
+						//var resultNew = $.parseJSON(result);
+						var resultNew = result;
+						if(resultNew && resultNew.httpCode ==200){//成功
+							
+							$scope.record.filePath = resultNew.data;
+							//"filePath": "[{\"id\":1495763676232,\"fileName\":\"九一八事变.docx\",\"fileUrlPath\":\"http://118.190.172.83:8012/九一八事变.docx\"},{\"id\":1495763684089,\"fileName\":\"图片1.png\",\"fileUrlPath\":\"http://118.190.172.83:8012/图片1.png\"}]"
+							$scope.fileUpFlag = true;
+							console.log(resultNew);
+							//$scope.record['avatar'] =result.fileNames[0];
+							//saveData();
+						}else if(resultNew && resultNew.httpCode ==400){
+							//saveData();
+						}
+				});
+			}
+			if ($scope.imgUpFlag && $scope.fileUpFlag){
+				saveData();
+			}
+			//
+        };
+
+        function saveData(){
+            var m = $scope.record;
+            if(m){
+                $scope.isDisabled = true;//提交disabled
+                $.ajax({
+                	type: 'POST',
+    				url : '/iBase4J-SYS-Web/notice/updateNotice',
+    	            dataType: 'json',
+    				contentType:'application/json;charset=UTF-8',
+    				data: angular.toJson(m)
+    			}).then(callback);
+            }
+            function callback(result){
+                if(result.httpCode ==200){//成功
+                	toaster.clear('*');
+                    toaster.pop('success', '', "保存成功");
+                    //$timeout(function(){
+                        $state.go('main.party.notice');
+                    //},2000);
+                }else{
+                    toaster.clear('*');
+                    toaster.pop('error', '', result.msg);
+                    $scope.isDisabled = false;
+                }
+                $scope.loading = false;
+            }
+        }
+		
+		
+		
+		//百度编辑器
+		if($("#myEditor").length > 0){
+			var myEditor = UE.getEditor("myEditor", {
+				topOffset: 0,
+				autoFloatEnabled: false,
+				autoHeightEnabled: false,
+				wordCount: false,
+				autotypeset: {
+					removeEmptyline: true
+				},
+				toolbars: [
+					[
+						'source', //源代码
+						'bold', //加粗
+						'forecolor', //字体颜色
+						'indent', //首行缩进
+						'italic', //斜体
+						'underline', //下划线
+						//'simpleupload', //单图上传
+						//'inserttable', //插入表格
+						'link', //超链接
+						'removeformat',//清除格式
+						'huodong',
+
+					]
+				]
+			});
+		}
+		
+        //表单验证
+        function validate(userId){
+            var validator = jQuery('form').validate({
+				ignore: "",
+                rules: {
+                    noticeTitle: {
+                        required: true,
+                        maxLengthB:[128]
+                    },
+					noticeSpread: {
+                        required: true
+                    },
+					myEditor: {
+                        required: true
+                    },
+                    noticeHeadNum: {
+                        required: true
+                    },
+                    noticeHeadTitle: {
+                        required: true
+                    },
+                    noticeHeadSubTitle:{
+                        required: true
+                    },
+                    noticeHeadFileNum:{
+                       required: true
+                    },
+					showNodes:{
+					   required: true
+					}
+					
+                },
+                messages: {
+                    noticeTitle: {
+                        required: '请输入通知标题',
+                        maxLengthB:"帐号不得超过{0}个字符"
+                    },
+                    noticeSpread: {
+                        required: '请选择发布范围'
+                    },
+                    myEditor: {
+                        required: '请输入通知内容'
+                    },
+                    noticeHeadNum: {
+                        required: '请输入编号'
+                    },
+                    noticeHeadTitle: {
+                        required: '请输入文件头'
+                    },
+                    noticeHeadSubTitle:{
+                        required: '请输入简称'
+                    },
+                    noticeHeadFileNum:{
+                        required: '请输入文件编号'
+                    },
+                    showNodes:{
+                        required: '发布范围不能为空'
+                    }
+                },
+                submitHandler: function() {
+                    $scope.submit();
+                }
+            });
+			validator.focusInvalid = function() {
+                if( this.settings.focusInvalid ) {
+                    try {
+                        var toFocus = $(this.findLastActive() || this.errorList.length && this.errorList[0].element || []);
+                        if (toFocus.is("textarea")) {
+                            UE.getEditor('myEditor').focus()
+                        } else {
+                            toFocus.filter(":visible").focus();
+                        }
+                    } catch(e) {
+                    }
+                }
+            }
+        }
+
+		$scope.showPerview = function(){
+			$scope.record.content = myEditor.getContent();
+			if($scope.record.type == 1){
+				$scope.record.noticeTime = $("#noticeTime").val();
+			}
+			layer.open({
+				  type: 1,
+				  shade: 0.6,
+				  area: ['700px','800px'],
+				  title: false, //不显示标题
+				  content: $('#preview'), //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
+				  cancel: function(){
+					
+				  }
+			});
+		}
+} ]);

@@ -1,0 +1,29 @@
+'use strict';
+
+angular.module('app')
+	.controller('demoContentController', ['$rootScope', '$scope', '$http', '$state', '$timeout',
+    function ($rootScope, $scope, $http, $state, $timeout) {
+    	$scope.title = '评议规则设置';
+
+    	// 取消
+    	$scope.cancel = function () {
+    		layer.confirm('确认取消吗?', function () {
+    			$state.go('main.demoratic.list');
+    		})
+    	}
+
+    	// 预览
+    	$scope.showModule = function () {
+    		layer.open({
+    			type: 1,
+    			title: '民主评议党员测评表预览',
+    			area: ['80%', '500px'],
+    			content: $('#moduleTable')
+    		})
+    	}
+
+    	// 下一步
+    	$scope.goNextPage = function () {
+    		$state.go('main.demoratic.notice');
+    	}
+    }])

@@ -1,0 +1,69 @@
+<script type="text/javascript" src="src/app/sys/partyners/RAPInfoController.js"></script>
+<div ng-controller="RAPInfoController">
+
+   
+    <!-- 加载提醒 -->
+    <div ng-show="loading" class="text-center m-t-md text-lg"><i class="fa fa-spin fa-spinner"></i>数据加载中...</div>
+
+    <!-- 内容区域 -->
+    <div ng-hide="loading" class="wrapper-md content" style="margin-top: 0">
+        <!-- 数据显示 -->
+        <div class="wrapper-data">
+            <div class="panel panel-default">              
+                 <!-- 头部 -->
+                <div class="panel-heading clearfix">
+                    <a href="javascript:;" class="btn btn-info pull-right m-l-xs" ng-show="showSubmit" ng-click="ShowForm(0)">
+                        <span class="" style="position: relative; top: 1px;"><i class="fa fa-plus text-md"></i></span>
+                        添加
+                    </a>
+
+                </div>
+                <!-- 数据表格 -->
+                <div class="row org-m-t20 m-l-none m-r-none">
+                    <div class="table-responsive">
+                        <table class="table table-striped b-t b-light text-center">
+                            <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th class="text-left">相关照片</th>
+                                    <th ng-click="sortData(url, '', param, $event)" class="text-left sortable both">奖惩信息</th>
+                                    <th ng-click="sortData(url, '', param, $event)" class="sortable both">奖惩说明</th>
+                                    <th ng-click="sortData(url, '', param, $event)" class="sortable both">奖惩批准日期</th>
+                                    <th ng-click="sortData(url, '', param, $event)" class="sortable both">奖惩批准机关</th>
+                                    <th ng-click="sortData(url, '', param, $event)" class="sortable both">批准机关级别</th>
+                                    <th ng-click="sortData(url, '', param, $event)" class="sortable both">奖惩原因</th>
+                                    <th ng-click="sortData(url, '', param, $event)" class="sortable both">奖惩撤销日期</th>
+
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in pageInfo.data">
+                                    <td>{{ $index+1 }}</td>
+                                    <td class="text-left">
+                                        <img ng-src="{{ item.imgUrl?item.imgUrl:'res/img/np.png' }}" width="65" height="50" />
+                                    </td>
+                                    <td class="text-left">{{ item.rewardName }}</td>
+                                    <td class="text-left">{{ item.remark }}</td>
+                                    <td class="text-left">{{ item.rewardApprovalDate }}</td>
+                                    <td class="text-left">{{ item.rewadApprovalDept }}</td>
+                                    <td class="text-left">{{ item.approvalDeptLevelName }}</td>
+                                    <td class="text-left">{{ item.rewardReasonName}}</td>
+                                    <td class="text-left">{{ item.rewardRevokeDate }}</td>
+
+                                    <td>
+                                        <button class="btn btn-outline blue btn-xs m-r-10" ng-click="ShowForm(item.id)">编辑</button>
+                                        <button class="btn btn-outline red btn-xs m-r-10 " ng-click="del(item.id)">删除</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+           
+            </div>
+        </div>
+
+    </div>
+</div>

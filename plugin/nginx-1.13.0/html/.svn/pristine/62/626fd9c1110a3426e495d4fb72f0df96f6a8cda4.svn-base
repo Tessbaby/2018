@@ -1,0 +1,217 @@
+
+<style>
+.notice-head h4{color:red;margin-top:10px;margin-bottom:10px;}
+.notice-star{position:relative;height:3px;background:#ff0000;width:100%;margin: 20px 0;}
+.notice-star div{position:absolute;top:-13px;left:50%;margin-left:-40px;width:80px;background:#fff;color:#ff0000;font-size:24px;text-align:center;line-height:1;font-weight:bold;}
+</style>
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><span><i class="fa fa-home">&nbsp;</i> 党务办公</span></li>
+        <li><a ui-sref="main.party.task">工作任务</a></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+<div class="wrapper-md content">
+    <div class="panel panel-default">
+        <!-- 头部 -->
+        <div class="panel-heading font-bold">{{title}}
+			<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.party.task"><i class="text-md fa fa-times text-muted"></i></a>
+        </div>
+        <!--表单-->
+            <div class="panel-body">
+			
+                <form class="form-horizontal" name="user_form" id="user_form">
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="noticeTitle"><span class="text-danger wrapper-sm">*</span>任务标题</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="noticeTitle" id="noticeTitle" placeholder="请输入任务标题" ng-model="record.title" >
+                            <span class="help-block m-b-none"><!-- 任务标题不得超过60个字。 --></span>
+                        </div>
+                    </div>
+					<!-- <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="userLogoPic">标题图</label>
+                        <div class="col-sm-6"  style="width:394px;">
+                            <input type="file" id="uploadImg" class="dropify" data-height="204"  data-allowed-file-extensions="png jpg" data-default-file="/res/img/np.png" ng-model="record.picUrl" />
+							<span class="help-block m-b-none">标题图尺寸要求宽度*高度为360px*200px。图片格式支持jpg,png</span>
+						</div>
+                    </div> -->
+                  <!--  <div class="line line-dashed b-b line-lg pull-in"></div>
+					<div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="userLogoPic">标题图</label>
+                        <div class="col-sm-6">
+                            <div class="m-b upload-pic-box inline">
+                                <a href="javascript:void(0);" class="btn btn-default btn-addon">
+                                    <i class="fa fa-upload"></i>上传图片
+                                </a>
+                            </div>
+							 <div class="m-b inline" ng-show="imgSrc!='res/img/np.png'" ng-click="img_del($index)">
+                                <a href="javascript:void(0);" class="btn btn-danger btn-addon">删除</a>
+                            </div>
+							
+                            <input type="file" id="uploadImg" accept="image/png,image/jpg,image/jpeg" class="fileInput" ng-hide="1"  />
+							<div class="col">
+								<div class="inline bg-white wrapper-sm b-a">
+									<div class="bg-light" style="width:360px;height:200px;position:relative;overflow:hidden;">
+										<img ng-src="{{imgSrc}}" style="width:100%;text-align:center;" />
+									</div>
+								</div>
+							</div>
+                            <span class="help-block m-b-none">标题图尺寸要求宽度*高度为360px*200px。图片格式支持jpg,png</span>
+                        </div>
+                    </div>-->
+					
+					<div class="line line-dashed b-b line-lg pull-in"></div>
+					<div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="noticeTitle"><span class="text-danger wrapper-sm">*</span>发布范围</label>
+                        <div class="col-sm-6" >
+							<div class="form-control" id="showNodes" style="height:auto;min-height:52px;"></div>
+							<input type="text" style="opacity:0;height:1px;" name="showNodes" id="showNodesInput">
+						</div>
+                        <div class="col-sm-6 col-lg-offset-2 col-sm-offset-3">
+							<ul id="treeDemo" class="ztree" name="treeDemo"></ul>
+                        </div>
+                    </div>
+					<div class="line line-dashed b-b line-lg pull-in"></div>
+					<div class="form-group" >
+						<label class="col-lg-2 col-sm-3 control-label" for="noticeTitle"><span class="text-danger wrapper-sm">*</span>任务内容</label>
+                        <div class="col-sm-6">
+							<script type="text/javascript" charset="utf-8" src="lib/ueditor/ueditor.config.js"></script>
+							<script type="text/javascript" charset="utf-8" src="lib/ueditor/ueditor.all.js"> </script>
+							<script type="text/javascript" charset="utf-8" src="lib/ueditor/lang/zh-cn/zh-cn.js"></script>
+							
+							<textarea id="myEditor" name="myEditor" rows="15" cols="80" style="width:100%;height:310px;position:relative;z-index:0;" ng-model="record.content"></textarea>
+							<!--<script src="lib/ueditor/addCustomizeDialog.js"></script>-->
+                        </div>
+					</div>
+					<div class="line line-dashed b-b line-lg pull-in"></div>
+					<!-- <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="userLogoPic">上传附件</label>
+                        <div class="col-sm-6"  style="width:394px;">
+                            <input type="file" id="uploadFile" class="dropify" data-height="204" multiple="multiple" ng-model="record.filePath" />
+						</div>
+                    </div> -->
+					<!-- <form id="id123"> -->
+					<div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="userLogoPic">上传附件</label>
+                        <div class="col-sm-6">
+                            <div class="m-b upload-file-box">
+                                <a href="javascript:void(0);" class="btn btn-default btn-addon">
+                                    <i class="fa fa-upload"></i>上传
+                                </a>
+								<!-- <small class="">（支持最多上传5个附件，文件大小不超过2M）</small> -->
+														<small class="block">
+                            （支持扩展名：.rar/.zip/.doc/.docx/.xls/.xlsx/.ppt/.pptx/.pdf/.txt/.png/.jpg/.jpeg/.gif；
+最多上传5个附件，文件大小不超过2M）
+                            </small>
+                            </div>
+							
+                            <input type="file" id="uploadFiles" class="fileInput" ng-hide="1" />
+							
+                            <div>
+								<div class="m-t-sm" ng-repeat="item in thumb">
+									<span>{{item.filename}}</span>
+									<span class="inline " ng-click="file_del($index)"><i class="text-md fa fa-times text-muted"></i></span>
+								</div>
+							</div>
+							
+                        </div>
+                    </div>
+				
+					
+					
+			
+					
+					<div class="form-group">
+						<label class="col-lg-2 col-sm-3 control-label" for="noticeRead"><span class="text-danger wrapper-sm"></span>开启未读提醒</label>
+						<div class="col-sm-6">
+							<div class="radio r-inline add-radio">
+								<label>
+									<input type="radio" name="noticeRead" id="read1" value="1" ng-model="record.isUnread" >
+									是
+								</label>
+								<label>
+									<input type="radio" name="noticeRead" id="read2" value="2" ng-model="record.isUnread" ng-checked="true">
+									否
+								</label>
+							</div>
+						</div>
+					</div>
+					
+					<div class="m-l-xl m-r-xl panel-heading" ng-show="record.isUnread==1">
+						<div class="form-group">
+							<label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm"></span>时间间隔</label>
+							<div class="col-sm-6">
+								<input type="number" class="form-control inline w140" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" ng-model="record.intervalHour">小时
+								<input type="number" class="form-control inline w140" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" ng-model="record.intervalMinute">分
+								<!-- <input type="text" class="form-control" name="noticeTitle" id="noticeTitle" placeholder="请输入任务标题" ng-model="record.noticeTitle" ng-disabled="record.userId"> -->
+								<span class="help-block m-b-none"><!-- 任务标题不得超过60个字。 --></span>
+							</div>
+						</div>
+						
+						
+						<div class="form-group">
+							<label class="col-lg-2 col-sm-3 control-label" for="intervalStartTime"><span class="text-danger wrapper-sm"></span>开始结束时间</label>
+							<div class="col-sm-6">
+								<input type="text" class="form-control laydate-icon inline" style="width: 220px;"  name="intervalStartTime" id="intervalStartTime" ng-model="record.intervalStartTime" placeholder="开始时间">
+								<input type="text"  class="form-control laydate-icon inline" style="width: 220px;" name="intervalEndTime" id="intervalEndTime" ng-model="record.intervalEndTime" placeholder="结束时间">
+								
+								<!-- <input type="text" class="form-control laydate-icon inline" style="width:220px;" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" name="intervalStartTime" id="intervalStartTime" ng-model="record.intervalStartTime">
+								<input type="text" class="form-control laydate-icon inline" style="width:220px;" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" name="intervalEndTime" id="intervalEndTime" ng-model="record.intervalEndTime">
+								 -->
+								<span class="help-block m-b-none"></span>
+							</div>
+						</div>
+					</div>
+                    
+                    <div class="form-group text-center">
+						<button class="btn btn-primary m-r-20 p-lr-20" type="button" ng-click="showPerview()">预览</button>
+						<button class="btn btn-primary m-r-20 p-lr-20" type="submit" ng-disabled="isDisabled">发布</button>
+						<a class="btn btn-default p-lr-20" id="cancel" ng-click="cancel()">取消</a>
+					</div>
+                </form>
+            </div>
+    </div>
+</div>
+<div class="open-layer-content">
+	<div class="add-content white-bg p-md" id="preview">
+			<div class="text-center notice-head" ng-if="record.type==1">
+				<h4>{{record.headerTitle}}</h4>
+				<p class="text-center">{{record.headerShortTitle}}{{record.titleNum}}</p>
+				<div class="notice-star">
+					<div>★</div>
+				</div>
+			</div>
+				
+			<p class="text-center"><strong>{{record.title}}</strong></p>
+			
+			<div class="" style="min-height:50px;" ng-bind-html="record.content | trustHtml">
+				<!-- <p>系统各单位、各部门：</p>
+				<p>&nbsp; &nbsp; &nbsp; &nbsp;现将区文明办《关于2016年度区级文明单位申报工作的任务》转发给你们，请认真按照任务要求做好区级文明单位申报工作，凡符合区级文明单位基本条件的单位均可参加申报。</p>
+				<p>&nbsp; &nbsp; &nbsp; &nbsp;各单位、各部门要严格按照《文明单位测评体系》要求，如实填报“申报表”和“自查测评考核评分表”，名称要写单位全称，申报表要正反面打印。并上报2016年文明创建情况工作总结，总结要突出创建特色，字数不超过2000字。以上材料均一式两份加盖公章连同电子版于2月10日前报送到机关党工委，逾期不报的单位视为自动放弃参评资格。</p>
+				 -->
+			</div>
+			<div ng-show="thumbLength">
+				<p class="tindent14">附：</p>
+				<div class="m-t-sm font" ng-repeat="item in thumb">
+					<p class="tindent14" >&nbsp;&nbsp;&nbsp;<span id="{{item.id}}" class="font14" ng-click="tipMsg()">{{item.filename}}</span></p>
+					<!-- <span>{{item.filename}}</span> -->
+					<!-- <span class="inline " ng-click="file_del($index)"><i class="text-md fa fa-times text-muted"></i></span> -->
+				</div>
+				<!-- <p class="tindent14" ng-repeat="item in filePath">&nbsp;&nbsp;&nbsp;<a href="{{item.fileUrlPath}}" id="{{item.id}}">{{item.fileName}}</a></p> -->
+				<!-- <p class="tindent14">&nbsp;&nbsp;&nbsp;<a href="javascript:;">1、文明单位申报表</a></p>
+				<p class="tindent14">&nbsp;&nbsp;&nbsp;<a href="javascript:;">2、唐山市文明单位测评体系（试行）</a></p> -->
+			</div>
+			
+			<div class="text-right p-r-sm" ng-if="record.type==1">
+				<div class="">{{record.inscribe}}</div>
+				<div class="m-t-sm">{{record.noticeTime}}</div>
+				<img ng-src="{{record.signature}}" width="100" class="" style="position:relative;top:-70px;right:0;" />
+			</div>
+	</div>
+</div>

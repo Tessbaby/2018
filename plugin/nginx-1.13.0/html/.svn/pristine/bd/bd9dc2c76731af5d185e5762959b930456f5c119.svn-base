@@ -1,0 +1,16 @@
+'use strict';
+
+angular.module('app')
+	.controller('activityController', ['$rootScope', '$scope', '$http', '$state', 'toaster',
+	                                function ($rootScope, $scope, $http, $state, toaster) {
+
+	                                    $scope.title = '群团活动';
+	                                    $scope.pageInfo = [];
+	                                    $scope.param = {};
+	                                    $scope.param.type = "1";
+	                                    $scope.url = '/iBase4J-SYS-Web/activity/list';
+	                                    $rootScope.search($scope.url, $scope.param);
+
+
+
+	                                }]);

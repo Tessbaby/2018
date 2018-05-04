@@ -1,0 +1,211 @@
+'use strict';
+
+angular.module('app')
+	.controller('meetingListController', ['$rootScope', '$scope', '$http', '$state', '$timeout',
+	    function ($rootScope, $scope, $http, $state, $timeout) {
+
+	        $scope.title = '会议管理';
+	        $scope.param = {};
+	        $scope.id = ''; // 用于二维码下载
+
+	        $scope.statusList = [
+                                    { "value": "3", "name": "全部" },
+                                    { "value": "-1", "name": "未开始" },
+                                    { "value": "1", "name": "进行中" },
+                                    { "value": "2", "name": "已结束" },
+	        ];
+
+	        //=======================================验证权限 statr===================================
+	        //权限模块代码
+	        $scope.permissionCode = $state.$current.name;
+	        $scope.hasQuery = $.inArray($scope.permissionCode + '.query', $rootScope.permissionList) != -1;
+	        $scope.hasUpdate = $.inArray($scope.permissionCode + '.update', $rootScope.permissionList) != -1;
+	        $scope.hasDelete = $.inArray($scope.permissionCode + '.delete', $rootScope.permissionList) != -1;
+
+	        if (!$scope.hasQuery) {
+	            layer.alert("未经授权，禁止访问！", { icon: 2 });
+	            return false;
+	        }
+	        //=======================================验证权限 end===================================
+
+
+
+
+	        //=======================================部门Tree statr===================================
+	        //党组织结构设置
+	        var setting = {
+	            check: { enable: false },
+	            data: {
+	                key: {
+	                    name: "deptName"
+	                },
+	                simpleData: {
+	                    enable: true,
+	                    idKey: "id",
+	                    pIdKey: "parentId",
+	                    rootPId: 0
+	                }
+	            },
+	            callback: { onClick: onClick }
+	        };
+
+	        //获取选中子级
+	        function onClick(e, treeId, treeNode) {
+
+	            $scope.param.deptid = treeNode.id;
+
+	            $rootScope.search($scope.url, $scope.param);
+	        }
+	        //党组织结构树
+
+	        $scope.getDepTree = function () {
+
+	            $.ajax({
+	                type: 'PUT',
+	                dataType: 'json',
+	                contentType: 'application/json;charset=UTF-8',
+	                url: '/iBase4J-SYS-Web/dept/read/treelist2',
+	                data: angular.toJson($scope.param)
+	            }).then(function (result) {
+
+	                if (result.httpCode == 200) {
+	                    //console.log(result);
+	                    var zNodes = result.data;
+	                    var treeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+	                    treeObj.expandAll(true);
+
+	                } else {
+	                    // $scope.msg = result.msg;
+	                    alertDialog(result.msg, 2);
+	                }
+	                $scope.$apply();
+	            });
+	        }
+
+	        //=======================================部门Tree end===================================
+
+	        //==================================执行查询 start==================================
+	        $scope.param.status = $scope.statusList[0].value;
+	        $scope.url = '/iBase4J-SYS-Web/sysMeeting/read/list';
+	        $rootScope.pageInfo = []; // 请求数据前清空
+	        $rootScope.search($scope.url, $scope.param);
+	        $scope.getDepTree();
+
+	        // 切换会议状态
+	        $scope.meetingState = function () {
+	            $rootScope.search($scope.url, $scope.param);
+	            //$scope.$apply();
+	        }
+	        $scope.clearSearch = function () {
+	            $scope.param.keyword = null;
+	            $rootScope.search($scope.url, $scope.param);
+	        }
+
+
+	        // 翻页 - 排序翻页数据与此一致
+	        $scope.pagination = function (page) {
+	            $scope.param.pageNum = page;
+	            $scope.param.asc = $rootScope.changeAsc();
+	            $rootScope.search($scope.url, $scope.param);
+	        };
+
+	        //==================================执行查询 end==================================
+
+	        $scope.del = function (id) {
+
+            var postData = { meetid: id };
+            layer.confirm('确认要删除？', function () {
+              $.ajax({
+                url: '/iBase4J-SYS-Web/sysMeeting',
+                type: 'delete',
+                data: angular.toJson(postData)
+              }).then(function (result) {
+                $scope.loading = false;
+                if (result.httpCode == 200) {
+                  tipDialog("删除成功", 1, 0.8 * 1000, function () {
+                    if ($rootScope.pageInfo.data.length == 1 && $scope.param.pageNum > 1) {
+                      $scope.param.pageNum = $scope.param.pageNum - 1;
+                    }
+                    $rootScope.search($scope.url, $scope.param);
+                  });
+                } else {
+                    alertDialog(result.msg, 2);
+                }
+                $scope.$apply();
+              })
+            })
+	        }
+
+	        // 二维码下载
+	        $scope.showEWM = function (id) {
+	            $scope.id = id;
+	            var m = {
+	                enable: 1,
+	                type: 'BARCODETYPE'
+	            };
+	            $.ajax({
+	                url: '/iBase4J-SYS-Web/dic/read/list',
+	                type: 'put',
+	                dataType: 'json',
+	                contentType: 'application/json;charset=UTF-8',
+	                data: angular.toJson(m)
+	            }).then(function (result) {
+	                if (result.httpCode == 200) {
+	                    $scope.ewmList = result.data;
+	                    layer.open({
+	                        type: 1, //信息层
+	                        title: '二维码下载', //显示标题
+	                        shade: 0.5, //遮罩透明度
+	                        moveType: 1, //拖拽风格，0是默认，1是传统拖动
+	                        shift: 1, //0-6的动画形式，-1不开启
+	                        area: ['550px', '300px'],
+	                        skin: 'layer-add',
+	                        content: $('#ewmHTML')
+	                    })
+	                } else {
+	                    alertDialog(result.msg, 2);
+	                }
+	                $scope.$apply();
+	            })
+	        }
+
+	        $scope.download = function (code) {
+	            // var load = parent.layer.load(0, { shade: false });
+	            var dParam = {
+	                barlength: code,
+	                meetid: $scope.id
+	            };
+	            $timeout(function () {
+	                $.ajax({
+	                    url: '/iBase4J-SYS-Web/sysMeeting/read/barcode',
+	                    type: 'put',
+	                    dataType: 'json',
+	                    contentType: 'application/json;charset=UTF-8',
+	                    data: angular.toJson(dParam)
+	                }).then(function (result) {
+	                    if (result.httpCode == 200) {
+	                        var img = result.data.imgpath;
+	                        if (img) {
+	                            $('#image').attr('src', img);
+	                            $("#down").attr({ "href": img });
+	                            layer.open({
+	                                type: 1, //信息层
+	                                title: false, //显示标题
+	                                shade: 0.5, //遮罩透明度
+	                                moveType: 1, //拖拽风格，0是默认，1是传统拖动
+	                                shift: 1, //0-6的动画形式，-1不开启
+	                                area: ['400px', '300px'],
+	                                content: $('#downMsg')
+	                            })
+	                        } else {
+	                            alertDialog("无二维码", 2);
+	                            
+	                        }
+	                    } else {
+	                        alertDialog(result.msg, 2);
+	                    }
+	                    $scope.$apply();
+	                })
+	            }, 200);
+	        }
+	    }]);

@@ -1,0 +1,113 @@
+'use strict';
+
+	angular.module('app')
+		.controller('updateController', [ '$rootScope', '$scope', '$http', '$state', 'toaster','$timeout',
+										function($rootScope, $scope, $http, $state, toaster,$timeout) {
+				
+		/*初始化页面*/
+		var title = "添加汇报";
+		var defaultAva = $rootScope.defaultAvatar;
+		$scope.thumb = [];
+		$scope.record = {};	
+		//控制按钮显示状态
+		$scope.btnInfo='添加';
+		$scope.btnState=false;		
+		validate();
+		$scope.title = $rootScope.title = title;
+       
+			
+		//文本框剩余字数
+		$scope.count = 0;
+		$scope.tolCount = function(){
+		
+　　　　　　$scope.count = $scope.record.content.length;
+		}
+		
+	   // 获取汇报类型
+		var getReportList = function () {
+				var postData = {
+					enable: 1,    		
+					type: 'REPORTTYPE'
+				};
+				$.ajax({
+					type: 'PUT',
+						url : '/iBase4J-SYS-Web/dic/read/list',
+						dataType: 'json',
+						contentType:'application/json;charset=UTF-8',
+						data: angular.toJson(postData)
+					}).then(function (result) {
+						$scope.reportList = result.data;
+						$scope.record.type=$scope.reportList[0].code;
+						$scope.$apply();
+					});
+			}
+			getReportList();
+		
+		//提交表单
+        $scope.submit= function(){ 
+			
+			saveData();
+        };
+
+        function saveData(){
+		    $scope.loading = true;			 
+			$scope.btnInfo='提交中...';
+			$scope.btnState=true;
+            	$.ajax({
+					type: 'POST',
+					url : '/iBase4J-SYS-Web/report/updateReport',
+					dataType: 'json',
+					contentType:'application/json;charset=UTF-8',
+					data:angular.toJson($scope.record)
+				}).then(function(result){
+					    $scope.loading = false;
+						if(result.httpCode ==200){//成功
+						 toaster.clear('*');
+						  toaster.pop('success', '', '保存成功');
+						  $timeout(function(){
+							  $state.go('main.party.hb');
+						  },800);
+						}else{
+						  toaster.clear('*');
+						  toaster.pop('error', '', result.msg);
+							$scope.btnInfo='提交汇报';
+								$scope.btnState=false;
+						}
+				});
+        }
+		
+		
+		
+        //表单验证
+        function validate(){
+            var validator = jQuery('form').validate({
+				ignore: "",
+                rules: {
+                    title: {
+                        required: true,                        
+                        maxlength:128
+                    },
+					content: {
+                        required: true
+                    },
+					
+					
+                },
+                messages: {
+                    title: {
+                        required: '请输入标题',
+                        maxLength:"标题不得超过128个字符"
+                    },
+                    content: {
+                        required: '汇报内容不能为空'
+                    }                   
+                },
+                submitHandler: function() {
+                    $scope.submit();
+                }
+            });
+			
+        }
+
+		
+} ]);

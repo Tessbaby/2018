@@ -1,0 +1,85 @@
+'use strict';
+
+angular.module('app')
+	.controller('changeController', ['$rootScope', '$scope', '$http', '$state', 'toaster', '$timeout',
+	 function ($rootScope, $scope, $http, $state, toaster, $timeout) {
+
+	     validate();
+	     $scope.btnInfo = '提交';
+	     $scope.btnState = false;
+	     $scope.record = {};
+
+	     function submit() {
+	         $scope.btnInfo = '提交中...';
+	         $scope.btnState = true;
+	         $.ajax({
+	             type: 'POST',
+	             url: '/iBase4J-SYS-Web/user/update/updatePassword',
+	             dataType: 'json',
+	             contentType: 'application/json;charset=UTF-8',
+	             data: angular.toJson($scope.record)
+	         }).then(function (result) {
+	             if (result.httpCode == 200) {
+	                // toaster.clear('*');
+	                // toaster.pop('success', '', '密码已修改');
+	                 layer.msg("密码已修改", { icon: 1 });
+	                 $timeout(function () {
+	                     $scope.cancel();
+	                 },2000);
+	                 
+	             } else {
+	                 //toaster.clear('*');
+	                 layer.msg(result.msg, {icon:2});
+	                 //toaster.pop('error', '', result.msg);
+	             }
+	             $scope.btnInfo = '提交';
+	             $scope.btnState = false;
+
+	         });
+	     }
+
+	     $scope.cancel = function () {
+	        parent.layer.closeAll();
+	     }
+	     function validate() {
+
+	         jQuery('form').validate({
+	             rules: {
+	                 oldpassword: {
+	                     required: true,
+
+	                 },
+	                 newpassword1: {
+	                     required: true,
+	                     minlength: 6
+	                 },
+
+	                 newpassword2: {
+	                     required: true,
+	                     minlength: 6,
+	                     equalTo: "#newpassword1"
+	                 }
+
+
+	             },
+	             messages: {
+	                 oldpassword: {
+	                     required: "请输入原密码",
+	                 },
+	                 newpassword1: {
+	                     required: "请输入新密码",
+	                     minlength: "密码最少6位"
+	                 },
+
+	                 newpassword2: {
+	                     required: "请再次输入新密码",
+	                     minlength: "密码最少6位",
+	                     equalTo: "两次密码不一致"
+	                 }
+	             },
+	             submitHandler: function () {
+	                 submit();
+	             }
+	         });
+	     }
+	 }])

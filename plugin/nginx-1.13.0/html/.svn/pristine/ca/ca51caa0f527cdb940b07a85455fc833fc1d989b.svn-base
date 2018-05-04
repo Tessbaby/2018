@@ -1,0 +1,65 @@
+<toaster-container toaster-options="{'position-class': 'toast-center', 'close-button':true}"></toaster-container>
+
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><a ui-sref="main"><i class="fa fa-home">&nbsp;</i>系统设置</a></li>
+        <li><a ui-sref="main.setting.banner">宣传图管理</a></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+
+<div class="wrapper-md content">
+  <div class="panel panel-default">
+    <!-- 头部 -->
+    <div class="panel-heading font-bold">{{title}}
+			<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.setting.banner"><i class="text-md fa fa-times text-muted"></i></a>
+    </div>
+    <!--表单-->
+    <div class="panel-body">
+      <form class="form-horizontal"  name="organize_form">
+				<div class="panel-body">
+					<!--用户名-->
+			    <div class="form-group">
+	          <label class="col-lg-2 col-sm-3 control-label" for="userLogoPic">宣传图</label>
+	          <div class="col-sm-6">
+
+	            <div class="m-b upload-pic-box inline">
+	              <a href="javascript:void(0);" class="btn btn-default btn-addon">
+	                <i class="fa fa-upload"></i>上传图片
+	              </a>
+	            </div>
+	            <div class="m-b inline" ng-show="imgSrc!='res/img/np.png'" ng-click="img_del($index)">
+	              <a href="javascript:void(0);" class="btn btn-danger btn-addon">删除</a>
+	            </div>
+	      
+	            <input type="file" id="uploadImg" accept="image/png,image/jpg,image/jpeg" class="fileInput" ng-hide="1"  />
+	            <div class="col">
+	              <div class="inline bg-white wrapper-sm b-a">
+	                <div class="bg-light" style="width:360px;height:200px;position:relative;overflow:hidden;">
+	                  <img ng-src="{{imgSrc}}" style="width:100%;text-align:center;" />
+	                </div>
+	              </div>
+	            </div>
+	            <span class="help-block m-b-none">图片格式支持jpg,png</span>
+	          </div>
+	        </div>
+					<div class="line line-dashed b-b line-lg pull-in"></div>
+
+					<div class="form-group">
+	          <label class="col-lg-2 col-sm-3 control-label" for="remark">图片描述</label>
+	          <div class="col-sm-6">
+	            <input type="text" class="form-control" name="remark" id="remark" placeholder="请输入内容" ng-model="record.remark">
+	            <span class="help-block m-b-none"><!-- 组织名称不得超过60个字。 --></span>
+	          </div>
+	        </div>
+
+				  <div class="form-group text-center">
+				    <button class="btn btn-primary m-r-20 p-lr-20" type="submit" ng-click="submit()" ng-disabled="btnState">{{btnInfo}}</button>
+				    <button class="btn btn-default p-lr-20" ng-click="cancel()">取消</button>
+				  </div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

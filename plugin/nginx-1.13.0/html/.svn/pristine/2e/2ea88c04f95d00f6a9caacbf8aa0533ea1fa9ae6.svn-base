@@ -1,0 +1,294 @@
+<style>
+    .panel-heading li {
+        width: 15%;
+    }
+
+        .panel-heading li > a {
+            height: 100px;
+        }
+
+    .padding {
+        padding: 20px;
+    }
+
+    .h145 {
+        height: 145px;
+    }
+
+    .wp80 {
+        width: 80%;
+    }
+
+    .work-panel {
+        width: 80%;
+        margin: 0 auto;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .orange-color {
+        color: #d49e39;
+        background-color: #fbf5cb;
+        border: 2px solid #fbcb00;
+        border-radius: 5px;
+    }
+
+    .red-color {
+        color: #ec4c47;
+        background-color: #fcdcda;
+        border: 1px solid #ec4d45;
+        border-radius: 5px;
+    }
+</style>
+
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><a ui-sref="main.partyner"><i class="fa fa-home">&nbsp;</i>工作面板</a></li>
+        <li class="active" ng-bind="title">党委工作台</li>
+    </ul>
+</div>
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+    <!-- 数据显示 -->
+    <div class="wrapper-data">
+        <div class="panel panel-default" style="background-color: #f6f8f8">
+            <!-- 头部 -->
+            <div class="panel-heading clearfix m-b-sm" style="background-color: #fff">
+                <ul class="m-n p-n">
+                    <li class="pull-left border-right">
+                        <a href="" class="block full-width text-center">
+                            <img src="./res/img/system/工作部署.png" alt="">
+                            <span class="block m-t-sm" style="font-size: 20px; color: #809bb1">工作部署</span>
+                        </a>
+                    </li>
+                    <li class="pull-left">
+                        <a ng-click="showWorkLayer('通知')" class="block full-width text-center">
+                            <img src="./res/img/system/通知.png" alt="" class="m-t-xs" style="height: 90%">
+                        </a>
+                    </li>
+                    <li class="pull-left">
+                        <a ng-click="showWorkLayer('会议')" class="block full-width text-center">
+                            <img src="./res/img/system/会议.png" alt="" class="m-t-xs" style="height: 90%">
+                        </a>
+                    </li>
+                    <li class="pull-left">
+                        <a ng-click="showWorkLayer('活动')" class="block full-width text-center">
+                            <img src="./res/img/system/活动.png" alt="" class="m-t-xs" style="height: 90%">
+                        </a>
+                    </li>
+                    <li class="pull-left">
+                        <a ng-click="showWorkLayer('任务')" class="block full-width text-center">
+                            <img src="./res/img/system/任务.png" alt="" class="m-t-xs" style="height: 90%">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="org-m-t20 padding white-bg">
+                <div class="row">
+                    <div class="col-sm-4 text-center m-b-20" ng-repeat="item in panels">
+                        <a ng-if="item.request == ''" ui-sref="{{ item.permission }}" class="block full-width">
+                            <div ng-if="item.orange == 1" class="row h145 orange-color work-panel">
+                                <div class="col-sm-9 text-left font14">
+                                    <span class="block text-left font16 m-b-10" ng-bind="item.menuName">微传递</span>
+                                    <span ng-bind="item.remark">让信息快速有效的传递出去</span>
+                                </div>
+                                <div class="col-sm-3 p-t-15">
+                                    <img ng-src="{{ item.img ? item.img : '' }}" class="wp80">
+                                </div>
+                            </div>
+                            <div ng-if="item.red == 1" class="row h145 red-color work-panel">
+                                <div class="col-sm-9 text-left font14">
+                                    <span class="block text-left font16 m-b-10" ng-bind="item.menuName">微传递</span>
+                                    <span ng-bind="item.remark">让信息快速有效的传递出去</span>
+                                </div>
+                                <div class="col-sm-3 p-t-15">
+                                    <img ng-src="{{ item.img ? item.img : '' }}" class="wp80">
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- 如果是微党课 -->
+                        <a ng-if="item.request != ''" href="{{ item.request }}" class="block full-width" target="_blank">
+                            <div ng-if="item.orange == 1" class="row h145 orange-color work-panel">
+                                <div class="col-sm-9 text-left font14">
+                                    <span class="block text-left font16 m-b-10" ng-bind="item.menuName"></span>
+                                    <span ng-bind="item.remark"></span>
+                                </div>
+                                <div class="col-sm-3 p-t-15">
+                                    <img ng-src="{{ item.img ? item.img : '' }}" class="wp80">
+                                </div>
+                            </div>
+                            <div ng-if="item.red == 1" class="row h145 red-color work-panel">
+                                <div class="col-sm-9 text-left font14">
+                                    <span class="block text-left font16 m-b-10" ng-bind="item.menuName"></span>
+                                    <span ng-bind="item.remark"></span>
+                                </div>
+                                <div class="col-sm-3 p-t-15">
+                                    <img ng-src="{{ item.img ? item.img : '' }}" class="wp80">
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- <div class="row">
+	      	<div class="col-sm-4 text-center h145 m-b-sm">
+		      	<a href="" class="block full-width">
+		      		<img src="./res/img/system/党员身边无违章无事故.png" alt="" class="m-t-xs" style="height: 90%">
+	      		</a>
+	      	</div>
+	      	<div class="col-sm-4 text-center h145">
+		      	<a href="" class="block full-width">
+		      		<img src="./res/img/system/精彩推荐.png" alt="" class="m-t-xs" style="height: 90%">
+	      		</a>
+	      	</div>
+	      	<div class="col-sm-4 text-center h145">
+		      	<a href="" class="block full-width">
+		      		<img src="./res/img/system/管理制度.png" alt="" class="m-t-xs" style="height: 90%">
+	      		</a>
+	      	</div>
+      	</div>
+      </div> -->
+            </div>
+        </div>
+    </div>
+
+
+    <div style="height: 1px; overflow: hidden">
+        <div id="workLayer">
+
+            <div ng-show="showNoticeLayer">
+                <div class="text-center m-t-sm m-b-sm">
+                    <a class="btn btn-info" ng-bind="layerTitle" ui-sref="main.party.noticeAdd" ng-click="hideLayer()" ng-show="hasNoticeUpdate"></a>
+                </div>
+
+                <div class="table-responsive p-xs">
+                    <span>最近通知</span>
+                    <table class="table text-center m-t-sm">
+                        <tr ng-repeat="item in layerData">
+                            <td class="text-left">{{ item.count }}</td>
+                            <td title="{{item.title}}">{{  item.title | cut:true:10:' ...' }}
+                            </td>
+                            <td>
+                                <a ui-sref="main.party.noticeReadList({id: item.id,title:item.title})" ng-click="hideLayer()">{{ item.readCount }}/{{ item.sendCount }}
+                                </a>
+                            </td>
+                            <td>{{ item.createTime }}</td>
+                            <td>
+                                <span ng-show="item.enable==1">正常</span>
+                                <span ng-show="item.enable==-1" class="text-danger">已删除</span>
+                            </td>
+                            <td class="text-left">
+                                <a ui-sref="main.party.noticeDetail({id: item.id})" class="btn btn-outline blue btn-xs m-r-10" ng-click="hideLayer()">详情</a>
+                                <button class="btn btn-outline red btn-xs m-r-10" ng-show="item.enable!=-1 && hasNoticeDelete" ng-click="delNotice(item.id)">删除</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="p-sm text-right"><a ui-sref="main.party.notice" ng-click="hideLayer()">查看更多...</a></div>
+            </div>
+
+            <div ng-show="showMeetingLayer">
+                <div class="text-center m-t-sm m-b-sm">
+                    <a class="btn btn-info" ng-bind="layerTitle" ui-sref="main.lifes.meetingAdd({status: ''})" ng-click="hideLayer()" ng-show="hasMeetUpdate"></a>
+                </div>
+
+                <div class="table-responsive p-xs">
+                    <span>最近会议</span>
+                    <table class="table text-center m-t-sm">
+                        <tr ng-repeat="item in layerData">
+                            <td>
+                                <span ng-show="item.status==1" class="text-danger">进行中</span>
+                                <span ng-show="item.status==2">已结束</span>
+                                <span ng-show="item.status==-1">未开始</span>
+                            </td>
+                            <td class="text-left" title="{{item.mname}}">{{  item.mname | cut:true:10:' ...' }}</td>
+                            <td>{{ item.hashere }}/{{ item.allhere}}</td>
+                            <td>
+                                <button class="btn btn-outline blue btn-xs m-r-10" ng-click="showEWM(item.id)">二维码</button>
+                                <button class="btn btn-outline blue btn-xs m-r-10" ui-sref="main.lifes.meetingDetail({id: item.id})" ng-click="hideLayer()">详情</button>
+                                <button class="btn btn-outline blue btn-xs m-r-10" ui-sref="main.lifes.meetingAdd({id: item.id})" ng-click="hideLayer()" ng-show="item.allowEdit==1 && hasMeetUpdate">编辑</button>
+                                <button class="btn btn-outline blue  btn-xs m-r-10" ui-sref="main.lifes.meetingRecord({id: item.id})" ng-click="hideLayer()" ng-show="item.allowEditRemark==1 && hasMeetUpdate">添加事项</button>
+                                <button class="btn btn-outline red  btn-xs m-r-10" ng-click="delMeeting(item.id, $event)" ng-show="item.allowDelete==1 && hasMeetDelete">删除</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="p-sm text-right"><a ui-sref="main.life.meeting" ng-click="hideLayer()">查看更多...</a></div>
+            </div>
+
+            <div ng-show="showActiveLayer">
+                <div class="table-responsive p-xs">
+                    <table class="table text-center m-t-sm">
+                        <tr ng-repeat="item in activityList">
+                            <td style="border-top: 0; border-bottom: 1px solid #f3f3f3;"><a ui-sref="{{item.mlink}}" ng-click="hideLayer()">{{ item.mname }}</a></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div ng-show="showDutyLayer">
+                <div class="text-center m-t-sm m-b-sm">
+                    <a class="btn btn-info" ng-bind="layerTitle" ui-sref="main.party.taskForm" ng-click="hideLayer()" ng-show="hasTaskUpdate"></a>
+                </div>
+
+                <div class="table-responsive p-xs">
+                    <span>最近任务</span>
+                    <table class="table text-center m-t-sm">
+                        <tr ng-repeat="item in layerData">
+                            <td class="text-left">{{ item.count }}</td>
+                            <td title="{{item.title}}">{{  item.title | cut:true:10:' ...' }}
+                            </td>
+                            <td><a ui-sref="main.party.noticeReadList({id: item.id,title:item.title})" ng-click="hideLayer()">{{item.readCount}}/{{item.sendCount}}</a></td>
+                            <td>{{ item.createTime }}</td>
+                            <td>
+                                <span ng-show="item.enable==1">正常</span>
+                                <span ng-show="item.enable==-1" class="text-danger">已删除</span>
+                            </td>
+                            <td class="text-left">
+                                <a ui-sref="main.party.taskDetail({id: item.id})" class="btn btn-outline blue btn-xs m-r-10" ng-click="hideLayer()">详情</a>
+                                <button class="btn btn-outline red btn-xs m-r-10" ng-show="item.enable!=-1 && hasTaskDelete" ng-click="delTask(item.id)">删除</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="p-sm text-right"><a ui-sref="main.party.task" ng-click="hideLayer()">查看更多...</a></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 会议二维码弹出层 -->
+    <div style="height: 1px; overflow: hidden;">
+        <div class="panel panel-default" id="ewmHTML">
+            <div class="row org-m-t20 m-l-none m-r-none">
+                <div class="table-responsive">
+                    <table class="table table-striped b-t b-light text-center">
+                        <thead>
+                            <tr>
+                                <th>二维码边长(cm)</th>
+                                <th>建议扫描距离(m)</th>
+                                <th>下载链接</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in ewmList">
+                                <td>{{ item.codeText }}</td>
+                                <td>{{ item.remark }}</td>
+                                <td><a ng-click="download(item.code)">预览</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center" id="downMsg">
+            <img id="image" style="display: inline-block; width: 200px; height: 180px; margin-top: 30px" />
+            <a href="" id="down" style="display: block; margin: 0 auto;">点击下载</a>
+        </div>
+    </div>
+</div>

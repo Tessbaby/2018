@@ -1,0 +1,65 @@
+<style>
+    .first {
+        width: 150px;
+        height: 110px;
+        position: relative;
+    }
+    td[class="first"]:before {
+        content: "";
+        position: absolute;
+        width: 1px;
+        height:185px;/*这里需要自己调整，根据td的宽度和高度*/
+        top:0;
+        left:0;
+        background-color: #ddd;
+        display: block;
+        transform: rotate(-54deg);/*这里需要自己调整，根据线的位置*/
+        transform-origin: top;
+    }
+    tr.fir td:first-child {
+        width: 150px;
+        text-overflow:ellipsis;
+        overflow:hidden;
+        white-space:nowrap;
+    }
+</style>
+<!-- 加载提醒 -->
+<div ng-show="loading" class="text-center m-t-md text-lg"><i class="fa fa-spin fa-spinner"></i>数据加载中...</div>
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content m-n">
+    <!-- 数据显示 -->
+    <div class="wrapper-data">
+        <div class="panel panel-default">
+            <!-- 数据表格 -->
+            <div class="row org-m-t20 m-l-none m-r-none">
+                <div class="col-md-12">
+                    <div class="table-responsive" style="width: 100%;">
+                        <table class="table table-striped table-bordered b-t b-light text-center">
+                            <tr>
+                                <td rowspan="2" class="first" style="padding: 0;">
+                                    <span style="line-height: 40px; padding-right: 5px;" class="block text-right">评议内容</span>
+                                    <span style="line-height: 40px; padding-left: 15px;" class="block text-left">姓名</span>
+                                </td>
+                                <td colspan="{{ colspan }}" ng-repeat="item in resultList.titles track by $index">{{ item }}</td>
+                                <!-- <td colspan="4">
+                                讲党性：是指党员要 坚定政治立场，牢记宗旨使命，坚持改革创新，自觉服务大局，严格遵守党纪，抵制歪风邪气</td>
+                                <td colspan="4">
+                                    重品行：是指党员既要重政治品行，又要重道德品行
+                                </td>
+                                <td colspan="4">综合评价</td>-->
+                                <td rowspan="2">评议结果</td>
+                            </tr>
+                            <tr>
+                                <td ng-repeat="lItem in resultList.levels track by $index">{{ lItem }}</td>
+                            </tr>
+                            <tr class="fir" ng-repeat="item in resultList.contents track by $index">
+                                <td ng-repeat="value in item track by $index">{{ value }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

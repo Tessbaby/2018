@@ -1,0 +1,236 @@
+<style>
+	.tab2 {
+		width: 310px;
+		height: 40px;
+		line-height: 40px;
+		color: #fff;
+	}
+	.con-bg {
+		background: url('res/img/democratic/content-bg.png') no-repeat;
+	}
+	.notice-bg {
+		background: url('res/img/democratic/notice_2.png') no-repeat;
+	}
+	a.tab2:hover {
+		color: #fff;
+	}
+	textarea { width: 100%; font-size: 12px; }
+	.m-b-md { margin-bottom: 20px !important; }
+
+    .first {
+        width: 110px;
+        height: 100px;
+        position: relative;
+    }
+    td[class="first"]:before {
+        content: "";
+        position: absolute;
+        width: 1px;
+        height:150px;/*这里需要自己调整，根据td的宽度和高度*/
+        top:0;
+        left:0;
+        background-color: #ddd;
+        display: block;
+        transform: rotate(-45deg);/*这里需要自己调整，根据线的位置*/
+        transform-origin: top;
+    }
+</style>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+  <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+    <li><a><i class="fa fa-home">&nbsp;</i>组织生活</a></li>
+    <li><a ui-sref="main.party.comment">民主评议</a></li>
+    <li class="active" ng-bind="title"></li>
+  </ul>
+</div>
+
+<div class="wrapper-md content">
+	<div class="wrapper-data">
+		<div class="panel panel-default">
+			<div class="panel-heading font-bold">{{title}}
+                <a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.party.comment"><i class="text-md fa fa-times text-muted"></i></a>
+            </div>
+
+            <div class="panel-body ">
+        		<form class="form-horizontal" name="organize_form">
+        			<div class="form-group m-b-md m-t-md font-bold" style="font-size: 20px;">
+        				<span class="col-sm-offset-2">1、评议内容</span>
+        			</div>
+
+                    <div class="form-group m-b-md m-t-sm row" ng-repeat="item in info.contents">
+                        <div class="col-sm-6 col-sm-offset-3">
+                            <div class="col-sm-8">
+                                <textarea ng-if="item.enable == 1 && item.isAll != 1" name="" id="item.id" rows="3" ng-model="item.content">{{ item.content }} {{ item.remark }}</textarea>
+                                <textarea ng-if="item.enable != 1 && item.isAll != 1" name="" id="item.id" rows="3" readonly>{{ item.content }} {{ item.remark }}</textarea>
+                                <textarea ng-if="item.isAll == 1" name="" id="item.id" rows="2" readonly>{{ item.content }}</textarea>
+                            </div>
+                            <div ng-if="item.isAll != 1" class="col-sm-4 p-t-10">
+                                <button class="btn btn-primary m-r-20 col-sm-5" ng-click="removeOptions($index)">-</button>
+                                <button class="btn btn-primary col-sm-5" ng-click="addOptions($index + 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+        			<!-- <div class="form-group m-b-md m-t-sm row">
+        				<div class="col-sm-6 col-sm-offset-3">
+        					<div class="col-sm-8">
+        						<textarea name="" id="" rows="3">讲党性：是指党员要 坚定政治立场，牢记宗旨使命，坚持改革创新，自觉服务大局，严格遵守党纪，抵制歪风邪气</textarea>
+        					</div>
+        					<div class="col-sm-4 p-t-10">
+        						<button class="btn btn-primary m-r-20 col-sm-5">-</button>
+        						<button class="btn btn-primary col-sm-5">+</button>
+        					</div>
+    	    			</div>
+        			</div>
+
+    				<div class="form-group m-b-md m-t-sm row">
+        				<div class="col-sm-6 col-sm-offset-3">
+        					<div class="col-sm-8">
+        						<textarea name="" id="" rows="3">重品行：是指党员既要重政治品行，又要重道德品行</textarea>
+        					</div>
+        					<div class="col-sm-4 p-t-10">
+        						<button class="btn btn-primary m-r-20 col-sm-5">-</button>
+        						<button class="btn btn-primary col-sm-5">+</button>
+        					</div>
+    	    			</div>
+        			</div>
+
+    				<div class="form-group m-b-md m-t-sm row">
+        				<div class="col-sm-6 col-sm-offset-3">
+        					<div class="col-sm-8">
+        						<textarea name="" id="" rows="3">优作风：是指党员要有良好的思想作风，工作作风，生活作风和学风</textarea>
+        					</div>
+        					<div class="col-sm-4 p-t-10">
+        						<button class="btn btn-primary m-r-20 col-sm-5">-</button>
+        						<button class="btn btn-primary col-sm-5">+</button>
+        					</div>
+    	    			</div>
+        			</div>
+
+        			<div class="form-group m-b-md m-t-sm row">
+        				<div class="col-sm-6 col-sm-offset-3">
+        					<div class="col-sm-8">
+        						<textarea name="" id="" rows="3">做表率：是指党员要在工作中“党员管理人员身边无违章”活动中发挥示范榜样和模范作用</textarea>
+        					</div>
+        					<div class="col-sm-4 p-t-10">
+        						<button class="btn btn-primary m-r-20 col-sm-5">-</button>
+        						<button class="btn btn-primary col-sm-5">+</button>
+        					</div>
+    	    			</div>
+        			</div>
+
+        			<div class="form-group m-b-md m-t-sm row">
+        				<div class="col-sm-6 col-sm-offset-3">
+        					<div class="col-sm-8">
+        						<textarea name="" id="" rows="2" readonly>综合评价</textarea>
+        					</div>
+    	    			</div>
+        			</div> -->
+        			
+        			<!-- 评议等级 -->
+        			<div class="form-group m-b-md m-t-md font-bold" style="font-size: 20px;">
+        				<span class="col-sm-offset-2">2、评议等级</span>
+        			</div>
+                    <div id="level">
+                        <div class="form-group m-b-md m-t-sm row" ng-repeat="lItem in info.levels">
+                            <div class="col-sm-6 col-sm-offset-3">
+                                <div class="col-sm-8">
+                                    <textarea name="" id="" rows="2" ng-bind="lItem" ng-model="lItem"></textarea>
+                                </div>
+                                <div class="col-sm-4 p-t-10">
+                                    <button class="btn btn-primary m-r-20 col-sm-5" ng-click="removeLevel($index)">-</button>
+                                    <button class="btn btn-primary col-sm-5" ng-click="addLevel($index + 1)">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+        			<!-- <div class="form-group m-b-md m-t-sm row">
+        				<div class="col-sm-6 col-sm-offset-3">
+        					<div class="col-sm-8">
+        						<textarea name="" id="" rows="2">优秀</textarea>
+        					</div>
+        					<div class="col-sm-4 p-t-10">
+        						<button class="btn btn-primary m-r-20 col-sm-5">-</button>
+        						<button class="btn btn-primary col-sm-5">+</button>
+        					</div>
+    	    			</div>
+        			</div>
+
+    				<div class="form-group m-b-md m-t-sm row">
+        				<div class="col-sm-6 col-sm-offset-3">
+        					<div class="col-sm-8">
+        						<textarea name="" id="" rows="2">合格</textarea>
+        					</div>
+        					<div class="col-sm-4 p-t-10">
+        						<button class="btn btn-primary m-r-20 col-sm-5">-</button>
+        						<button class="btn btn-primary col-sm-5">+</button>
+        					</div>
+    	    			</div>
+        			</div>
+
+    				<div class="form-group m-b-md m-t-sm row">
+        				<div class="col-sm-6 col-sm-offset-3">
+        					<div class="col-sm-8">
+        						<textarea name="" id="" rows="2">基本合格</textarea>
+        					</div>
+        					<div class="col-sm-4 p-t-10">
+        						<button class="btn btn-primary m-r-20 col-sm-5">-</button>
+        						<button class="btn btn-primary col-sm-5">+</button>
+        					</div>
+    	    			</div>
+        			</div>
+
+        			<div class="form-group m-b-md m-t-sm row">
+        				<div class="col-sm-6 col-sm-offset-3">
+        					<div class="col-sm-8">
+        						<textarea name="" id="" rows="2">不合格</textarea>
+        					</div>
+        					<div class="col-sm-4 p-t-10">
+        						<button class="btn btn-primary m-r-20 col-sm-5">-</button>
+        						<button class="btn btn-primary col-sm-5">+</button>
+        					</div>
+    	    			</div>
+        			</div> -->
+
+        			<div class="form-group text-center">
+                        <button type="button" class="btn btn-default m-r-20 p-lr-20" id="" ng-click="cancel()">取消</button>
+                        <button class="btn btn-primary m-r-20 p-lr-20" id="watch" ng-click="showModule()">预览</button>
+                        <button class="btn btn-primary p-lr-20" ng-bind="btnInfo" ng-disabled="!btnState" ng-click="submit()"></button>
+                    </div>
+        		</form>
+    		</div>
+        </div>
+	</div>
+</div>
+
+<div style="height: 1px; overflow: hidden">
+    <div id="moduleTable" class="m-t-md p-sm">
+        <table class="table table-striped table-bordered b-t b-light text-center">
+            <tr>
+                <td rowspan="2" class="first" style="padding: 0;">
+                    <span style="line-height: 40px; padding-right: 5px;" class="block text-right">评议内容</span>
+                    <span style="line-height: 40px; padding-left: 15px;" class="block text-left">姓名</span>
+                </td>
+                <td colspan="{{ colspan }}" ng-repeat="item in moduleList.contents track by $index">{{ item.content }}</td>
+                <!-- <td colspan="4">
+                讲党性：是指党员要 坚定政治立场，牢记宗旨使命，坚持改革创新，自觉服务大局，严格遵守党纪，抵制歪风邪气</td>
+                <td colspan="4">
+                    重品行：是指党员既要重政治品行，又要重道德品行
+                </td>
+                <td colspan="4">综合评价</td> -->
+            </tr>
+            <tr>
+                <td ng-repeat="lItem in moduleList.levels track by $index">{{ lItem }}</td>
+            </tr>
+            <tr>
+                <td>谭梦稳</td>
+                <td ng-repeat="cItem in moduleList.levels track by $index">0</td>
+            </tr>
+            <tr>
+                <td>谭梦稳</td>
+                <td ng-repeat="cItem in moduleList.levels track by $index">0</td>
+            </tr>
+        </table>
+    </div>
+</div>

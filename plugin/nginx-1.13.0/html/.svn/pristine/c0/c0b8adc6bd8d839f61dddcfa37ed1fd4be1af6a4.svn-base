@@ -1,0 +1,4 @@
+<script type="text/javascript" src="src/app/sys/partyners/democraticController.js"></script>
+<div ng-controller="democraticController">
+	民主评议信息
+</div>

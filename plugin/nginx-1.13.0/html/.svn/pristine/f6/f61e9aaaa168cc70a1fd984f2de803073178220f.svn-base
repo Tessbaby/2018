@@ -1,0 +1,61 @@
+<toaster-container toaster-options="{'position-class': 'toast-center', 'close-button':true}"></toaster-container>
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<style type="text/css">
+	.inline-span { width: 70%; display: inline-block; padding-top: 10px; }
+	.valign-top { vertical-align: top; }
+</style>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+  <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+    <li><a ui-sref="main.roles"><i class="fa fa-home">&nbsp;</i>角色管理</a></li>
+    <li class="active" ng-bind="title"></li>
+  </ul>
+</div>
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+  <!-- 数据显示 -->
+  <div class="wrapper-data">
+    <div class="add-content white-bg">
+
+      <div class="form-group">
+        <label for="" class="p-r-20 w140 text-right valign-top">名称: </label>
+        <span class="inline-span">{{ roleInfo.roleName }}</span>
+      </div>
+      <div class="form-group">
+        <label for="" class="p-r-20 w140 text-right valign-top">创建人: </label>
+        <span class="inline-span">{{ roleInfo.createBy }}</span>
+      </div>
+      <div class="form-group">
+        <label for="" class="p-r-20 w140 text-right valign-top">部门: </label>
+        <span class="inline-span">{{ roleInfo.deptName }}</span>
+      </div>
+      <div class="form-group">
+        <label for="" class="p-r-20 w140 text-right valign-top">创建时间: </label>
+        <span class="inline-span">{{  roleInfo.createTime }}</span>
+      </div>
+      <div class="form-group">
+		    <label class="p-r-20 w140 text-right valign-top">描述: </label>
+		    <span class="inline-span">{{ roleInfo.remark }}</span>
+		  </div>
+		  <div class="form-group" style="height: 400px">
+		  	<div class="col-lg-2 col-sm-3"></div>
+        <div class="col-sm-4 col-lg-4">
+          <div style="border: 1px solid #000; border-bottom: 0; width: 220px; margin-bottom: -10px; background: #f0f6e4; padding: 10px 15px;">
+            <span>菜单权限</span>
+          </div>
+          <ul id="menuRole" class="ztree"></ul>
+        </div>
+
+        <div class="col-sm-4 col-lg-4">
+          <div style="border: 1px solid #000; border-bottom: 0; width: 220px; margin-bottom: -10px; background: #f0f6e4; padding: 10px 15px;">
+            <span>部门权限</span>
+          </div>
+          <ul id="deptRole" class="ztree"></ul>
+        </div>
+		  </div>
+	  </div>
+  </div>
+</div>

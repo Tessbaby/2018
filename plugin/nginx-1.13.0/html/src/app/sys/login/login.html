@@ -1,0 +1,63 @@
+<link href="//at.alicdn.com/t/font_z333t4gb94szto6r.css" rel="stylesheet"/>
+<script src="//at.alicdn.com/t/font_z333t4gb94szto6r.js"></script>
+<div class="fixed-sidebar full-height-layout fixed-nav">
+<header>
+  <div class="login-top">
+  	<div class="inline"> 
+  		<img src="./res/img/logo.png" style="width: 45px; height: 45px; margin-top: -5px;">
+	    <span class="inline" style="font-size: 18px; font-weight: bold; color: #ba1f25;" ng-bind="config.homeWords"></span>
+    </div>
+    <a href="{{ config.studyServer}}/Frame/Login.aspx" target="_blank" class="pull-right learn">学习平台入口</a>
+  </div>
+</header>
+
+<div class="animated fadeInRight" style="background: url(./res/img/bg.png) center top no-repeat; background-size: cover;background-color: #ff0000; height: 70%;">
+	<div style="width:800px;margin:0 auto;overflow:hidden;">
+		<div class="login-content ">
+
+			<!-- 账号登录 -->
+			<div class="show t-c-show">
+				<div class="" style="position: relative; height: 50px;">
+					<span class="login-title">账号登录</span>
+					<i class="iconfont icon-iconfonterweima erweima font52" title="二维码登录" ng-click="allFun.changeMode('ewm')"></i>
+					<i class="erweima-cover"></i>
+				</div>
+
+				<form ng-submit="login()">
+					<div class="form-group">
+						<input type="text" id="txtAccount" ng-model="user.account" class="form-control input-lg gray-bg " placeholder="请输入账号" required="">
+					</div>
+					<div class="form-group">
+						<input type="password" id="txtPassword" ng-model="user.password" class="form-control input-lg gray-bg" placeholder="请输入密码" required="">
+					</div>
+					<div class="form-group idcode hidden">
+						<div class="input-group m-b">
+							<input type="text" class="form-control" id="Txtidcode">
+							<span class="input-group-addon" id="idcode"></span>
+						</div>
+					</div>
+					<div class="form-message"></div>
+					<button id="btlogin" class="btn btn-warning btn-lg block full-width m-b" style="background:#ff7223;" type="submit" ng-keyup="myKeyup($event)">登 录</button>
+					<p class="text-muted text-right">
+						<a href="javascript:;" ng-click="allFun.changeMode('forgetPass')" style="color:#c4c5c8;"><small>忘记密码</small></a>
+					</p>
+				</form>
+			</div>
+
+			<!-- 二维码登录 -->
+			<div class="hide t-c-hide">
+				<div class="" style="position: relative; height: 50px;">
+					<span class="login-title">二维码登录</span>
+					<i class="iconfont icon-diannao erweima font52" title="账号登录" ng-click="allFun.changeMode('account')"></i>
+					<i class="erweima-cover"></i>
+				</div>
+				<div class="erweima-img text-center">
+					<img src="./res/img/erweima.png" alt="加载失败">
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+<!-- <div class="login-bg"></div> -->
+<div class="zsxq-copyright">Copyright © 2014-2017cotlife.cn All Rights Reserved_河北知行信息技术有限公司  版权所有<br/>技术支持： 知行信息技术有限公司</div>

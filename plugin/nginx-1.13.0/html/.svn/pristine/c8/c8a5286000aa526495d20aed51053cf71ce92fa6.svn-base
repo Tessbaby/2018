@@ -1,0 +1,4 @@
+<script type="text/javascript" src="src/app/sys/partyners/RAPInfoController.js"></script>
+<div ng-controller="RAPInfoController">
+奖惩信息
+</div>

@@ -1,0 +1,52 @@
+'use strict';
+
+angular.module('app')
+	.controller('RAPInfoController', ['$rootScope', '$scope', '$http', '$state',
+	  function ($rootScope, $scope, $http, $state) {
+
+	      //==================================执行查询 start==================================
+	      $scope.param = {};
+	      $scope.url = '/iBase4J-SYS-Web/userReward/list';
+	      $rootScope.pageInfo = []; // 请求数据前清空
+
+	      $scope.param.userId = 155;
+
+	      $scope.getList = function () {
+	          $scope.loading = true;
+	          // 请求表格数据
+	          $.ajax({
+	              url: $scope.url,
+	              type: 'get',
+	              contentType: 'application/json;charset=UTF-8',
+	              data: $scope.param
+	          }).then(function (result) {
+	              console.log(result);
+	              $scope.loading = false;
+	              if (result.httpCode == 200) {
+	                  $rootScope.pageInfo = new Object(result);
+	                  console.log($rootScope.pageInfo);
+	              } else {
+	                  $scope.msg = result.msg;
+	                  //toaster.clear('*');
+	                  //toaster.pop('error', '', "查询失败");
+	              }
+	              $rootScope.$apply();
+	          })
+	      }
+	      $scope.getList();
+
+
+	      $scope.clearSearch = function () {
+	          $scope.param.keyword = null;
+	          $scope.getList();
+	      }
+
+	      // 翻页 - 排序翻页数据与此一致
+	      $scope.pagination = function (page) {
+	          $scope.param.pageNum = page;
+	          $scope.param.asc = $rootScope.changeAsc();
+	          $scope.getList();
+	      };
+	      //==================================执行查询 end==================================
+
+	  }])

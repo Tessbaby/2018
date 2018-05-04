@@ -1,0 +1,203 @@
+<style>
+    .tree-select {
+        width: 220px;
+        background-color: #fff !important;
+        color: #34495e !important;
+    }
+</style>
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><a ui-sref="main.partyner"><i class="fa fa-home"></i>党员</a></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+
+<div class="wrapper-md content">
+    <div class="panel panel-default">
+        <!-- 头部 -->
+        <div class="panel-heading font-bold">
+            {{title}}
+			<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.partyner"><i class="text-md fa fa-times text-muted"></i></a>
+        </div>
+        <!--表单-->
+        <div class="panel-body">
+            <form class="form-horizontal" name="organize_form">
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>姓名</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="userName" placeholder="请输入姓名" ng-model="record.userName">
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="sex"><span class="text-danger wrapper-sm">*</span>性别</label>
+                    <div class="col-sm-6">
+                        <div class="radio r-inline add-radio" id="sex">
+                            <label ng-repeat="item in sexList">
+                                <input type="radio" name="{{item.type}}" value="{{item.code}}" ng-model="record.sex">
+                                {{ item.codeText }}
+                            </label>
+                            <!--<label>
+								<input type="radio" name="sex">
+								男
+							</label>
+							<label>
+								<input type="radio" name="sex">
+								女
+							</label> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="birthDay"><span class="text-danger wrapper-sm">*</span>出生日期</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control r-inline add-date laydate-icon" readonly name="birthDay" id="birthDay" ng-model="record.birthDay" placeholder="请选择日期">
+                        <span class="help-block m-b-none"></span>
+                    </div>
+
+                    <label class="col-lg-2 col-sm-3 control-label" for="">参加工作日期</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control r-inline add-date laydate-icon" id="worktdate" readonly ng-model="record.worktdate" placeholder="请选择日期">
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="rddate"><span class="text-danger wrapper-sm">*</span>入党日期</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control r-inline add-date laydate-icon" name="rddate" readonly id="rddate" ng-model="record.rddate" placeholder="请选择日期">
+                        <span class="help-block m-b-none"></span>
+                    </div>
+
+                    <label class="col-lg-2 col-sm-3 control-label" for="">转正日期</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control r-inline add-date laydate-icon" id="zzdate" readonly ng-model="record.zzdate" placeholder="请选择日期">
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="">民族</label>
+                    <div class="col-sm-2">
+                        <select class="form-control add-select" ng-model="record.nation">
+                            <option ng-repeat="item in nationList" value="{{item.code}}" type="{{item.type}}">{{ item.codeText }}</option>
+                            <!-- <option>未开始</option>
+							<option>已开始</option>
+							<option>已结束</option> -->
+                        </select>
+                        <span class="help-block m-b-none"></span>
+                    </div>
+
+                    <label class="col-lg-2 col-sm-3 control-label" for="">文化程度</label>
+                    <div class="col-sm-3">
+                        <select class="form-control add-select" ng-model="record.whcd">
+                            <option ng-repeat="item in whcdList" value="{{item.code}}" type="{{item.type}}">{{ item.codeText }}</option>
+                        </select>
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="deptId"><span class="text-danger wrapper-sm">*</span>所属组织</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control tree-select" name="deptId" id="deptId" ng-click="showMenu()" readonly>
+                        <input id="treeids" type="hidden">
+                        <div id="menuContent" class="menuContent" style="display: none; position: absolute; z-index: 10">
+                            <ul id="treeDemo" class="ztree"></ul>
+                        </div>
+                        <span class="help-block m-b-none"></span>
+                    </div>
+
+                    <label class="col-lg-2 col-sm-3 control-label" for="">党内职务</label>
+                    <div class="col-sm-3">
+                        <select class="form-control add-select" ng-model="record.dnzw">
+                            <option ng-repeat="item in dnzwList" value="{{item.code}}" type="{{item.type}}">{{ item.codeText }}</option>
+                        </select>
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="">分管工作</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="staff" placeholder="请输入分管工作" ng-model="record.staff">
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="phone"><span class="text-danger wrapper-sm">*</span>手机号码</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="phone" placeholder="请输入手机号码" name="phone" ng-model="record.phone">
+                        <span class="m-b-none">注：如不知道用户微信号码，请输入用户绑定微信的手机号码，才能在微信端登录</span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="">微信号码</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="wxNumber" placeholder="请输入微信号码" ng-model="record.wxNumber">
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="">身份证号</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="identifienumber" placeholder="请输入身份证号" ng-model="record.identifienumber">
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="">家庭住址</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="address" id="" placeholder="请输入家庭住址" ng-model="record.address">
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="">邮箱</label>
+                    <div class="col-sm-6">
+                        <input type="email" class="form-control" name="email" id="" placeholder="请输入邮箱" ng-model="record.email">
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="">简介</label>
+                    <div class="col-sm-6">
+                        <textarea class="form-control r-inline" id="remark" name="remark" rows="5" ng-model="record.remark"></textarea>
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                <div class="form-group text-center">
+                    <button class="btn btn-primary m-r-20 p-lr-20" id="submit" ng-disabled="btnState">{{btnInfo}}</button>
+                    <button type="button" class="btn btn-default p-lr-20" id="" ng-click="cancel()">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

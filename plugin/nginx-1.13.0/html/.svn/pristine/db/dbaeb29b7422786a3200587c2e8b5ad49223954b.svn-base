@@ -1,0 +1,250 @@
+<style>
+    .notice-head h4 {
+        color: red;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .notice-star {
+        position: relative;
+        height: 3px;
+        background: #ff0000;
+        width: 100%;
+        margin: 20px 0;
+    }
+
+        .notice-star div {
+            position: absolute;
+            top: -13px;
+            left: 50%;
+            margin-left: -40px;
+            width: 80px;
+            background: #fff;
+            color: #ff0000;
+            font-size: 24px;
+            text-align: center;
+            line-height: 1;
+            font-weight: bold;
+        }
+</style>
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><span><i class="fa fa-home">&nbsp;</i> 党务办公</span></li>
+        <li><a ui-sref="main.party.task">工作任务</a></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+
+<!-- 加载提醒 -->
+<div ng-show="loading" class="text-center m-t-md text-lg"><i class="fa fa-spin fa-spinner"></i>数据加载中...</div>
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+    <!-- 数据显示 -->
+    <div class="wrapper-data">
+
+        <div class="org-m-t20 add-content white-bg p-lg">
+            <div class="text-center notice-head" ng-if="data.type==1">
+                <h4>{{data.headerTitle}}</h4>
+                <div class="text-center">{{data.headerShortTitle}}{{data.titleNum}}</div>
+                <div class="notice-star">
+                    <div>★</div>
+                </div>
+            </div>
+
+            <div class="text-center m-b-sm"><strong>{{data.title}}</strong></div>
+
+            <div class="" ng-bind-html="data.content | trustHtml">
+
+                <!-- <p>系统各单位、各部门：</p>
+					<p>&nbsp; &nbsp; &nbsp; &nbsp;现将区文明办《关于2016年度区级文明单位申报工作的通知》转发给你们，请认真按照通知要求做好区级文明单位申报工作，凡符合区级文明单位基本条件的单位均可参加申报。</p>
+					<p>&nbsp; &nbsp; &nbsp; &nbsp;各单位、各部门要严格按照《文明单位测评体系》要求，如实填报“申报表”和“自查测评考核评分表”，名称要写单位全称，申报表要正反面打印。并上报2016年文明创建情况工作总结，总结要突出创建特色，字数不超过2000字。以上材料均一式两份加盖公章连同电子版于2月10日前报送到机关党工委，逾期不报的单位视为自动放弃参评资格。</p>
+					 -->
+            </div>
+            <div class="m-t font14" ng-if="filePath">
+                <p class="tindent14">附：</p>
+                <p class="tindent14" ng-repeat="item in filePath">&nbsp;&nbsp;&nbsp;<a href="{{item.fileUrlPath}}" id="{{item.id}}">{{item.fileName}}</a></p>
+
+                <!-- <p class="tindent14">&nbsp;&nbsp;&nbsp;<a href="javascript:;">1、文明单位申报表</a></p>
+					<p class="tindent14">&nbsp;&nbsp;&nbsp;<a href="javascript:;">2、唐山市文明单位测评体系（试行）</a></p> -->
+            </div>
+
+            <div class="text-right p-r-sm " ng-if="data.type==1">
+                <div class="">{{data.inscribe}}</div>
+                <div class="">{{data.noticetime}}</div>
+                <img ng-show="data.signature" ng-src="{{data.signature}}" width="100" class="pos-absolute pos-tr m-t-n-md" />
+                <!-- <img src="res/img/zhang_tmp.png" width="100" class=" m-t-n-xl" /> -->
+            </div>
+        </div>
+        <div class="org-m-t20 ">
+            <div class="add-content white-bg overhidden">
+                <!--<div class="form-group">
+						<label for="memName" class="pull-left p-r-20 w140 text-right">上传时间: </label>
+						<div class="m-l-140 form-control-static">{{data.createTime}}</div>
+					</div>-->
+                <div class="form-group">
+                    <label for="memName" class="pull-left p-r-20 w140 text-right">未读提醒: </label>
+                    <div class="m-l-140 form-control-static">{{data.isUnread == 1?"已开启":"未开启"}}</div>
+                </div>
+                <div class="form-group" ng-show="data.isUnread == 1">
+                    <label for="memName" class="pull-left p-r-20 w140 text-right">时间间隔: </label>
+                    <div class="m-l-140 form-control-static">{{data.intervalHour}} 时 {{data.intervalMinute}} 分</div>
+                </div>
+                <div class="form-group" ng-show="data.isUnread == 1">
+                    <label for="memName" class="pull-left p-r-20 w140 text-right">提醒时段: </label>
+                    <div class="m-l-140 form-control-static">{{data.intervalStartTime}} - {{data.intervalEndTime}}</div>
+                </div>
+                <div class="form-group">
+                    <label for="memName" class="pull-left p-r-20 w140 text-right">发布时间: </label>
+                    <div class="m-l-140 form-control-static">{{data.createTime}}</div>
+                </div>
+                <div class="form-group">
+                    <label for="memName" class="pull-left p-r-20 w140 text-right">发布状态: </label>
+                    <div class="m-l-140 form-control-static">{{data.enable == 1?"正常":"删除"}}</div>
+                </div>
+                <div class="form-group" ng-if="data.enable != 1">
+                    <label for="memName" class="pull-left p-r-20 w140 text-right">删除时间: </label>
+                    <div class="m-l-140 form-control-static">{{data.deleteTime}}</div>
+                </div>
+                <div class="form-group">
+                    <label for="memName" class="pull-left p-r-20 w140 text-right">阅读/ 发送: </label>
+                    <div class="m-l-140 form-control-static"><a ui-sref="main.party.noticeReadList({id: data.id,title:data.title})">{{data.readCount}}/{{data.sendCount}}</a></div>
+                </div>
+                <div class="form-group">
+                    <label for="memName" class="pull-left p-r-20 w140 text-right v-top">发布范围: </label>
+                    <div class=" m-l-140 p-t-xs">{{data.deptNameList}}</div>
+                </div>
+
+                <div class="h30"></div>
+
+                <!-- 回复模块 -->
+                <div class="m-t-md">
+                    <div class="border-bottom p-tb-10" style="padding-left: 10px;">
+                        <span>回复 (<span ng-bind="data.issueReply.replyCount"></span>)</span>
+                    </div>
+                    <div ng-repeat="reItem in data.issueReply.reply"> <!-- 循环这层 -->
+                        <div class="row p-tb-10 m-n border-bottom">
+                            <div class="col-sm-2">
+                                <a href="profile.html#" class="block">
+                                    <img alt="image" class="img-circle full-width" style="max-height: 105px" ng-src="{{reItem.avatar ? reItem.avatar : defaultAvatar}}" >
+                                </a>
+                            </div>
+                            <div class="col-sm-7">
+                                <strong class="block" ng-bind="reItem.userName"></strong>
+                                <small class="block text-muted" ng-bind="reItem.remark"></small>
+                            </div>
+                            <div class="col-sm-3">
+                                <span class="inline valign" ng-bind="reItem.createTime"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <div class="ibox-content">
+
+    <div>
+        <div class="feed-activity-list">
+
+            <div class="feed-element"  ng-repeat="item in data.issueReply.reply">
+                <a href="profile.html#" class="pull-left">
+                    <img alt="image" class="img-circle" ng-src="defaultAvatar">
+                </a>
+                <div class="media-body ">
+                    <small class="pull-right text-navy" ng-bind="item.createTime"></small>
+                    <strong ng-bind="item.userName"> </strong> 
+                    <br>
+                    <small class="text-muted"  ng-bind="item.remark"></small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div> -->
+
+<!-- <div class="wrapper">
+	<div>
+		<ul class="breadcrumb">
+      <li><a href="#">党务办公</a></li>
+      <li class="active"><a href="#">通知公告</a></li>
+	  <li class="active" ng-bind="title"></li>
+	  </ul>
+	</div>
+	
+	<div class="org-m-t20 add-content white-bg">
+		<div class="text-center notice-head">
+			<h4>中共路北区直属机关工委文件</h4>
+			<div class="text-center  ">机党工字〔2017〕02号</div>
+			<div class="notice-star">
+				<div>★</div>
+			</div>
+		</div>
+		
+		<div class="text-center"><strong>中共路北区直属机关工委关于转发区文明办《关于2016年度区级文明单位申报工作的通知》的通知</strong></div>
+		
+		<div class="">
+			<p>系统各单位、各部门：</p>
+			<p>&nbsp; &nbsp; &nbsp; &nbsp;现将区文明办《关于2016年度区级文明单位申报工作的通知》转发给你们，请认真按照通知要求做好区级文明单位申报工作，凡符合区级文明单位基本条件的单位均可参加申报。</p>
+			<p>&nbsp; &nbsp; &nbsp; &nbsp;各单位、各部门要严格按照《文明单位测评体系》要求，如实填报“申报表”和“自查测评考核评分表”，名称要写单位全称，申报表要正反面打印。并上报2016年文明创建情况工作总结，总结要突出创建特色，字数不超过2000字。以上材料均一式两份加盖公章连同电子版于2月10日前报送到机关党工委，逾期不报的单位视为自动放弃参评资格。</p>
+			
+		</div>
+		<div>
+			<p class="tindent14">附：</p>
+			<p class="tindent14">&nbsp;&nbsp;&nbsp;<a href="javascript:;">1、文明单位申报表</a></p>
+			<p class="tindent14">&nbsp;&nbsp;&nbsp;<a href="javascript:;">2、唐山市文明单位测评体系（试行）</a></p>
+		</div>
+		
+		<div class="text-right p-r-sm ">
+			<div class="">机关党工委</div>
+			<div class="">2017年2月7日</div>
+			<img src="res/img/zhang_tmp.png" width="100" class=" m-t-n-xl" />
+		</div>
+	</div>
+	<div class="org-m-t20 ">
+		<div class="add-content white-bg">
+			<div class="form-group">
+				<label for="memName" class="p-r-20 w140 text-right">未读提醒: </label>
+				<span>已开启</span>
+			</div>
+			<div class="form-group">
+				<label for="memName" class="p-r-20 w140 text-right">时间间隔: </label>
+				<span>20分钟</span>
+			</div>
+			<div class="form-group">
+				<label for="memName" class="p-r-20 w140 text-right">提醒时段: </label>
+				<span>09：00 - 20：00</span>
+			</div>
+			<div class="form-group">
+				<label for="memName" class="p-r-20 w140 text-right">发布时间: </label>
+				<span>2017-05-21 09：00：32</span>
+			</div>
+			<div class="form-group">
+				<label for="memName" class="p-r-20 w140 text-right">发布状态: </label>
+				<span>正常</span>
+			</div>
+			<div class="form-group">
+				<label for="memName" class="p-r-20 w140 text-right">阅读/ 发送: </label>
+				<span>30/100</span>
+			</div>
+			<div class="form-group">
+				<label for="memName" class="p-r-20 w140 text-right v-top">发布范围: </label>
+				<div class="inline">
+					<ul id="treeDemo" class="ztree"></ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	
+	<span data-ng-include=" 'src/tpl/pageInfo.html' "></span>
+</div> -->

@@ -1,0 +1,88 @@
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<style type="text/css"></style>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><span><i class="fa fa-home">&nbsp;</i>党员身边事</span></li>
+        <li class="active"><a ui-sref="main.faults.list">事件管理</a></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+
+<!-- 加载提醒 -->
+<div ng-show="loading" class="text-center m-t-md text-lg"><i class="fa fa-spin fa-spinner"></i>数据加载中...</div>
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+    <!-- 数据显示 -->
+    <div class="wrapper-data">
+        <div class="panel panel-default">
+            <!-- 头部 -->
+            <div class="panel-heading clearfix">
+                <a class="btn btn-info pull-right m-l-xs" href="javascript:;" ng-click="makeUp()">
+                    <span class="" style="position: relative; top: 1px;"></span>
+                    生成上月
+                </a>
+                <a class="btn btn-info pull-right m-l-xs" href="javascript:;" ng-click="makeCrrrent()">
+                    <span class="" style="position: relative; top: 1px;"></span>
+                    生成本月                </a>
+                <div class="">
+                    <form ng-submit="search(url, param)" class="ng-pristine ng-valid">
+                        <input type="text" id="queryDate" class="form-control r-inline add-date laydate-icon pull-left m-r-sm " style="background-color: #fff;" ng-model="param.queryDate" readonly placeholder="统计月份">
+                        <div class="w-lg input-group search-box">
+                           <!-- <input type="text" class="form-control" ng-model="param.keyWord" placeholder="请输入关键字">-->
+                            <i ng-show="user.keyword" ng-click="clearSearch()" class="fa fa-times-circle text-muted search-clear"></i>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 数据表格 -->
+            <div class="row org-m-t20 m-l-none m-r-none">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped b-t b-light text-center">
+                            <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th ng-click="sortData(url, 'title', param, $event)" class="text-left sortable both">组织名称</th>
+                                    <th >事件数</th>
+                                    <th ng-click="sortData(url, 'createTime', param, $event)" class="sortable both ">处理率</th>
+                                    <th>总时长</th>
+                                    <th>平均时长</th>
+                                    <th>得分</th>
+                                    <th>转发数</th>
+                                    <th>上报数</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in pageInfo.data">
+                                    <td>{{ (pageInfo.current-1)*pageInfo.size+$index+1 }}</td>
+                                    <td class="text-left">{{item.deptName|limitTo:10}}...</td>
+                                    <td>{{item.issueCount}}</td>
+                                    <td>{{item.handleRate}}</td>
+                                    <td>{{item.allTimeCountName}}</td>
+                                    <td>{{item.aveTimeCountName}}</td>
+                                    <td>{{item.score}}</td>
+                                    <td>{{item.forwardCount}}</td>
+                                    <td>{{item.sendCount}}</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- 底部分页 -->
+            <span data-ng-include=" 'src/tpl/pageInfo.html' "></span>
+        </div>
+    </div>
+
+</div>
+

@@ -1,0 +1,124 @@
+<style>
+    .tree-select {
+        width: 220px;
+        background-color: #fff !important;
+        color: #34495e !important;
+    }
+</style>
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<div class="wrapper-md content m-n">
+    <div class="panel panel-default">
+       
+     
+        <!--表单-->
+        <div class="panel-body">
+            <form class="form-horizontal" name="organize_form">
+             
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="deptId"><span class="text-danger wrapper-sm">*</span>奖惩名称</label>
+                    <div class="col-sm-6">
+                        <select class="form-control add-select" ng-model="model.reward" name="reward">
+                            <option value="">请选择</option>
+                            <option ng-repeat="item in dropdowmList.rewardList" value="{{item.code}}">{{item.codeText}}</option>
+
+                        </select>
+                        <!--  <input type="text" class="form-control tree-select" name="reward" id="reward" ng-click="showMenu()" readonly>
+                        <input id="treeids" type="hidden">
+                        <div id="depContent" class="depContent" style="display: none; position: absolute; z-index: 10">
+                            <ul id="depTree" class="ztree"></ul>
+                        </div>-->
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="">相关照片</label>
+                        <div class="col-sm-6">
+                            <div class="m-b upload-pic-box inline">
+                                <a href="javascript:void(0);" class="btn btn-default btn-addon">
+                                    <i class="fa fa-upload"></i>上传图片
+                                </a>
+                            </div>
+                            <div class="m-b inline" ng-show="imgSrc!='res/img/np.png'" ng-click="img_del($index)">
+                                <a href="javascript:void(0);" class="btn btn-danger btn-addon">删除</a>
+                            </div>
+
+                            <input type="file" id="uploadImg" accept="image/png,image/jpg,image/jpeg" class="fileInput" ng-hide="1" />
+                            <div class="col">
+                                <div class="inline bg-white wrapper-sm b-a">
+                                    <div class="bg-light" style="width: 240px; height: 160px; position: relative; overflow: hidden;">
+                                     	<img ng-src="{{imgSrc}}" style="width:100%;text-align:center;" />
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="help-block m-b-none">相关照片尺寸要求宽度*高度为360px*200px。图片格式支持jpg,png</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>奖惩批准日期</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control r-inline add-date laydate-icon" readonly name="rewardApprovalDate" id="rewardApprovalDate" ng-model="model.rewardApprovalDate" placeholder="请选择日期">
+                    </div>                  
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>奖惩批准机关</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="rewadApprovalDept" placeholder="奖惩批准机关，不超过20字" ng-model="model.rewadApprovalDept">
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>批准机关级别</label>
+                    <div class="col-sm-6">
+                        <select class="form-control add-select" ng-model="model.approvalDeptLevel" name="approvalDeptLevel">
+                            <option value="">请选择</option>
+                            <option ng-repeat="item in dropdowmList.approvalDeptLevelList" value="{{item.code}}">{{item.codeText}}</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="">奖惩原因</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control tree-select" name="rewardReason" ng-model="model.rewardReasonText" ng-click="showReasonContent()" readonly>
+                        <div id="reasonContent" class="depContent" style="display: none; position: absolute; z-index: 10">
+                            <ul id="treeReason" class="ztree"></ul>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="">奖惩撤销日期</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control r-inline add-date laydate-icon" readonly name="rewardRevokeDate" id="rewardRevokeDate" ng-model="model.rewardRevokeDate" placeholder="请选择日期">
+                    </div>
+                </div>
+
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="">奖惩说明</label>
+                    <div class="col-sm-6">
+                        <textarea class="form-control" name="remark" placeholder="奖惩说明" ng-model="model.remark" />
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group text-center">
+                    <button class="btn btn-primary m-r-20 p-lr-20" type="submit">{{btnInfo}}</button>
+                    <button type="button" class="btn btn-default p-lr-20" ng-click="cancel()">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+

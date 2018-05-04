@@ -1,0 +1,84 @@
+<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+<style>
+.notice-head h4{color:red;margin-top:10px;margin-bottom:10px;}
+.notice-star{position:relative;height:3px;background:#ff0000;width:100%;margin: 20px 0;}
+.notice-star div{position:absolute;top:-13px;left:50%;margin-left:-40px;width:80px;background:#fff;color:#ff0000;font-size:24px;text-align:center;line-height:1;font-weight:bold;}
+.img-span { display: block; font-weight: bold; margin: 15px; }
+.inline-span { width: 70%; display: inline-block; padding-top: 10px; }
+.valign-top { vertical-align: top; }
+</style>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+  <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+    <li><a ui-href="main"><i class="fa fa-home"></i> 系统设置</a></li>
+    <li class="active" ng-bind="title">党委信息</li>
+  </ul>
+</div>
+
+<!-- 加载提醒
+<div ng-show="loading" class="text-center m-t-md text-lg"><i class="fa fa-spin fa-spinner"></i> 数据加载中...</div> -->
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+  <!-- 数据显示 -->
+  <div class="wrapper-data">
+  	<div class="add-content white-bg">
+  		<a ui-sref="main.setting.setInfoAdd" class="btn btn-info pull-right m-l-xs">
+        <i class="icon-user-follow m-r-sm text-md"></i>
+        编辑
+			</a>
+  		<div class="text-center">
+	  		<img style="width: 100px; height: 100px; margin-left: 70px;" ng-src="{{ result.imgpath ||imgSrc}}">
+	  		<span class="img-span" style="display: block">路北区直机关党工委</span>
+	  	</div>
+			<div class="form-group">
+				<label for="memName" class="p-r-20 w140 text-right valign-top">组织类别: </label>
+				<span class="inline-span">{{ result.deptType }}</span>
+			</div>
+			<div class="form-group">
+				<label for="memName" class="p-r-20 w140 text-right valign-top">上级组织: </label>
+				<span class="inline-span">{{ result.parentId }}</span>
+			</div>
+			<div class="form-group">
+				<label for="memName" class="p-r-20 w140 text-right valign-top">所在单位: </label>
+				<span class="inline-span">{{ result.toUnit }}</span>
+			</div>
+			<div class="form-group">
+				<label for="memName" class="p-r-20 w140 text-right valign-top">组织性质: </label>
+				<span class="inline-span">{{ result.dept_proper }}</span>
+			</div>
+			<div class="form-group">
+				<label for="memName" class="p-r-20 w140 text-right valign-top">建立日期: </label>
+				<span class="inline-span">{{ result.deptCreatedate }}</span>
+			</div>
+			<div class="form-group">
+				<label for="memName" class="p-r-20 w140 text-right valign-top">联系人: </label>
+				<span class="inline-span">{{ result.lxr }}</span>
+			</div>
+			<div class="form-group">
+				<label for="memName" class="p-r-20 w140 text-right valign-top">联系电话: </label>
+				<span class="inline-span">{{ result.mobile }}</span>
+			</div>
+			<div class="form-group">
+				<label for="memName" class="p-r-20 w140 text-right valign-top">手机号码: </label>
+				<span class="inline-span">{{ result.lxPhone }}</span>
+			</div>
+			<div class="form-group">
+				<label for="memName" class="p-r-20 w140 text-right valign-top">通讯地址: </label>
+				<span class="inline-span">{{ result.address }}</span>
+			</div>
+			<div class="form-group">
+				<label for="memName" class="p-r-20 w140 text-right valign-top">邮箱地址: </label>
+				<span class="inline-span">{{ result.email }}</span>
+			</div>
+			<div class="form-group">
+		    <label class="p-r-20 w140 text-right">签章: </label>
+		    <span><img ng-src="{{ result.signature||imgSrc }}" style="width: 100px; height: 100px; vertical-align: top;"></span>
+		  </div>
+			<div class="form-group">
+		    <label class="p-r-20 w140 text-right valign-top">简介: </label>
+		    <span class="inline-span">{{ result.remark }}</span>
+		  </div>
+		</div>
+  </div>
+</div>

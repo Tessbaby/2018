@@ -1,0 +1,53 @@
+<style>
+    .nav-tabs a {
+        font-size: 16px;
+    }
+</style>
+<div class="white-bg p-sm">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="operate" ng-class="{active: activeTab == 1}">
+            <a ng-click="onClickTab(1)" aria-controls="baseInfo" role="tab" data-toggle="tab">基本信息</a>
+        </li>
+        <li ng-show="type==5" role="operate" ng-class="{active: activeTab == 2}">
+            <a ng-click="onClickTab(2)" aria-controls="partyInfo" role="tab" data-toggle="tab">党籍信息</a>
+        </li>
+        <li role="operate" ng-class="{active: activeTab == 3}">
+            <a ng-click="onClickTab(3)" aria-controls="orgRelationShip" role="tab" data-toggle="tab">组织关系</a>
+        </li>
+        <li ng-show="type==5" role="operate" ng-class="{active: activeTab == 4}">
+            <a ng-click="onClickTab(4)" aria-controls="democratic" role="tab" data-toggle="tab">民主评议</a>
+        </li>
+        <li ng-show="type==5" role="operate" ng-class="{active: activeTab == 5}">
+            <a ng-click="onClickTab(5)" aria-controls="RAPInfo" role="tab" data-toggle="tab">奖惩信息</a>
+        </li>
+        <li role="operate" ng-class="{active: activeTab == 6}">
+            <a ng-click="onClickTab(6)" aria-controls="training" role="tab" data-toggle="tab">培养发展</a>
+        </li>
+    </ul>
+    <div ng-if="showName" class="form-group m-t-sm font-bold" style="font-size: 20px; margin-bottom: 40px;">
+        <span class="col-lg-4 col-sm-4 text-right">姓名：</span>
+        <span class="col-sm-2" ng-bind="infoList.userName"></span>
+        <span class="col-lg-2 col-sm-2 text-right">党组织：</span>
+        <span class="col-sm-4" ng-bind="infoList.deptName"></span>
+    </div>
+</div>
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="baseInfo">
+        <div ng-include="currentTab"></div>
+    </div>
+    <!--<div role="tabpanel" class="tab-pane" id="partyInfo">
+		<div ng-include="partyInfoTab"></div>
+	</div>
+	<div role="tabpanel" class="tab-pane" id="orgRelationShip">
+		<div ng-include="orgRelationShipTab"></div>
+	</div>
+	<div role="tabpanel" class="tab-pane" id="democratic">
+		<div ng-include="democraticTab"></div>
+	</div>
+	<div role="tabpanel" class="tab-pane" id="RAPInfo">
+		<div ng-include="RAPInfoTab"></div>
+	</div>
+	<div role="tabpanel" class="tab-pane" id="training">
+		<div ng-include="trainingTab"></div>
+	</div>-->
+</div>

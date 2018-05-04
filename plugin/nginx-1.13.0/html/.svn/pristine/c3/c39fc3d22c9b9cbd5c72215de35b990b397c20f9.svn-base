@@ -1,0 +1,28 @@
+<script src="../../../../lib/echarts/echarts.min.js"></script>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><a><i class="fa fa-home">&nbsp;</i>党员关爱</a></li>
+        <li class="active" ng-bind="title">发送统计</li>
+    </ul>
+</div>
+<div class="wrapper-md content">
+    <div class="panel panel-default">
+        <!-- 头部 -->
+        <div class="panel-heading font-bold">
+            {{title}}
+			<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.party.hb"><i class="text-md fa fa-times text-muted"></i></a>
+        </div>
+        <!--表单-->
+        <div class="panel-body">
+            <form class="form-horizontal" name="user_form">
+                <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+                <div id="main" style="width: 80%; height: 60%;"></div>
+             
+
+
+            </form>
+        </div>
+    </div>
+</div>
+

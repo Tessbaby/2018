@@ -1,0 +1,504 @@
+'use strict';
+
+angular.module('app')
+    .controller('taskFormController', ['$rootScope', '$scope', '$http', '$state',
+         function ($rootScope, $scope, $http, $state) {
+
+             /*初始化页面*/
+             var title = "添加";
+             var defaultAva = $rootScope.defaultAvatar;
+             $scope.imgData = [];
+             $scope.imgUpFlag = true;
+             $scope.fileUpFlag = true;
+             $scope.thumb = [];
+             $scope.thumbLength = 0;
+             $scope.record = {};
+             $scope.record.type = "2";
+             $scope.record.isUnread = "2";
+             validate(null);
+             $scope.title = $rootScope.title = title;
+             $scope.loading = true;
+             $scope.record.intervalMinute = 30;
+
+             function timeStamp2String(time) {
+                 var datetime = new Date();
+                 datetime.setTime(time);
+                 var year = datetime.getFullYear();
+                 var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+                 var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+                 var hour = datetime.getHours() < 10 ? "0" + datetime.getHours() : datetime.getHours();
+                 var minute = datetime.getMinutes() < 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+                 var second = datetime.getSeconds() < 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
+                 return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
+             }
+             var start = {
+                 elem: '#intervalStartTime',
+                 format: 'YYYY/MM/DD hh:mm:ss',
+                 min: laydate.now(0, "YYYY/MM/DD hh:mm:00"), //设定最小日期为当前日期
+                 max: '2099-06-16 23:59:', //最大日期
+                 istime: true,
+                 istoday: true, //是否显示今天
+                 issure: true, //是否显示确认
+                 festival: true, //是否显示节日
+                 choose: function (datas) {
+                     var time = new Date(datas);
+                     time.setMinutes(time.getMinutes() + 5, time.getSeconds(), 0);
+                     //timeStamp2String(time);
+                     // console.log(timeStamp2String(time));
+                     end.min = timeStamp2String(time); //开始日选好后，重置结束日的最小日期
+                     end.start = datas;//将结束日的初始值设定为开始日
+                     $scope.record.intervalStartTime = datas;
+
+                     console.log(new Date(datas));
+                 }
+             };
+             var end = {
+                 elem: '#intervalEndTime',
+                 format: 'YYYY/MM/DD hh:mm:ss',
+                 min: laydate.now(0, "YYYY/MM/DD hh:mm:00"),
+                 max: '2099-06-16 23:59:59',
+                 istime: true,
+                 istoday: false,
+                 choose: function (datas) {
+                     start.max = datas; //结束日选好后，重置开始日的最大日期
+
+                     $scope.record.intervalEndTime = datas;
+                 }
+             };
+             laydate(start);
+             laydate(end);
+
+             //自定义上传标题图
+             var imgArrType = ['image/png', 'image/jpg', 'image/jpeg'];
+             $scope.imgSrc = 'res/img/np.png';
+             $scope.img_upload = function (evt) {    //单次提交图片的函数
+                 $scope.reader = new FileReader();  //创建一个FileReader接口
+                 var fileInfo = evt.currentTarget.files[0];
+
+                 $scope.reader.readAsDataURL(fileInfo); //FileReader的方法，把图片转成base64
+                 if ($.inArray(fileInfo.type, imgArrType) == -1) {//判断图片类型
+                     alert("不支持该图片类型上传，请重新选择！");
+                     fileInfo = {};
+                 } else if (fileInfo.size > 2 * 1024 * 1024) {
+                     alert("大小不超过2M!");
+                     fileInfo = {};
+                 } else {
+                     $scope.reader.onload = function (ev) {
+                         $scope.$apply(function () {
+                             $scope.imgSrc = ev.target.result;
+                             $scope.imgData.push({
+                                 file: ev.target.result,
+                                 filename: fileInfo.name
+                             });
+                         });
+                     };
+                 }
+             };
+             angular.element(document.querySelector('#uploadImg')).on('change', $scope.img_upload);
+             $('.upload-pic-box a').click(function () {
+                 $('#uploadImg').click();
+             });
+
+             $scope.img_del = function (key) {  //删除，删除的时候thumb和form里面的图片数据都要删除，避免提交不必要的
+                 $scope.imgData = [];
+                 $scope.imgSrc = 'res/img/np.png';
+                 $('#uploadImg').val('');
+                 //$("#user_form")[0].reset();
+             };
+
+
+             //自定义上传附件
+             $scope.file_upload = function (evt) {    //单次提交图片的函数
+                 $scope.reader2 = new FileReader();  //创建一个FileReader接口 
+                 var fileInfo2 = evt.currentTarget.files[0];
+                 $scope.reader2.readAsDataURL(fileInfo2); //FileReader的方法，把图片转成base64
+                 if (fileInfo2.size > 2 * 1024 * 1024) {//判断图片类型
+                     alert("文件大小不超过2M!");
+                     fileInfo2 = {};
+                 } else {
+                     $scope.reader2.onload = function (ev) {
+                         if ($scope.thumbLength < 5) {
+                             $scope.$apply(function () {
+                                 $scope.thumb.push({
+                                     file: ev.target.result,
+                                     filename: fileInfo2.name
+                                 });
+                                 $scope.thumbLength = $scope.thumb.length;
+                             });
+                         } else {
+                             alert("支持最多上传5个附件");
+                         }
+                     };
+                 }
+             };
+             angular.element(document.querySelector('#uploadFiles')).on('change', $scope.file_upload);
+             $('.upload-file-box a').click(function () {
+                 $('#uploadFiles').click();
+             });
+
+             $scope.file_del = function (key) {  //删除，删除的时候thumb和form里面的图片数据都要删除，避免提交不必要的
+                 $scope.thumb.splice(key, 1);
+                 $scope.thumbLength = $scope.thumb.length;
+                 $('#uploadFiles').val('');
+             };
+
+
+             $scope.tipMsg = function () {
+                 layer.msg('预览不提供在线查看附件功能');
+             }
+
+           
+             ////签章
+             //$.ajax({
+             //    type: 'PUT',
+             //    dataType: 'json',
+             //    contentType: 'application/json;charset=UTF-8',
+             //    url: '/iBase4J-SYS-Web/notice/deptSigner',
+             //    data: angular.toJson({})
+             //}).then(function (result) {
+             //    if (result.httpCode == 200) {
+             //        $scope.record.signature = result.data;
+             //        //console.log($scope.record.signature);
+             //        //$scope.headerList = result;
+             //    } else {
+             //        alertDialog(result.msg, 2);
+             //    }
+             //    $scope.$apply();
+             //});
+
+           //  提交表单
+             $scope.submit = function () {
+                 $scope.loading = true;
+                 //内容
+                 $scope.record.content = myEditor.getContent();
+                 ////是否正式文件日期
+                 //if ($scope.record.type == 1) {
+                 //    $scope.record.noticeTime = $("#noticeTime").val();
+                 //} else {
+                 //    $scope.record.num = '';
+                 //    $scope.record.headerTitle = '';
+                 //    $scope.record.headerShortTitle = '';
+                 //    $scope.record.inscribe = '';
+                 //    $scope.record.titleNum = '';
+                 //    $scope.record.noticeTime = '';
+                 //}
+                 //是否开启阅读提醒日期
+                 if ($scope.record.isUnread == 1) {
+                     //$scope.record.intervalStartTime = $("#intervalStartTime").val();
+                     //$scope.record.intervalEndTime = $("#intervalEndTime").val();
+                     if (!$scope.record.intervalStartTime || !$scope.record.intervalEndTime) {
+                         alert("开启未读提醒后，开始结束时间不能为空");
+                         return;
+                     }
+                     if (!$scope.record.intervalHour && !$scope.record.intervalMinute) {
+                         alert("开启未读提醒后，时间间隔不能为空");
+                         return;
+                     }
+
+                 } else {
+                     $scope.record.intervalStartTime = '';
+                     $scope.record.intervalEndTime = '';
+                     $scope.record.intervalHour = '';
+                     $scope.record.intervalMinute = '';
+                 }
+
+                 if ($scope.imgData.length > 0) {
+                     $scope.imgUpFlag = false;
+                     $.ajax({
+                         type: 'POST',
+                         url: 'http://118.190.172.83:8011/wx/djuploadFile',
+                         async: false,
+                         contentType: 'application/json;charset=UTF-8',
+                         data: angular.toJson($scope.imgData)
+                     }).then(function (result) {
+                         console.log(result);
+                         //var resultNew = $.parseJSON(result);
+                         var resultNew = result;
+                         if (resultNew && resultNew.httpCode == 200) {//成功
+                             $scope.record.picUrl = resultNew.data[0].fileUrlPath;
+                             //"picUrl": "http://sg.cotlife.cn:8006/appstreetsjz/upload/20170527042823.jpg",
+                             console.log(resultNew);
+                             $scope.imgUpFlag = true;
+                             //$scope.record['avatar'] =result.fileNames[0];
+                             //saveData();
+                         } else if (resultNew && resultNew.httpCode == 400) {
+                             //saveData();
+                         }
+                     });
+                 }
+
+                 if ($scope.thumb.length > 0) {
+                     $scope.fileUpFlag = false;
+                     $.ajax({
+                         type: 'POST',
+                         url: 'http://118.190.172.83:8011/wx/djuploadFile',
+                         async: false,
+                         contentType: 'application/json;charset=UTF-8',
+                         data: angular.toJson($scope.thumb)
+                     }).then(function (result) {
+                         //var resultNew = $.parseJSON(result);
+                         var resultNew = result;
+                         if (resultNew && resultNew.httpCode == 200) {//成功
+
+                             $scope.record.filePath = resultNew.data;
+                             //"filePath": "[{\"id\":1495763676232,\"fileName\":\"九一八事变.docx\",\"fileUrlPath\":\"http://118.190.172.83:8012/九一八事变.docx\"},{\"id\":1495763684089,\"fileName\":\"图片1.png\",\"fileUrlPath\":\"http://118.190.172.83:8012/图片1.png\"}]"
+                             $scope.fileUpFlag = true;
+                             console.log(resultNew);
+                             //$scope.record['avatar'] =result.fileNames[0];
+                             //saveData();
+                         } else if (resultNew && resultNew.httpCode == 400) {
+                             //saveData();
+                         }
+                     });
+                 }
+                 if ($scope.imgUpFlag && $scope.fileUpFlag) {
+                     saveData();
+                 }
+                 //
+             };
+
+             function saveData() {
+                 var m = $scope.record;
+                 if (m) {
+                     $scope.isDisabled = true;//提交disabled
+                     $.ajax({
+                         type: 'POST',
+                         url: '/iBase4J-SYS-Web/task/updateTask',
+                         dataType: 'json',
+                         contentType: 'application/json;charset=UTF-8',
+                         data: angular.toJson(m)
+                     }).then(callback);
+                 }
+                 function callback(result) {
+                     $scope.loading = false;
+                     if (result.httpCode == 200) {//成功
+                         tipDialog("保存成功", 1, 0.8 * 1000, function () {
+
+                             $state.go('main.party.task');
+                         });
+                     } else {
+                         $scope.isDisabled = false;
+                         alertDialog(result.msg, 2);
+                     }
+
+                 }
+             }
+
+             //发送范围
+             var setting = {
+                 check: {
+                     enable: true,
+                     chkboxType: { "Y": "s", "N": "s" }
+                 },
+                 data: {
+                     key: {
+                         name: "deptName"
+                     },
+                     simpleData: {
+                         enable: true,
+                         idKey: "id",
+                         pIdKey: "parentId",
+                         rootPId: 0
+                     }
+                 },
+                 callback: {
+                     //beforeClick: beforeClick,
+                     onCheck: onCheck
+                 }
+             };
+
+             //获取选中子级
+             function onCheck(e, treeId, treeNode) {
+                 var arrNodeNames = new Array();
+                 var arrNodeIds = new Array();
+                 var treeObj = $.fn.zTree.getZTreeObj("treeDemo"),
+                 nodes = treeObj.getCheckedNodes(true);
+                 if (nodes.length > 0) {
+                     for (var i = 0; i < nodes.length; i++) {
+                         arrNodeIds.push(nodes[i].id);
+                         var pNode = nodes[i].getParentNode();
+                         if (pNode != null) {
+                             arrNodeNames.push(pNode.deptName + "-" + nodes[i].deptName);
+                         } else {
+                             arrNodeNames.push(nodes[i].deptName);
+                         }
+                     }
+                 }
+
+                 $("#showNodes").html(arrNodeNames.join("，"));
+                 $("#showNodesInput").val(arrNodeNames.join("，"));
+                 $("#showNodesInput").blur();
+                 $scope.record.deptList = arrNodeIds.join(",");
+             }
+             //点击文字选中复选框
+             function beforeClick(treeId, treeNode) {
+                 var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+                 zTree.checkNode(treeNode, !treeNode.checked, null, true);
+                 return false;
+             }
+
+             //党组织结构树
+             $.ajax({
+                 type: 'PUT',
+                 dataType: 'json',
+                 contentType: 'application/json;charset=UTF-8',
+                 url: '/iBase4J-SYS-Web/dept/read/treelist2',
+                 data: ''
+             }).then(function (result) {
+                 $scope.loading = false;
+                 if (result.httpCode == 200) {
+                     //console.log(result);
+                     var zNodes = result.data;
+                     var treeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+                     treeObj.expandAll(true);
+
+                 } else {
+                     alertDialog(result.msg, 2);
+                 }
+                 $scope.$apply();
+             });
+
+             //百度编辑器
+             var myEditor = UE.getEditor("myEditor", {
+                 topOffset: 0,
+                 autoFloatEnabled: false,
+                 autoHeightEnabled: false,
+                 wordCount: false,
+                 autotypeset: {
+                     removeEmptyline: true
+                 },
+                 toolbars: [
+                     [
+                         'source', //源代码
+                         'bold', //加粗
+                         'forecolor', //字体颜色
+                         'indent', //首行缩进
+                         'italic', //斜体
+                         'underline', //下划线
+                         //'simpleupload', //单图上传
+                         //'inserttable', //插入表格
+                         'link', //超链接
+                         'removeformat',//清除格式
+                         'huodong',
+
+                     ]
+                 ]
+             });
+
+             //表单验证
+             function validate(userId) {
+                 var validator = jQuery('form').validate({
+                     ignore: "",
+                     rules: {
+                         noticeTitle: {
+                             required: true,
+                             maxLengthB: [128]
+                         },
+                         noticeSpread: {
+                             required: true
+                         },
+                         myEditor: {
+                             required: true
+                         },
+                         noticeHeadNum: {
+                             required: true,
+                             maxLengthB: [128]
+                         },
+                         noticeHeadTitle: {
+                             required: true,
+                             maxLengthB: [128]
+                         },
+                         noticeHeadSubTitle: {
+                             required: true,
+                             maxLengthB: [128]
+                         },
+                         noticeHeadFileNum: {
+                             required: true,
+                             maxLengthB: [128]
+                         },
+                         showNodes: {
+                             required: true
+                         },
+                         noticeTime: {
+                             date: true
+                         }
+
+                     },
+                     messages: {
+                         noticeTitle: {
+                             required: '请输入通知标题',
+                             maxLengthB: "帐号不得超过{0}个字符"
+                         },
+                         noticeSpread: {
+                             required: '请选择发布范围'
+                         },
+                         myEditor: {
+                             required: '请输入通知内容'
+                         },
+                         noticeHeadNum: {
+                             required: '请输入编号',
+                             maxLengthB: "不得超过{0}个字符"
+                         },
+                         noticeHeadTitle: {
+                             required: '请输入文件头',
+                             maxLengthB: "不得超过{0}个字符"
+                         },
+                         noticeHeadSubTitle: {
+                             required: '请输入简称',
+                             maxLengthB: "不得超过{0}个字符"
+                         },
+                         noticeHeadFileNum: {
+                             required: '请输入文件编号',
+                             maxLengthB: "不得超过{0}个字符"
+                         },
+                         showNodes: {
+                             required: '发布范围不能为空'
+                         },
+                         noticeTime: {
+                             date: '必须为日期格式'
+                         }
+                     },
+                     submitHandler: function () {
+                         $scope.submit();
+                     }
+                 });
+                 validator.focusInvalid = function () {
+                     if (this.settings.focusInvalid) {
+                         try {
+                             var toFocus = $(this.findLastActive() || this.errorList.length && this.errorList[0].element || []);
+                             if (toFocus.is("textarea")) {
+                                 UE.getEditor('myEditor').focus()
+                             } else {
+                                 toFocus.filter(":visible").focus();
+                             }
+                         } catch (e) {
+                         }
+                     }
+                 }
+             }
+
+             $scope.showPerview = function () {
+                 $scope.record.content = myEditor.getContent();
+                 if ($scope.record.type == 1) {
+                     $scope.record.noticeTime = $("#noticeTime").val();
+                 }
+                 layer.open({
+                     type: 1,
+                     shade: 0.6,
+                     area: ['700px', '800px'],
+                     title: false, //不显示标题
+                     content: $('#preview'), //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
+                     cancel: function () {
+
+                     }
+                 });
+             }
+
+             $scope.cancel = function () {
+                layer.confirm('您确认放弃本次编辑吗？' ,function (index) {
+                    layer.close(index);
+                    $state.go('main.party.notice');
+                })
+             }
+
+         }]);

@@ -1,0 +1,148 @@
+
+<script type="text/javascript" charset="utf-8" src="lib/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="lib/ueditor/ueditor.all.js"> </script>
+<script type="text/javascript" charset="utf-8" src="lib/ueditor/lang/zh-cn/zh-cn.js"></script>
+
+<div class="bg-white bread-crumb">
+  <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+    <li><a><i class="fa fa-home">&nbsp;</i>组织生活</a></li>
+    <li><a ui-sref="main.life.activity({typeId: type})" ng-bind="typeName"></a></li>
+    <li class="active" ng-bind="title"></li>
+  </ul>
+</div>
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+  <!-- 数据显示 -->
+  <div class="wrapper-data">
+    <div class="panel panel-default">
+    	<!-- 头部 -->
+	    <div class="panel-heading font-bold">{{title}}
+				<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.life.activity({typeId: type})"><i class="text-md fa fa-times text-muted"></i></a>
+	    </div>
+
+	    <div class="panel-body">
+	    	<form class="form-horizontal"  name="organize_form">
+		    	<h4 style="margin-left: 10%;" title="{{infoList.aname}}">
+		    		{{ infoList.aname.length > 20 ? infoList.aname.substr(0, 20) + '...' : infoList.aname }}
+		    	</h4>
+
+		    	<div class="form-group">
+		    		<div  class="col-sm-5" > 
+			    		<label class="col-sm-5 text-right">发布者：</label>
+			    		<label class="col-sm-7 m-n">{{ infoList.deptName }}</label>
+		    		</div>
+		    		<div  class="col-sm-4" > 
+			    		<label class="col-sm-4 text-right">发布时间：</label>
+			    		<label class="col-sm-7 m-n">{{ infoList.createTime }}</label>
+		    		</div>
+		    	</div>
+
+		    	<div class="form-group">
+	          <label class="col-lg-2 col-sm-3 control-label" for="coverPic">封面图：</label>
+	          <div class="col-sm-6 p-t-10">
+							<img ng-src="{{ infoList.titleimg }}" style="width: 230px; height: 410px">
+	          </div>
+	        </div>
+
+	        <div class="form-group">
+	          <label class="col-lg-2 col-sm-3 control-label" for="listPic">列表宣传图：</label>
+	          <div class="col-sm-6 p-t-10">
+							<img ng-src="{{ infoList.listimg }}" style="width: 697px; height: 260px">
+	          </div>
+	        </div>
+
+	        <div class="form-group">
+	          <label class="col-lg-2 col-sm-3 control-label" for="">活动时间：</label>
+	          <div class="col-sm-6 p-t-10">
+							<span>{{ infoList.begintime }}   ——   {{ infoList.endtime }}</span>
+	          </div>
+	        </div>
+
+	        <div class="form-group">
+	          <label class="col-lg-2 col-sm-3 control-label" for="">活动地址：</label>
+	          <div class="col-sm-6 p-t-10">
+							<span>{{ infoList.place }}</span>
+	          </div>
+	        </div>
+
+	        <div class="form-group">
+	          <label class="col-lg-2 col-sm-3 control-label" for="">是否公开活动：</label>
+	          <div class="col-sm-6 p-t-10">
+							<span>{{ infoList.isPublic == 1 ? '公开' : '不公开' }}</span>
+	          </div>
+	        </div>
+
+	        <div class="form-group">
+	          <label class="col-lg-2 col-sm-3 control-label" for="">是否开启报名：</label>
+	          <div class="col-sm-6 p-t-10">
+							<span>{{ infoList.allowsign != 0 ? '开启' : '未开启' }}</span>
+	          </div>
+	        </div>
+					
+					<!-- 开启报名时显示 -->
+					<div ng-show="{{ infoList.openSign != 0 }}">
+		        <div class="form-group">
+		          <label class="col-lg-2 col-sm-3 control-label" for="">报名限制：</label>
+		          <div class="col-sm-6 p-t-10">
+								<span>{{ infoList.allowsign == 1 ? '仅党员可报名' : '允许群众报名' }}</span>
+		          </div>
+		        </div>
+		        <div class="form-group">
+		          <label class="col-lg-2 col-sm-3 control-label" for="">报名截止时间：</label>
+		          <div class="col-sm-6 p-t-10">
+								<span>{{ infoList.signendtime }}</span>
+		          </div>
+		        </div>
+		        <div class="form-group">
+		          <label class="col-lg-2 col-sm-3 control-label" for="">报名须知：</label>
+		          <div class="col-sm-6 p-t-10">
+								<span>{{ infoList.signknowage }}</span>
+		          </div>
+		        </div>
+					</div>
+					<!-- 开启报名时显示 END -->
+
+					<div class="form-group">
+	          <label class="col-lg-2 col-sm-3 control-label" for="">活动描述：</label>
+	          <div class="col-sm-6 p-t-10">
+							<div ng-bind-html="infoList.remark | trustHtml"></div>
+	          </div>
+	        </div>
+
+	        <div class="form-group">
+	          <label class="col-lg-2 col-sm-3 control-label" for="">推荐置顶：</label>
+	          <div class="col-sm-6 p-t-10">
+							<span>{{ infoList.remandtop == 1 ? '是' : '否' }}</span>
+	          </div>
+	        </div>
+
+	        <!-- 已结束时显示 -->
+	        <!--  详情时显示 -->
+	        <div class="form-group" ng-show="!isEnd && infoList.state == 2">
+	          <label class="col-lg-2 col-sm-3 control-label" for="">活动风采：</label>
+	          <div class="col-sm-6 p-t-10">
+							<div ng-bind-html="infoList.activityStyle | trustHtml"></div>
+	          </div>
+	        </div>
+	        <!--  详情时显示 END -->
+
+	        <!-- 添加风采时显示 -->
+					<div class="form-group" style="height: 560px" ng-show="isEnd">
+						<label for="" class="col-lg-2 col-sm-3 control-label"><span class="text-danger wrapper-sm">*</span>活动风采: </label>
+						<div class="col-sm-8 p-t-10">
+							<textarea id="activeEditor" name="activeEditor" rows="15" cols="80" style="width:100%;height:300px;" ng-model="activity.activityStyle"></textarea>
+						</div>
+					</div>
+					<!-- 编辑时显示 END-->
+
+					<div class="form-group text-center" ng-show="isEnd">
+						<button class="btn btn-primary m-r-20 p-lr-20" id="submit" ng-click="submit()" ng-disabled="btnState">{{btnInfo}}</button>
+						<button type="button" class="btn btn-default p-lr-20" id="cancel" ng-click="cancel()">取消</button>
+					</div>
+
+		    </form>
+		  </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+'use strict';
+
+angular.module('app')
+	.controller('caredDetailController', ['$rootScope', '$scope', '$http', '$state',
+	       function ($rootScope, $scope, $http, $state) {
+	           $scope.title = '事件详情';
+
+	           $scope.id = $state.params.id;
+	           //=======================================验证权限 statr===================================
+	           ////权限模块代码
+	           //$scope.permissionCode = $state.$current.name;
+	           //$scope.hasQuery = $.inArray($scope.permissionCode + '.query', $rootScope.permissionList) != -1;
+	           //$scope.hasUpdate = $.inArray($scope.permissionCode + '.update', $rootScope.permissionList) != -1;
+	           //$scope.hasDelete = $.inArray($scope.permissionCode + '.delete', $rootScope.permissionList) != -1;
+	           //$scope.hasShare = $.inArray($scope.permissionCode + '.share', $rootScope.permissionList) != -1;
+	           //if (!$scope.hasQuery) {
+	           //    layer.alert("未经授权，禁止访问！", { icon: 2 });
+	           //    return false;
+	           //}
+	           //=======================================验证权限 end===================================	          
+
+	           getModel($scope.id);
+
+              
+	           /*  获取详情 */
+	           function getModel(id) {
+	               $.ajax({
+	                   type: 'PUT',
+	                   url: '/iBase4J-SYS-Web/issue/detail',
+	                   data: angular.toJson({ id: $scope.id })
+	               }).then(function (result) {
+
+	                   if (result.httpCode == 200) {
+	                       $scope.model = result.data;
+	                      
+	                   } else {
+	                       alertDialog(result.msg, 2);
+	                   }
+	                   $scope.$apply();
+	               })
+	           }
+	         
+
+
+	       }]);

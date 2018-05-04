@@ -1,0 +1,170 @@
+'use strict';
+
+angular.module('app')
+	.controller('activityController', ['$rootScope', '$scope', '$http', '$state',
+    function ($rootScope, $scope, $http, $state) {
+        $scope.param = {};
+        // $scope.param.type = "1";
+        $scope.type = $state.params.typeId;
+
+        //$scope.title = '群团活动';
+        //=======================================验证权限 statr===================================
+        //权限模块代码
+        $scope.permissionCode = $state.$current.name + '.' + $scope.type;
+        $scope.hasQuery = $.inArray($scope.permissionCode + '.query', $rootScope.permissionList) != -1;
+        $scope.hasUpdate = $.inArray($scope.permissionCode + '.update', $rootScope.permissionList) != -1;
+        $scope.hasDelete = $.inArray($scope.permissionCode + '.delete', $rootScope.permissionList) != -1;
+        if (!$scope.hasQuery) {
+            layer.alert("未经授权，禁止访问！", { icon: 2 });
+            return false;
+        }
+
+        //=======================================验证权限 end===================================
+
+
+        $scope.param.type = $scope.type;
+        $scope.url = '/iBase4J-SYS-Web/activity/list';
+        $rootScope.pageInfo = []; // 请求数据前清空
+        $rootScope.search($scope.url, $scope.param);
+
+        $scope.statusList = [
+                                  { "value": "3", "name": "全部" },
+                                  { "value": "0", "name": "未开始" },
+                                  { "value": "1", "name": "进行中" },
+                                  { "value": "2", "name": "已结束" },
+        ];
+        $scope.param.state = $scope.statusList[0].value;
+        getTypeName();
+
+        // 获取类型
+        function getTypeName() {
+            $.ajax({
+                type: 'PUT',
+                url: '/iBase4J-SYS-Web/activityType/list',
+                data: angular.toJson({ 'type': $scope.param.type })
+            }).then(function (result) {
+                if (result.httpCode == 200) {
+                    $scope.title = result.data.name;
+                    $scope.$apply();
+                } else {
+                    alertDialog(result.msg, 2);
+                }
+            });
+        }
+
+        //党组织结构设置
+        var setting = {
+            check: {
+                enable: true,
+                chkboxType: { "Y": "", "N": "" }
+            },
+            data: {
+                key: {
+                    name: "deptName"
+                },
+                simpleData: {
+                    enable: true,
+                    idKey: "id",
+                    pIdKey: "parentId",
+                    rootPId: 0
+                }
+            },
+            callback: {
+                //beforeClick: beforeClick,
+                onCheck: onCheck
+            }
+        };
+        //包含下级
+        function setCheck() {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+              sy = $("#sy").prop("checked");
+            var type;
+            if (sy) {
+                type = { "Y": "s", "N": "s" };
+            } else {
+                type = { "Y": "", "N": "" };
+            }
+            //console.log(type);
+            zTree.setting.check.chkboxType = type;
+        }
+        //获取选中子级
+        function onCheck(e, treeId, treeNode) {
+            var arrNodes = new Array();
+            var treeObj = $.fn.zTree.getZTreeObj("treeDemo"),
+              nodes = treeObj.getCheckedNodes(true);
+            for (var i = 0; i < nodes.length; i++) {
+                arrNodes.push(nodes[i].id);
+            }
+            $scope.param.deptId = arrNodes.join(",");
+            //console.log($scope.param.sendDeptId);
+            $rootScope.search($scope.url, $scope.param);
+        }
+        //点击文字选中复选框
+        function beforeClick(treeId, treeNode) {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            zTree.checkNode(treeNode, !treeNode.checked, null, true);
+            return false;
+        }
+        //党组织结构树
+        $.ajax({
+            type: 'PUT',
+            dataType: 'json',
+            contentType: 'application/json;charset=UTF-8',
+            url: '/iBase4J-SYS-Web/dept/read/treelist2',
+            data: ''
+        }).then(function (result) {
+            $scope.loading = false;
+            if (result.httpCode == 200) {
+                //console.log(result);
+                var zNodes = result.data;
+                var treeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+                treeObj.expandAll(true);
+                setCheck();
+                $("#sy").bind("change", setCheck);
+            } else {
+                alertDialog(result.msg, 2);
+            }
+            $scope.$apply();
+        });
+
+
+        $scope.clearSearch = function () {
+            $scope.param.keyword = null;
+            $rootScope.search($scope.url, $scope.param);
+        }
+
+        // 翻页 - 排序翻页数据与此一致
+        $scope.pagination = function (page) {
+            $scope.param.pageNum = page;
+            $scope.param.asc = $rootScope.changeAsc();
+            $rootScope.search($scope.url, $scope.param);
+        };
+
+        $scope.cancel = function (id) {
+            layer.confirm('确认删除吗？', function (index) {
+                layer.close(index);
+                $.ajax({
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: 'application/json;charset=UTF-8',
+                    url: '/iBase4J-SYS-Web/activity/delete',
+                    data: angular.toJson({ id: id })
+                }).then(function (result) {
+                    if (result.httpCode == 200) {
+                        tipDialog("删除成功", 1, 0.8 * 1000, function () {
+                            var infoLength = $rootScope.pageInfo.data.length - 1;
+                            if (infoLength == 0 && $scope.param.pageNum != 1) {
+                                $scope.param.pageNum = $scope.param.pageNum - 1;
+                            }
+                            $rootScope.search($scope.url, $scope.param);
+                        });
+                    } else {
+                        alertDialog(result.msg, 2);
+                    }
+                    $scope.$apply();
+                })
+            })
+
+        }
+
+    }]);

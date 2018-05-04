@@ -1,0 +1,153 @@
+<script src="lib/flat-ui/js/application.js"></script>
+
+<link href="../../../../lib/calendar/calendar.css" rel="stylesheet" />
+<script src="../../../../lib/calendar/calendar.js"></script>
+<style>
+.radio .icons{left:50%;margin-left:-10px;}
+</style>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><a><i class="fa fa-home">&nbsp;</i>组织生活</a></li>
+        <li><a ui-sref="main.care.list">党员关爱</a></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+
+<div class="wrapper-md content">
+    <div class="panel panel-default">
+        <!-- 头部 -->
+        <div class="panel-heading font-bold">
+            {{title}}
+			<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.care.list"><i class="text-md fa fa-times text-muted"></i></a>
+        </div>
+        <!--表单-->
+        <div class="panel-body">
+            <form class="form-horizontal" name="user_form">
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="title"><span class="text-danger wrapper-sm">*</span>主题</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="title" id="title"  placeholder="发送通知时显示的标题" ng-model="record.title">
+                     
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="title"><span class="text-danger wrapper-sm">*</span>节日名称</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="tname" id="tname" required maxlength="128" placeholder="请输入节日名称" ng-model="record.tname">
+                        <span class="help-block m-b-none">
+                            <!-- 通知标题不得超过60个字。 -->
+                        </span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="title"><span class="text-danger wrapper-sm">*</span>事件类型</label>
+                    <div class="col-sm-6">
+                        <div class="radio r-inline add-radio" id="isYl">
+                             <label ng-repeat="type in typeList">
+                                <input type="radio" name="isYl" value="{{type.value}}" ng-model="record.isYl"  ng-disabled="isDefault">
+                                {{ type.name }}
+                            </label>
+                          <!--  <label>
+                                <input type="radio" name="isYl">
+                                公历事件
+                            </label>
+                            <label>
+                                <input type="radio" name="isYl">
+                                农历事件
+                            </label>-->
+                        </div>
+                        <span class="help-block m-b-none">
+                            <!-- 通知标题不得超过60个字。 -->
+                        </span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>事件日期</label>
+                    <div class="col-sm-6" >
+                        <input type="text" class="form-control r-inline add-date laydate-icon" id="tdate" name="tdate" ng-model="record.tdate"  placeholder="事件日期"  ng-disabled="isDefault">
+						<span class="help-block m-b-none">
+                            <!-- 组织名称不得超过60个字。 -->
+                        </span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="type"><span class="text-danger wrapper-sm">*</span>选择模板</label>
+                    <div class="col-sm-6">
+						<div class="inline" style="padding-top:10px;padding-right:10px;" id="templateInfo"></div>
+						<button class="btn btn-primary m-r-20 p-lr-20 m-t-xs" type="button" ng-click="choseModel()"  ng-disabled="isDefault">选择</button>
+                         <!--  <select class="form-control r-inline add-select"  ng-init="record.templateid=1" ng-model="record.templateid" id="templateid">
+                           <option ng-repeat="x in reportList" value="{{x.code}}">{{x.codeText}}</option>
+                        </select>-->
+
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="remark"><span class="text-danger wrapper-sm">*</span>祝福语</label>
+                    <div class="col-sm-6">
+                        <textarea class="form-control r-inline" id="topic" rows="10" required name="topic"  ng-disabled="isDefault" ng-model="record.topic" placeholder="请输入祝福语,最多80个字"   ng-change="tolCount()"></textarea>
+                        <span class="help-block m-b-none">已输入{{count}}个文字</span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group text-center">
+					<button class="btn btn-primary m-r-20 p-lr-20" type="button" ng-click="showDetail()">预览</button>
+                    <button class="btn btn-primary m-r-20 p-lr-20" type="submit" ng-disabled="btnState">{{btnInfo}}</button>
+                    <a class="btn btn-default p-lr-20" id="cancel" ng-click="cancel()">取消</a>
+                </div>
+
+
+
+            </form>
+        </div>
+    </div>
+</div>
+<div class="open-layer-content">
+	<div class="row m-lg" id="modelId">
+		<div class="col-sm-6">
+			<label for="optionsRadios1">
+				<img src="/res/img/care/care_1.jpg" width="100%" />
+				<div class="text-center">模板一</div>
+			</label>
+			<label class="radio">
+				<input type="radio" data-toggle="radio" name="optionsRadios" id="optionsRadios1" value="1" ng-model="record.templateid" ng-change="modelChange('模板一')">
+			</label>
+		</div>
+		<div class="col-sm-6">
+			<label for="optionsRadios2">
+				<img src="/res/img/care/care_2.jpg" width="100%" />
+				<div class="text-center">模板二</div>
+			</label>
+			<label class="radio">
+				<input type="radio" data-toggle="radio" name="optionsRadios" id="optionsRadios2" value="2" ng-model="record.templateid" ng-change="modelChange('模板二')">
+			</label>
+		</div>
+	</div>
+</div>
+<div class="open-layer-content">
+	<div class="white-bg" id="preview" style="width:414px;margin:0 auto;">
+		<div ng-if="record.templateid == '1'" class="pos-relative p-sm" style="width:414px;height:736px;background:url(/res/img/care/mem_1.png) center bottom no-repeat;background-size:100% 100%;">
+			<img src="/res/img/care/mem_2.png" class="pos-absolute pos-tr zindex0 m-r m-t" width="85" />
+			<img src="/res/img/care/mem_3.png" class="pos-absolute pos-bl zindex0" width="80%"  />
+			<div class="pos-absolute pos-tl zindex1 font7 full-width text-brown-color" style="top:10%;padding:0 15px;">
+				<p class="p-lr text-strong" style="margin-bottom:5%;">{{record.title}}</p>
+				<p class="p-lr">{{record.topic}}</p>
+				<p class="p-lr text-strong text-right" ng-bind="MyDepartName"></p>
+			</div>
+		</div>	
+		<div ng-if="record.templateid == '2'" class="pos-relative p-sm" style="width:414px;height:736px;background:url(/res/img/care/mem_4.png) center bottom no-repeat;background-size:100% 100%;">
+			<img src="/res/img/care/mem_5.png" class="pos-absolute pos-bl zindex0" width="65%" />
+			<div class="pos-absolute pos-tl zindex1 font7 full-width text-brown-color" style="top:15%;padding:0 15px;">
+				<p class="p-lr text-strong" style="margin-bottom:5%;">{{record.title}}</p>
+				<p class="p-lr">{{record.topic}}</p>
+				 <p class="p-lr text-strong text-right"  ng-bind="MyDepartName"></p> 
+			</div>
+		</div>
+	</div>
+</div>
+

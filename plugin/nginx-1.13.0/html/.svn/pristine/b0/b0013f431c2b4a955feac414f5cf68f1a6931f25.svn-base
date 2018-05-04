@@ -1,0 +1,90 @@
+<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><span><i class="fa fa-home"></i> 党务办公</span></li>
+        <li><a ui-sref="main.party.notice">通知公告</a></li>
+		<li class="active"><a ui-sref="main.party.noticeListHead">文件头&落款</a></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+<!-- 内容区域 -->
+<div class="wrapper-md content">
+    <div class="panel panel-default">
+        <!-- 头部 -->
+        <div class="panel-heading font-bold">{{title}}
+			<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.party.noticeListHead"><i class="text-md fa fa-times text-muted"></i></a>
+        </div>
+        <!--表单-->
+            <div class="panel-body">
+                <form class="form-horizontal"  name="user_form">
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="headNum"><span class="text-danger wrapper-sm">*</span>编号</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="headNum" id="headNum" placeholder="11111" ng-model="record.num" ng-disabled="record.userId">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="headTitle"><span class="text-danger wrapper-sm">*</span>文件头</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="headTitle" id="headTitle" placeholder="请输入文件头" ng-model="record.title">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+					<div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="headSubTitle"><span class="text-danger wrapper-sm">*</span>简称</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="headSubTitle" id="headSubTitle" placeholder="请输入简称" ng-model="record.shortTitle">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+					<div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="headBottom"><span class="text-danger wrapper-sm"></span>落款</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="headBottom" id="headBottom" placeholder="请输入落款" ng-model="record.inscribe">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    
+                    <div class="form-group">
+                        <div class="col-sm-6 col-sm-offset-2">
+                            <button type="submit" class="btn btn-info w-xs m-l-xl" ng-disabled="isDisabled">保存</button>
+							<a ui-sref="main.party.noticeListHead" type="button" class="btn btn-default w-xs">取消</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+    </div>
+</div>
+<!-- <div class="wrapper">
+	<div class="add-content">
+  	<form class="">
+  		<div class="form-group">
+		    <label for="noticeNum" class="p-r-20 w140 text-right"><span class="p-r-10">*</span>编号: </label>
+		    <input type="text" class="form-control r-inline" id="noticeNum" placeholder="11111">
+		</div>
+		<div class="form-group">
+		    <label for="noticeTitle" class="p-r-20 w140 text-right"><span class="p-r-10">*</span>文件头: </label>
+		    <input type="text" class="form-control r-inline" id="noticeTitle" placeholder="请输入内容">
+		</div>
+		<div class="form-group">
+		    <label for="noticeSubTitle" class="p-r-20 w140 text-right"><span class="p-r-10">*</span>简称: </label>
+		    <input type="text" class="form-control r-inline" id="noticeSubTitle" placeholder="请输入内容">
+		</div>
+		<div class="form-group">
+		    <label for="noticeBottom" class="p-r-20 w140 text-right"><span class="p-r-10"></span>落款: </label>
+		    <input type="text" class="form-control r-inline" id="noticeBottom" placeholder="请输入内容">
+		</div>
+		<div class="form-group text-center m-t-lg">
+		    <button class="btn btn-primary m-r-20 p-lr-20" type="submit">确认</button>
+		    <button class="btn btn-default p-lr-20" ng-click="cancelAdd()">取消</button>
+		</div>
+	</form>
+	</div>
+	
+</div> -->

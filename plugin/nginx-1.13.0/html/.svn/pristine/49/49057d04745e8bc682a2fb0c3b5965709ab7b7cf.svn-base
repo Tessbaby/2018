@@ -1,0 +1,246 @@
+'use strict';
+
+angular.module('app')
+	.controller('roleAddController', ['$rootScope', '$scope', '$http', '$state',
+	  function ($rootScope, $scope, $http, $state) {
+
+	      //=======================================验证权限 statr===================================
+	      $scope.permissionCode = "main.role";
+	      $scope.hasUpdate = $.inArray($scope.permissionCode + '.update', $rootScope.permissionList) != -1;
+	      //=======================================验证权限 end===================================
+
+
+	      $scope.parts = {};
+	      if ($state.includes('**.role.query')) {
+	          $scope.title = '添加';
+	          var dCheck = false; // 菜单判断是编辑还是添加
+	      } else if ($state.includes('**.role.update')) {
+	          $scope.title = '编辑';
+	          var dCheck = true;
+	          $scope.id = Number($state.params.id);
+	          $scope.parts.roleid = $scope.id;
+	          getDetail();
+	      }
+	      $scope.btnInfo = '提交';
+	      $scope.btnState = false;
+	      var setTrees = {};
+	      treeInfo();
+	      validate();
+
+	      function getDetail() {
+	          $.ajax({
+	              type: 'put',
+	              dataType: 'json',
+	              contentType: 'application/json;charset=UTF-8',
+	              url: '/iBase4J-SYS-Web/role/read/detail',
+	              data: angular.toJson({ roleid: $scope.id })
+	          }).then(function (result) {
+	              if (result.httpCode == 200) {
+	                  $scope.parts.roleName = result.data.roleName;
+	                  $scope.parts.remark = result.data.remark;
+	                  setTrees.menuRole(result.data.menulist);
+	                  setTrees.deptRole(result.data.deptlist);
+	              } else {
+	                  alertDialog(result.msg, 2);
+	              }
+	              $scope.$apply();
+	          })
+	      }
+
+
+	      /******************************************树****************************************/
+	      function treeInfo() {
+	          $.ajax({
+	              type: 'get',
+	              dataType: 'json',
+	              contentType: 'application/json;charset=UTF-8',
+	              url: '/iBase4J-SYS-Web/role/read/myMenuAndDept',
+	              data: ''
+	          }).then(function (result) {
+	              if (result.httpCode == 200) {
+	                  if (!dCheck) {
+	                      setTrees.menuRole(result.data.menulist);
+	                      setTrees.deptRole(result.data.deptlist);
+	                  }
+	              } else {
+	                  alertDialog(result.msg, 2);
+	              }
+	              $scope.$apply();
+	          })
+	      }
+
+	      setTrees.roleSetting = {
+	          check: {
+	              enable: true
+	          },
+	          data: {
+	              simpleData: {
+	                  enable: true,
+	                  pIdKey: 'parentId'
+	              },
+	              key: {
+	                  name: 'name'
+	              }
+	          },
+	          callback: {
+	              onCheck: '',
+	              beforeClick: '',
+	          }
+	      };
+	      setTrees.menuRole = function (zNodes) {
+	          var _zNodes = angular.copy(zNodes);
+
+	          var setting = angular.copy(setTrees.roleSetting);
+	          setting.data.key.name = 'menuname';
+	          setting.callback.onCheck = setTrees.onMenuCheck;
+	          setting.callback.beforeClick = setTrees.bMenuClick;
+	          if (dCheck) { // 如果是编辑
+	              var obj,
+                      nodeArr = [];
+	              setting.check = { enable: true, chkDisabledInherit: true };
+	              angular.forEach(_zNodes, function (item) {
+	                  obj = {};
+	                  item.checked = item.isSelected == 1 ? true : false;
+	                  if (item.checked) {
+	                      obj.type = item.type;
+	                      obj.id = item.id;
+	                      nodeArr.push(obj);
+	                  }
+	              })
+	              $scope.parts.permission = nodeArr;
+	          }
+	          var treeObj = $.fn.zTree.init($("#menuRole"), setting, _zNodes);
+	          treeObj.expandAll(true);
+	      };
+	      setTrees.deptRole = function (zNodes) {
+	          var _zNodes = angular.copy(zNodes);
+	          var setting = angular.copy(setTrees.roleSetting);
+	          setting.data.key.name = 'deptName';
+	          //setting.check = { enable: true };chkboxType: { "Y": "s", "N": "s" }
+	          setting.callback.onCheck = setTrees.onDeptCheck;
+	          setting.callback.beforeClick = setTrees.bDeptClick;
+
+	          if (dCheck) { // 如果是编辑
+	              var nodeArr = [];
+	              setting.check = { enable: true, chkDisabledInherit: true };
+	              angular.forEach(_zNodes, function (item) {
+	                  item.checked = item.isSelected == 1 ? true : false;
+	                  if (item.checked) {
+	                      nodeArr.push(item.id);
+	                  }
+	              })
+	              $scope.parts.deptids = nodeArr;
+	          }
+
+	          var treeObj = $.fn.zTree.init($("#deptRole"), setting, _zNodes);
+	          treeObj.expandAll(true);
+	      }
+
+	      setTrees.onMenuCheck = function (e, treeId, treeNode) {
+	          var arrNodes = new Array();
+	          var nObj;
+	          var treeObj = $.fn.zTree.getZTreeObj("menuRole"),
+                nodes = treeObj.getCheckedNodes(true);
+	          angular.forEach(nodes, function (item, index) {
+	              nObj = {};
+	              nObj.type = item.type;
+	              nObj.id = item.id;
+	              arrNodes.push(nObj);
+	          })
+	          //console.log(arrNodes);
+	          $scope.parts.permission = arrNodes;
+	      }
+	      setTrees.bMenuClick = function (treeId, treeNode) {
+	          var zTree = $.fn.zTree.getZTreeObj("menuRole");
+	          zTree.checkNode(treeNode, !treeNode.checked, null, true);
+	          return false;
+	      }
+
+	      setTrees.bDeptClick = function (treeId, treeNode) {
+	          var zTree = $.fn.zTree.getZTreeObj("deptRole");
+	          zTree.checkNode(treeNode, !treeNode.checked, null, true);
+	          return false;
+	      }
+	      setTrees.deptFilter = function () {
+	          //获取所选区域
+	          var zTree = $.fn.zTree.getZTreeObj("deptRole");
+	          //所有需要排除的子节点
+	          var list = [];
+	          //需要提交的节点ID
+	          var selected = [];
+	          var nodes = zTree.getCheckedNodes(true);
+	          angular.forEach(nodes, function (node, i) {
+	              //判断当前节点是否已经存在
+	              if ($.inArray(node.id, list) == -1) {
+	                  if (node.isParent) {
+	                      if (node.check_Child_State == 2) {
+	                          selected.push(node.id);
+	                          list = setTrees.getAllChildrenNodes(node, list);
+	                      }
+
+	                  } else {
+	                      selected.push(node.id);
+	                  }
+	              }
+	          })
+	          $scope.parts.deptids = selected;
+	      }
+	      /*递归获取当前节点所选中子节点*/
+	      setTrees.getAllChildrenNodes = function (treeNode, result) {
+	          if (treeNode.isParent) {
+	              var childrenNodes = treeNode.children;
+	              if (childrenNodes) {
+	                  angular.forEach(childrenNodes, function (item, index) {
+	                      result.push(item.id);
+	                      result = setTrees.getAllChildrenNodes(item, result);
+	                  })
+	              }
+	          }
+	          return result;
+	      }
+	      /******************************************菜单权限树 END****************************************/
+
+	      // 表单验证
+	      function validate() {
+	          jQuery('form').validate({
+	              rules: {
+	                  roleName: { required: true, maxlength: 60 },
+	                  remark: { required: true, maxlength: 500 }
+	              },
+	              messages: {
+	                  roleName: { required: '请填写名称', maxlength: '长度不能超过60个字符' },
+	                  remark: { required: '请填写描述', maxlength: '长度不能超过500个字符' }
+	              },
+	              submitHandler: function () {
+	                  submit();
+	              }
+	          })
+	      }
+
+	      function submit() {
+	          $scope.btnInfo = '提交中...';
+	          $scope.btnState = true;
+	          setTrees.deptFilter();
+
+	          $.ajax({
+	              type: 'post',
+	              dataType: 'json',
+	              contentType: 'application/json;charset=UTF-8',
+	              url: '/iBase4J-SYS-Web/role',
+	              data: angular.toJson($scope.parts)
+	          }).then(function (result) {
+	              if (result.httpCode == 200) {
+	                  tipDialog("保存成功", 1, 0.8 * 1000, function () {
+	                      $state.go('main.roles');
+	                  });
+	              } else {
+	                  $scope.btnInfo = '提交';
+	                  $scope.btnState = false;
+	                  alertDialog(result.msg, 2);
+
+	              }
+	              $scope.$apply();
+	          })
+	      }
+
+	  }])

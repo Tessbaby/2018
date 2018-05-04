@@ -1,0 +1,210 @@
+'use strict';
+
+angular.module('app')
+	.controller('faultsListController', ['$rootScope', '$scope', '$http', '$state',
+	       function ($rootScope, $scope, $http, $state) {
+	           $scope.title = '党员身边事';
+	           $scope.param = {};
+
+	           //=======================================验证权限 statr===================================
+	           ////权限模块代码
+	           //$scope.permissionCode = $state.$current.name;
+	           //$scope.hasQuery = $.inArray($scope.permissionCode + '.query', $rootScope.permissionList) != -1;
+	           //$scope.hasUpdate = $.inArray($scope.permissionCode + '.update', $rootScope.permissionList) != -1;
+	           //$scope.hasDelete = $.inArray($scope.permissionCode + '.delete', $rootScope.permissionList) != -1;
+	           //$scope.hasShare = $.inArray($scope.permissionCode + '.share', $rootScope.permissionList) != -1;
+	           //if (!$scope.hasQuery) {
+	           //    layer.alert("未经授权，禁止访问！", { icon: 2 });
+	           //    return false;
+	           //}
+	           //=======================================验证权限 end===================================
+
+	           //=======================================部门Tree statr===================================
+	           //党组织结构设置
+	           var setting = {
+	               check: { enable: true },
+	               data: {
+	                   key: {
+	                       name: "deptName"
+	                   },
+	                   simpleData: {
+	                       enable: true,
+	                       idKey: "id",
+	                       pIdKey: "parentId",
+	                       rootPId: 0
+	                   }
+	               },
+	               callback: { onCheck: onCheck }
+	           };
+	           //包含下级
+	           function setCheck() {
+	               var zTree = $.fn.zTree.getZTreeObj("depTree"),
+                   sy = $("#sy").prop("checked");
+	               var type;
+	               if (sy) {
+	                   type = { "Y": "s", "N": "s" };
+	               } else {
+	                   type = { "Y": "", "N": "" };
+	               }
+	               //console.log(type);
+	               zTree.setting.check.chkboxType = type;
+	           }
+	           //获取选中子级
+	           function onCheck(e, treeId, treeNode) {
+	               var arrNodes = new Array();
+	               var treeObj = $.fn.zTree.getZTreeObj("depTree"),
+                   nodes = treeObj.getCheckedNodes(true);
+	               for (var i = 0; i < nodes.length; i++) {
+	                   arrNodes.push(nodes[i].id);
+	               }
+	               $scope.param.deptId = arrNodes.join(",");
+	               //console.log($scope.param.sendDeptId);
+	               $rootScope.search($scope.url, $scope.param);
+	           }
+	           //获取选中子级
+	           //function onClick(e, treeId, treeNode) {
+
+	           //    $scope.param.deptId = treeNode.id;
+
+	           //    $rootScope.search($scope.url, $scope.param);
+	           //}
+	           //党组织结构树
+
+	           $scope.getDepTree = function () {
+
+	               $.ajax({
+	                   type: 'PUT',
+	                   dataType: 'json',
+	                   contentType: 'application/json;charset=UTF-8',
+	                   url: '/iBase4J-SYS-Web/dept/read/treelist2',
+	                   data: angular.toJson($scope.param)
+	               }).then(function (result) {
+
+	                   if (result.httpCode == 200) {
+	                       //console.log(result);
+	                       var zNodes = result.data;
+	                       var treeObj = $.fn.zTree.init($("#depTree"), setting, zNodes);
+	                       treeObj.expandAll(true);
+	                       setCheck();
+	                       $("#sy").bind("change", setCheck);
+
+	                   } else {
+	                       // $scope.msg = result.msg;
+	                       alertDialog(result.msg, 2);
+	                   }
+	                   $scope.$apply();
+	               });
+	           }
+	           $scope.getDepTree();
+	           //=======================================部门Tree end===================================
+
+
+	           function timeStamp2String(time) {
+			          var datetime = new Date();
+			          datetime.setTime(time);
+			          var year = datetime.getFullYear();
+			          var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+			          var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+			          var hour = datetime.getHours() < 10 ? "0" + datetime.getHours() : datetime.getHours();
+			          var minute = datetime.getMinutes() < 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+			          var second = datetime.getSeconds() < 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
+			          return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
+			      }
+	           // 日期
+	           var start = {
+			          elem: '#beginTime',
+			          format: 'YYYY/MM/DD',
+			          //min: laydate.now(0, "YYYY/MM/DD hh:mm:00"), //设定最小日期为当前日期
+			          max: '2099-06-16', //最大日期
+			          istime: true,
+			          issure: true, //是否显示确认
+			          festival: true, //是否显示节日
+			          choose: function (dates) {
+			          		var time = new Date(dates);
+			              end.min = timeStamp2String(time); //开始日选好后，重置结束日的最小日期
+			              end.start = dates;		//将结束日的初始值设定为开始日
+			              $scope.param.beginTime = dates;
+			          }
+			      };
+			      var end = {
+			          elem: '#endTime',
+			          format: 'YYYY/MM/DD',
+			          //min: laydate.now(0, "YYYY/MM/DD hh:mm:00"),
+			          max: '2099-06-16',
+			          istime: true,
+			          istoday: false,
+			          choose: function (dates) {
+			              start.max = dates; //结束日选好后，重置开始日的最大日期
+			              $scope.param.endTime = dates;
+			          }
+			      };
+			      laydate(start);
+			      laydate(end);
+
+	           //==================================执行查询 start==================================
+	           
+	           $scope.param.enable = '0';
+	           $scope.url = '/iBase4J-SYS-Web/issue/list';
+	           $rootScope.pageInfo = []; // 请求数据前清空
+	           $rootScope.search($scope.url, $scope.param);
+
+	           $scope.clearSearch = function () {
+	               $scope.param.keyword = null;
+	               $rootScope.search($scope.url, $scope.param);
+	           }
+	           // 翻页 - 排序翻页数据与此一致
+	           $scope.pagination = function (page) {
+	               $scope.param.pageNum = page;
+	               $scope.param.asc = $rootScope.changeAsc();
+	               $rootScope.search($scope.url, $scope.param);
+	           };
+
+	           //==================================执行查询 end==================================
+
+	           //删除
+	           $scope.delInfo = function (id) {
+
+	               if (confirm('确认要删除？')) {
+	                   $scope.loading = true;
+	                   $.ajax({
+	                       type: 'post',
+	                       url: '/iBase4J-SYS-Web/file/delete',
+	                       data: angular.toJson({ "id": id })
+	                   }).then(function (result) {
+	                       $scope.loading = false;
+	                       //console.log(result);
+	                       if (result.httpCode == 200) {
+	                           tipDialog("删除成功", 1, 0.8 * 1000, function () {
+	                               if ($rootScope.pageInfo.data.length == 1 && $scope.param.pageNum > 1) {
+	                                   $scope.param.pageNum = $scope.param.pageNum - 1;
+	                               }
+	                               $rootScope.search($scope.url, $scope.param);
+	                           });
+	                       } else {
+	                           alertDialog(result.msg, 2);
+	                       }
+	                       $scope.$apply();
+	                   });
+	               }
+	           }
+
+	           $scope.export = function () {
+	               $scope.loading = true;
+	               $.ajax({
+	                   type: 'put',
+	                   url: '/iBase4J-SYS-Web/issue/export',
+	                   data: angular.toJson($scope.param)
+	               }).then(function (result) {
+	                   $scope.loading = false;
+
+	                   //console.log(result);
+	                   if (result.httpCode == 200) {
+	                       alertDialog("<a href='" + result.data + "' target='_blank'>点此下载</a>", 1);
+	                   } else {
+	                       alertDialog(result.msg, 2);
+	                   }
+	                   $scope.$apply();
+	               });
+	           }
+
+	       }]);

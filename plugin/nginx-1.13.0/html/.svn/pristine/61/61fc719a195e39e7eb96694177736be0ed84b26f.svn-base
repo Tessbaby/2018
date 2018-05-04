@@ -1,0 +1,655 @@
+'use strict';
+
+var app = angular.module('app')
+	.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider,   $urlRouterProvider) {
+    // 默认地址
+    $urlRouterProvider.otherwise('/access/login');
+    // 状态配置
+    $stateProvider
+      .state('main', {
+        abstract: true,
+        url: '',
+        templateUrl: 'src/tpl/app.html'
+      })
+      .state('access', {
+        url: '/access',
+        template: '<div ui-view class="fade-in-right-big smooth"></div>'
+      })
+      .state('access.login',{
+        url: '/login',
+        templateUrl: 'src/app/sys/login/login.html',
+        controller: 'loginController',
+        resolve: {
+        	deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+              return uiLoad.load('src/app/sys/login/loginController.js').then(function() {
+                return $ocLazyLoad.load('toaster');
+              });
+	          }]
+          }
+      })
+      .state('access.change',{
+        url: '/change',
+        templateUrl: 'src/app/sys/login/change.html',
+        controller: 'changeController',
+        resolve: {
+        	deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+              return uiLoad.load('src/app/sys/login/changeController.js').then(function() {
+                return $ocLazyLoad.load('toaster');
+              });
+	          }]
+          }
+      })
+      .state('main.system', {
+        url: '/organization',
+        template: '<div ui-view class="fade-in-right-big smooth"></div>'
+      })
+      .state('main.system.look', {
+        url: '/look',
+        template: '<div ui-view class="fade-in-right-big smooth"></div>'
+      })
+
+      // 党组织管理
+      .state('main.commynity', {
+        url: '/commynity',
+        template: '<div ui-view class="fade-in-right-big smooth"></div>'
+      })
+      .state('main.commynity.info', {
+        url: '/info',
+        templateUrl: 'src/app/sys/organization/organize.html',
+        controller: 'organizeController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/organization/organizeController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            });
+          }]
+        }
+      }) // 党组织管理详情&编辑
+      .state('main.commynity.update', {
+        url: '/update/{id}?params',
+        templateUrl: 'src/app/sys/organization/orgAdd.html',
+        controller: 'orgAddController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/organization/orgAddController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            })
+          }]
+        }
+      })
+      .state('main.commynity.create', {
+        url: '/create',
+        templateUrl: 'src/app/sys/organization/orgAdd.html',
+        controller: 'orgAddController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/organization/orgAddController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            })
+          }]
+        }
+      }) // 职务管理
+      .state('main.commynity.duty', {
+        url: '/duty',
+        templateUrl: 'src/app/sys/organization/orgPosition.html',
+        controller: 'orgPositionController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/organization/orgPositionController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            })
+          }]
+        }
+      }) // 党员管理
+      .state('main.partyner', {
+        url: '/partyner',
+        templateUrl: 'src/app/sys/organization/member.html',
+        controller: 'memberController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/organization/memberController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            })
+          }]
+        }
+      })
+      .state('main.partyners', {
+        url: '/partyners',
+        template: '<div ui-view class="fade-in-right-big smooth"></div>'
+      }) // 党员管理添加
+      .state('main.partyners.add', {
+        url: '/add',
+        templateUrl: 'src/app/sys/organization/memAdd.html',
+        controller: 'memAddController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/organization/memAddController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            })
+          }]
+        }
+      })
+      .state('main.partyners.update', {
+        url: '/update/{id}?param',
+        templateUrl: 'src/app/sys/organization/memAdd.html',
+        controller: 'memAddController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/organization/memAddController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            })
+          }]
+        }
+      }) // 党员管理详情
+      .state('main.partyners.detail', {
+        url: '/detail/{id}?param',
+        templateUrl: 'src/app/sys/organization/memDetail.html',
+        controller: 'memDetailController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/organization/memDetailController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            })
+          }]
+        }
+      }) // 党员管理角色
+      .state('main.partyners.part', {
+        url: '/part/{id}?param',
+        templateUrl: 'src/app/sys/organization/memPart.html',
+        controller: 'memPartController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/organization/memPartController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            })
+          }]
+        }
+      })
+
+      .state('main.setting', { // 系统设置
+        url: '/setting',
+        template: '<div ui-view class="fade-in-right-big smooth"></div>'
+      })
+      .state('main.setting.baseinfo', { // 系统设置 - 党委信息
+        url: '/baseinfo',
+        templateUrl: 'src/app/sys/setting/settingInfo.html',
+        controller: 'setInfoController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/setting/settingInfoController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            });
+          }]
+        }
+      })
+      .state('main.setting.setInfoAdd', { // 系统设置 - 党委信息编辑
+        url: '/setInfoAdd',
+        templateUrl: 'src/app/sys/setting/settingInfoAdd.html',
+        controller: 'setInfoAddController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/setting/settingInfoAddController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            });
+          }]
+        }
+      })
+      .state('main.setting.banner', { // 系统设置 - 宣传图管理
+        url: '/banner',
+        templateUrl: 'src/app/sys/setting/settingImage.html',
+        controller: 'setImageController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/setting/settingImageController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            });
+          }]
+        }
+      })
+      .state('main.setting.setImageAdd', { // 系统设置 - 宣传图管理添加
+        url: '/setImageAdd/{id}?param',
+        templateUrl: 'src/app/sys/setting/settingImageAdd.html',
+        controller: 'setImageAddController',
+        	resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/setting/settingImageAddController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            });
+          }]
+        }
+      })
+
+      .state('main.life', { // 组织生活
+        url: '/life',
+        template: '<div ui-view class="fade-in-right-big smooth"></div>'
+      })
+      .state('main.life.meeting', { // 组织生活 - 会议管理
+        url: '/meeting',
+        templateUrl: 'src/app/sys/life/meeting.html',
+        controller: 'meetingController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/life/meetingController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            });
+          }]
+        }
+      })
+      .state('main.life.activity', { // 组织生活 - 群团活动
+        url: '/activity',
+        templateUrl: 'src/app/sys/life/activity.html',
+        controller: 'activityController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/life/activityController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            });
+          }]
+        }
+      })
+      .state('main.lifes', { // 组织生活
+        url: '/lifes',
+        template: '<div ui-view class="fade-in-right-big smooth"></div>'
+      })
+      .state('main.lifes.meetingAdd', { // 组织生活 - 会议管理编辑
+        url: '/meetingAdd/{id}?param',
+        templateUrl: 'src/app/sys/life/meetingAdd.html',
+        controller: 'meetingAddController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/life/meetingAddController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            });
+          }]
+        }
+      })
+      .state('main.lifes.meetingUpdate', { // 组织生活 - 会议管理详情
+        url: '/meetingUpdate/{id}?param',
+        templateUrl: 'src/app/sys/life/meetingDetail.html',
+        controller: 'meetingDetailController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/life/meetingDetailController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            });
+          }]
+        }
+      })
+      .state('main.lifes.meetingDetail', { // 组织生活 - 会议管理详情
+        url: '/meetingDetail/{id}?param',
+        templateUrl: 'src/app/sys/life/meetingDetail.html',
+        controller: 'meetingDetailController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/life/meetingDetailController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            });
+          }]
+        }
+      })
+      .state('main.lifes.activityDetail', { // 组织生活 - 群团活动详情
+        url: '/activityDetail/{id}?param',
+        templateUrl: 'src/app/sys/life/activityDetail.html',
+        controller: 'activityDetailController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/life/activityDetailController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            });
+          }]
+        }
+      })
+      .state('main.lifes.activityAdd', { // 组织生活 - 群团活动添加
+        url: '/activityAdd',
+        templateUrl: 'src/app/sys/life/activityAdd.html',
+        controller: 'activityAddController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/life/activityAddController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            });
+          }]
+        }
+      })
+      .state('main.lifes.activityUpdate', { // 组织生活 - 群团活动编辑
+        url: '/activityUpdate/{id}?param',
+        templateUrl: 'src/app/sys/life/activityAdd.html',
+        controller: 'activityAddController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/life/activityAddController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            });
+          }]
+        }
+      })
+      .state('main.lifes.signList', { // 组织生活 - 群团活动 - 报名列表
+        url: '/signList/{id}?param',
+        templateUrl: 'src/app/sys/life/signList.html',
+        controller: 'signListController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/life/signListController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            });
+          }]
+        }
+      })
+      .state('main.lifes.fcAdd', { // 组织生活 - 群团活动 - 活动风采
+        url: '/fcAdd/{id}?param',
+        templateUrl: 'src/app/sys/life/activityDetail.html',
+        controller: 'activityDetailController',
+        resolve: {
+          deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+            return uiLoad.load('src/app/sys/life/activityDetailController.js').then(function() {
+              return $ocLazyLoad.load('toaster');
+            });
+          }]
+        }
+      })
+
+	    .state('main.party', { // 党务办公
+      	url: '/party',
+      	template: '<div ui-view class="fade-in-right-big smooth"></div>'
+      })
+      .state('main.party.notice', { // 通知公告列表
+      	url: '/notice',
+      	templateUrl: 'src/app/sys/notice/list.html',
+      	controller: 'listController',
+      	resolve: {
+      		deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+      			return uiLoad.load('src/app/sys/notice/listController.js').then(function() {
+    				  return $ocLazyLoad.load('toaster');
+    				});
+      		}]
+      	}
+      })
+	  .state('main.party.noticeAdd', { // 通知公告-发布
+      	url: '/noticeAdd',
+      	templateUrl: 'src/app/sys/notice/update.html',
+      	controller: 'updateController',
+      	resolve: {
+      		deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+      			return uiLoad.load('src/app/sys/notice/updateController.js').then(function() {
+				  return $ocLazyLoad.load('toaster');
+				});
+      		}]
+      	}
+      })
+	  .state('main.party.noticeUpdate', { // 通知公告-编辑
+      	url: '/noticeUpdate/{id}?params',
+      	templateUrl: 'src/app/sys/notice/update.html',
+      	controller: 'updateController',
+      	resolve: {
+      		deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+      			return uiLoad.load('src/app/sys/notice/updateController.js').then(function() {
+				  return $ocLazyLoad.load('toaster');
+				});
+      		}]
+      	}
+      })
+	  .state('main.party.noticeDetail', { // 通知公告-详情
+      	url: '/noticeDetail/{id}?params',
+      	templateUrl: 'src/app/sys/notice/detail.html',
+      	controller: 'detailController',
+      	resolve: {
+      		deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+      			return uiLoad.load('src/app/sys/notice/detailController.js').then(function() {
+				  return $ocLazyLoad.load('toaster');
+				});
+      		}]
+      	}
+      })
+	  .state('main.party.noticeListHead', { // 通知公告-文件头列表
+      	url: '/noticeListHead',
+      	templateUrl: 'src/app/sys/notice/listHead.html',
+      	controller: 'listHeadController',
+      	resolve: {
+      		deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+      			return uiLoad.load('src/app/sys/notice/listHeadController.js').then(function() {
+				  return $ocLazyLoad.load('toaster');
+				});
+      		}]
+      	}
+      })
+	  .state('main.party.noticeAddHead', { // 通知公告-文件头添加
+      	url: '/noticeAddHead',
+      	templateUrl: 'src/app/sys/notice/updateHead.html',
+      	controller: 'updateHeadController',
+      	resolve: {
+      		deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+      			return uiLoad.load('src/app/sys/notice/updateHeadController.js').then(function() {
+				  return $ocLazyLoad.load('toaster');
+				});
+      		}]
+      	}
+      })
+	  .state('main.party.noticeUpdateHead', { // 通知公告-文件头编辑
+      	url: '/noticeUpdateHead/{id}?params',
+      	templateUrl: 'src/app/sys/notice/updateHead.html',
+      	controller: 'updateHeadController',
+      	resolve: {
+      		deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+      			return uiLoad.load('src/app/sys/notice/updateHeadController.js').then(function() {
+				  return $ocLazyLoad.load('toaster');
+				});
+      		}]
+      	}
+      })
+	  .state('main.party.noticeDetailHeda', { // 通知公告-文件头详情
+      	url: '/noticeDetailHeda/{id}?params',
+      	templateUrl: 'src/app/sys/notice/detailHead.html',
+      	controller: 'detailHeadController',
+      	resolve: {
+      		deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+      			return uiLoad.load('src/app/sys/notice/detailHeadController.js').then(function() {
+				  return $ocLazyLoad.load('toaster');
+				});
+      		}]
+      	}
+      })
+	  .state('main.party.noticeReadList', { // 通知公告-阅读列表
+      	url: '/noticeReadList/{id}?params',
+      	templateUrl: 'src/app/sys/notice/readList.html',
+      	controller: 'readListController',
+      	resolve: {
+      		deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+      			return uiLoad.load('src/app/sys/notice/readListController.js').then(function() {
+				  return $ocLazyLoad.load('toaster');
+				});
+      		}]
+      	}
+      })
+	  .state('main.party.files', { // 文件流转-列表
+      	url: '/files',
+      	templateUrl: 'src/app/sys/files/list.html',
+      	controller: 'listController',
+      	resolve: {
+      		deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+      			return uiLoad.load('src/app/sys/files/listController.js').then(function() {
+				  return $ocLazyLoad.load('toaster');
+				});
+      		}]
+      	}
+      })
+	  .state('main.party.filesAdd', { // 文件流转-上传文件
+      	url: '/filesAdd',
+      	templateUrl: 'src/app/sys/files/update.html',
+      	controller: 'updateController',
+      	resolve: {
+      		deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+      			return uiLoad.load('src/app/sys/files/updateController.js').then(function() {
+				  return $ocLazyLoad.load('toaster');
+				});
+      		}]
+      	}
+      })
+	  .state('main.party.filesForward', { // 文件流转-转发
+      	url: '/filesForward/{id}?params',
+      	templateUrl: 'src/app/sys/files/forward.html',
+      	controller: 'forwardController',
+      	resolve: {
+      		deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+      			return uiLoad.load('src/app/sys/files/forwardController.js').then(function() {
+				  return $ocLazyLoad.load('toaster');
+				});
+      		}]
+      	}
+      })
+	  .state('main.party.filesDetail', { // 文件流转-文件详情
+      	url: '/filesDetail/{id}?params',
+      	templateUrl: 'src/app/sys/files/detail.html',
+      	controller: 'detailController',
+      	resolve: {
+      		deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+      			return uiLoad.load('src/app/sys/files/detailController.js').then(function() {
+				  return $ocLazyLoad.load('toaster');
+				});
+      		}]
+      	}
+      })
+	  .state('main.party.hb', { // 工作汇报-列表
+			url: '/hb',
+			templateUrl: 'src/app/sys/hb/list.html',
+			controller: 'listController',
+			resolve: {
+				deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+					return uiLoad.load('src/app/sys/hb/listController.js').then(function() {
+					  return $ocLazyLoad.load('toaster');
+					});
+				}]
+			}
+	   })
+	    .state('main.party.report', { // 工作汇报-列表
+			url: '/report',
+			templateUrl: 'src/app/sys/hb/listReport.html',
+			controller: 'listReportController',
+			resolve: {
+				deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+					return uiLoad.load('src/app/sys/hb/listReportController.js').then(function() {
+					  return $ocLazyLoad.load('toaster');
+					});
+				}]
+			}
+	   })
+	   .state('main.party.hbAdd', { // 工作汇报-上传文件
+			url: '/hbAdd',
+			templateUrl: 'src/app/sys/hb/update.html',
+			controller: 'updateController',
+			resolve: {
+				deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+					return uiLoad.load('src/app/sys/hb/updateController.js').then(function() {
+					  return $ocLazyLoad.load('toaster');
+					});
+				}]
+			}
+	  })
+	  .state('main.party.hbDetail', { // 工作汇报-文件详情
+			url: '/hbDetail/{id}?params',
+			templateUrl: 'src/app/sys/hb/detail.html',
+			controller: 'detailController',
+			resolve: {
+				deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+					return uiLoad.load('src/app/sys/hb/detailController.js').then(function() {
+					  return $ocLazyLoad.load('toaster');
+					});
+				}]
+			}
+	  })
+	  .state('main.party.vote', { // 选举投票-列表
+			url: '/vote/{typeId}?params',
+			templateUrl: 'src/app/sys/vote/list.html',
+			controller: 'listController',
+			resolve: {
+				deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+					return uiLoad.load('src/app/sys/vote/listController.js').then(function() {
+					  return $ocLazyLoad.load('toaster');
+					});
+				}]
+			}
+	   })
+	  .state('main.party.voteAdd', { // 选举投票-添加
+			url: '/voteAdd',
+			params:{"id":null,"type":null},
+			templateUrl: 'src/app/sys/vote/update.html',
+			controller: 'updateController',
+			resolve: {
+				deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+					return uiLoad.load('src/app/sys/vote/updateController.js').then(function() {
+					  return $ocLazyLoad.load('toaster');
+					});
+				}]
+			}
+	  })
+	  .state('main.party.voteDetail', { // 选举投票-详情
+			url: '/voteDetail/{id}?params',
+			templateUrl: 'src/app/sys/vote/detail.html',
+			controller: 'detailController',
+			resolve: {
+				deps: ['uiLoad', '$ocLazyLoad', function(uiLoad, $ocLazyLoad) {
+					return uiLoad.load('src/app/sys/vote/detailController.js').then(function() {
+					  return $ocLazyLoad.load('toaster');
+					});
+				}]
+			}
+	  });
+    }])
+    .controller("navCtrl",function($rootScope,$state) {
+    	$.ajax({
+    		type: 'GET',
+    		contentType:'application/json;charset=UTF-8',
+				//url : '/user/read/promission',
+				url: '/iBase4J-SYS-Web/menu/read/listtree',
+				success : function(result) {
+				  if (result.httpCode == 200) {
+					 	$rootScope.menuList = result.data;
+					 	/* $rootScope.userInfo = {
+					 		userName: '谭梦稳',
+					 		avatar: '/res/img/avatar.png',
+					 	}*/
+						$rootScope.$apply();
+					}
+				}
+		  });
+      $.ajax({
+        type: 'GET',
+        contentType:'application/json;charset=UTF-8',
+        //url : '/user/read/promission',
+        url: '/iBase4J-SYS-Web/user',
+        success : function(result) {
+          if (result.httpCode == 200) {
+            $rootScope.userInfo = result.data;
+            $rootScope.$apply();
+          }
+        }
+      });
+  	})
+    .run(['$rootScope', '$state', '$stateParams','$timeout', '$templateCache',
+          function ($rootScope,$state,$stateParams,$timeout, $templateCache) {
+              $rootScope.$state = $state;
+              $rootScope.$stateParams = $stateParams;
+              $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+                  var from =  fromState.name, to = toState.name;
+                  if(from && to){ // 解决 相应模块从列表进入编辑后 状态丢失问题
+                      var s1= from.substring(0,from.lastIndexOf(".")),
+                          g1 = from.substring(from.lastIndexOf(".")+1),
+                          s2 = to.substring(0,to.lastIndexOf(".")),
+                          g2 = to.substring(to.lastIndexOf(".")+1);
+                      if(s1 == s2){
+                          if(g1 =='list' && (g2=='update'||g2=='view')) { //进行编辑
+                              toParams['params'] = window.location.hash;
+                          }
+                          //返回列表
+                          if((g1 == "update"||g1 =='view') && g2=='list') {
+                              var h = fromParams['params'];
+                              if(h){
+                                  $timeout(function(){
+                                      window.location.hash = h;
+                                  });
+                              }
+                          }
+                      }
+                  }
+              });
+          }
+      ]);

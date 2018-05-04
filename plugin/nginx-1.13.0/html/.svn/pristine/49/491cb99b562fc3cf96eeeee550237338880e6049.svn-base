@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+	<meta charset="UTF-8">
+         <script src="jquery.js"></script>
+    </head>
+    
+    <body style="height:100%">
+	<button id="login">login</button>
+	<button id="userlist">userlist</button>
+<button id="applogin">applogin</button>
+<button id="appnoticelist">appnoticelist</button>
+<button id="wxnoticedetail">wxnoticedetail</button>
+<button id="deleteNotice">deleteNotice</button>
+<button id="userreadlist">userreadlist</button>
+<button id="headerlist">headerlist</button>
+<button id="updateDefault">updateDefault</button>
+<button id="updateFile">updateFile</button>
+<button id="queryFile">queryFile</button>
+<button id="detailFile">detailFile</button>
+<button id="deleteFile">deleteFile</button>
+<button id="appqueryFile">appqueryFile</button>
+<button id="repeatList">repeatList</button>
+<button id="appdeletefile">appdeletefile</button>
+<button id="appUpdateFile">appUpdateFile</button>
+<button id="wxqueryFile">wxqueryFile</button>
+<button id="wxrepeatList">wxrepeatList</button>
+<button id="wxdeletefile">wxdeletefile</button>
+<button id="wxUpdateFile">wxUpdateFile</button>
+<button id="queryNotice">queryNotice</button>
+<button id="headerDelete">headerDelete</button>
+   <script>
+         $("#login").click(function(){
+      var url="/iBase4J-SYS-Web/login";
+   var data={"ACCOUNT":'admin',"PASSWORD":"111111"};
+    $.ajax({
+	             type: 'POST',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+       
+	   
+	    $("#userlist").click(function(){
+      var url="/iBase4J-SYS-Web/user/read/list";
+   var data={};
+    $.ajax({
+	             type: 'put',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+			  $("#applogin").click(function(){
+      var url="/iBase4J-App-Web/app/login";
+   var data={"account":"admin","password":"111111"};
+    $.ajax({
+	             type: 'POST',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+			 $("#appnoticelist").click(function(){
+      var url="/iBase4J-App-Web/app/noticeApp/list";
+   var data={};
+    $.ajax({
+	             type: 'put',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+				 beforeSend: function(request) {
+                        request.setRequestHeader("token", "21232f297a57a5a743894a0e4a801fc3");
+                    },
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+			
+	    $("#wxnoticedetail").click(function(){
+      var url="/iBase4J-App-Web/wx/notice/detail";
+   var data={"id":8};
+    $.ajax({
+	             type: 'put',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+				    $("#deleteNotice").click(function(){
+      var url="/iBase4J-SYS-Web/notice/deleteNotice";
+   var data={"id":23,"enable":-1};
+    $.ajax({
+	             type: 'put',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+		$("#userreadlist").click(function(){
+      var url="/iBase4J-SYS-Web/noticeRead/read/userreadlist";
+   var data={"noticeId":27};
+    $.ajax({
+	             type: 'put',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+					$("#headerlist").click(function(){
+      var url="/iBase4J-SYS-Web/noticeHeader/header/list";
+   var data={};
+    $.ajax({
+	             type: 'put',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+		$("#updateDefault").click(function(){
+      var url="/iBase4J-SYS-Web/noticeHeader/header/updateDefault";
+   var data={"id":11};
+    $.ajax({
+	             type: 'post',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+	$("#updateFile").click(function(){
+      var url="/iBase4J-SYS-Web/file/updateFile";
+   var data=[{"fileName":"附件1","filePath":"附件路径1","isPublic":2,"userList":"5,6,7,8,9","remark":"描述1"},{"fileName":"附件2","filePath":"附件路径2","isPublic":2,"userList":"1,2,3,4,5","remark":"描述2"}];
+    $.ajax({
+	             type: 'post',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+		$("#queryFile").click(function(){
+      var url="/iBase4J-SYS-Web/file/list";
+   var data={};
+    $.ajax({
+	             type: 'put',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+				$("#detailFile").click(function(){
+      var url="/iBase4J-SYS-Web/file/detail";
+   var data={"id":19};
+    $.ajax({
+	             type: 'put',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+	$("#deleteFile").click(function(){
+      var url="/iBase4J-SYS-Web/file/delete";
+   var data={"id":19};
+    $.ajax({
+	             type: 'post',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+
+			 $("#appqueryFile").click(function(){
+     var url="/iBase4J-App-Web/app/file/list";
+   var data={"isPublic":1};
+    $.ajax({
+	             type: 'put',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+				 beforeSend: function(request) {
+                        request.setRequestHeader("token", "21232f297a57a5a743894a0e4a801fc3");
+                    },
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+			
+			 $("#repeatList").click(function(){
+     var url="/iBase4J-App-Web/app/file/repeatList";
+   var data={"fileId":19};
+    $.ajax({
+	             type: 'put',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+				 beforeSend: function(request) {
+                        request.setRequestHeader("token", "21232f297a57a5a743894a0e4a801fc3");
+                    },
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+			 $("#appdeletefile").click(function(){
+     var url="/iBase4J-App-Web/app/file/delete";
+   var data={"id":19};
+    $.ajax({
+	             type: 'post',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+				 beforeSend: function(request) {
+                        request.setRequestHeader("token", "21232f297a57a5a743894a0e4a801fc3");
+                    },
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+			
+			$("#appUpdateFile").click(function(){
+      var url="/iBase4J-App-Web/app/file/updatefile";
+  // var data=[{"fileName":"附件1","filePath":"附件路径1","isPublic":2,"userList":"5,6,7,8,9","remark":"描述1"},{"fileName":"附件2","filePath":"附件路径2","isPublic":2,"userList":"1,2,3,4,5","remark":"描述2"}];
+   var data=[{"fileName":"附件1","filePath":"附件路径1","isPublic":2,"userList":"5,6,7,8,9","remark":"描述1","id":24}];
+    $.ajax({
+	             type: 'post',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+				  beforeSend: function(request) {
+                        request.setRequestHeader("token", "21232f297a57a5a743894a0e4a801fc3");
+                    },
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+			 $("#wxqueryFile").click(function(){
+     var url="/iBase4J-App-Web/wx/file/list";
+   var data={"isPublic":1};
+    $.ajax({
+	             type: 'put',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+				
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+			
+			 $("#wxrepeatList").click(function(){
+     var url="/iBase4J-App-Web/wx/file/repeatList";
+   var data={"fileId":19};
+    $.ajax({
+	             type: 'put',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+				
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+			 $("#wxdeletefile").click(function(){
+     var url="/iBase4J-App-Web/wx/file/delete";
+   var data={"id":19};
+    $.ajax({
+	             type: 'post',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+				
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+			
+			$("#wxUpdateFile").click(function(){
+      var url="/iBase4J-App-Web/wx/file/updatefile";
+  // var data=[{"fileName":"附件1","filePath":"附件路径1","isPublic":2,"userList":"5,6,7,8,9","remark":"描述1"},{"fileName":"附件2","filePath":"附件路径2","isPublic":2,"userList":"1,2,3,4,5","remark":"描述2"}];
+   var data=[{"fileName":"附件1","filePath":"附件路径1","isPublic":2,"userList":"5,6,7,8,9","remark":"描述1","id":24}];
+    $.ajax({
+	             type: 'post',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+				  
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+				$("#queryNotice").click(function(){
+      var url="/iBase4J-SYS-Web/notice/list";
+   var data={"asc":true,"orderBy":"enable_"};
+    $.ajax({
+	             type: 'put',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+			$("#headerDelete").click(function(){
+      var url="/iBase4J-SYS-Web/noticeHeader/header/delete";
+   var data={id:11};
+    $.ajax({
+	             type: 'post',
+	             dataType: 'json',
+				 contentType:'application/json;charset=UTF-8',
+                 url:url,
+                 data:JSON.stringify(data),
+                 success:function(data){//ajax返回的数据
+                 alert(JSON.stringify(data));
+                 }
+            }); 
+			});
+      </script>
+
+	  
+    </body>
+</html>

@@ -1,0 +1,212 @@
+'use strict';
+
+angular.module('app')
+	.controller('demoContentController', ['$rootScope', '$scope', '$http', '$state', '$timeout',
+    function ($rootScope, $scope, $http, $state, $timeout) {
+    	$scope.title = '评议规则设置';
+        $scope.isShowContent = true;
+        $scope.isShowNotice = false;
+        $scope.btnInfo = '发布';
+        $scope.btnState = true;
+
+        // 查看最新评议模板
+        $.ajax({
+            type: 'get',
+            url: $rootScope.baseUrl + '/sysDeptComment/newtemplate',
+            dataType: 'json',
+            contentType: 'application/json;charset=UTF-8',
+            data: ''
+        }).then(function (result) {
+            // console.log(result);
+            if (result.httpCode == 200) {
+                $scope.info = result.data;
+            } else {
+                alertDialog(result.msg, 2);
+            }
+            $scope.$apply();
+        });
+
+        // 百度编辑器
+        var myEditor = UE.getEditor("myEditor", {
+            topOffset: 0,
+            autoFloatEnabled: false,
+            autoHeightEnabled: false,
+            wordCount: false,
+            autotypeset: {
+                removeEmptyline: true
+            },
+            toolbars: [
+                [
+                    //'source', //源代码
+                    'bold', //加粗
+                    'forecolor', //字体颜色
+                    'indent', //首行缩进
+                    'italic', //斜体
+                    'underline', //下划线
+                    'insertvideo', //视频                          
+                    'simpleupload', //单图上传
+                    'insertimage', //多图上传
+                    //'inserttable', //插入表格
+                    'link', //超链接
+                    'removeformat',//清除格式
+                    'huodong',
+
+                ]
+            ]
+        });
+
+        // 删除内容
+        $scope.removeOptions = function (key) {
+            if ($scope.info.contents.length > 1) {
+                $scope.info.contents.splice(key, 1);
+            } else {
+                alert("内容最少一项");
+            }
+        }
+        // 添加内容
+        $scope.addOptions = function (key) {
+            $scope.info.contents.splice(key, 0, {
+                content: "",
+                enable: "1",
+                id: "",
+                remark: ""
+            });
+            // console.log($scope.info.contents)
+        }
+
+        // 删除评级
+        $scope.removeLevel = function (key) {
+            if ($scope.info.levels.length > 1) {
+                $scope.info.levels.splice(key, 1);
+            } else {
+                alert("内容最少一项");
+            }
+        }
+        // 添加评级
+        $scope.addLevel = function (key) {
+            $scope.info.levels.splice(key, 0, '');
+        }
+
+        // 提交
+        $scope.submit = function () {
+            // console.log($scope.info);
+            var param = {};
+            param.contents = [];
+            angular.forEach($scope.info.contents, function (item, i) {
+                param.contents[i] = {};
+                param.contents[i].content = item.content;
+                param.contents[i].isAll = item.isAll == 1 ? parseInt(item.isAll) : -1;
+            })
+            param.levels = angular.copy($scope.info.levels);
+            param.tSubject = $scope.info.tSubject;
+            // param.tContent = 'sss';
+            param.tContent = myEditor.getContent();
+            // 模板id
+            param.templateid = parseInt($scope.info.id);
+
+            if (param.tSubject == '') {
+                tipDialog("评议主题不能为空", 2);
+                return;
+            } else if (param.tSubject.length > 100) {
+                tipDialog("评议主题不能超过100字", 2);
+                return;
+            } else if (param.tContent == '') {
+                tipDialog("评议内容不能为空", 2);
+                return;
+            } else if (param.tContent.length > 1000) {
+                tipDialog("评议内容不能超过1000字符", 2);
+                return;
+            }
+
+            $scope.btnInfo = '发布中...';
+            $scope.btnState = false;
+            $.ajax({
+              url: '/iBase4J-SYS-Web/sysDeptComment',
+              type: 'post',
+              data: angular.toJson(param)
+            }).then(function (result) {
+                if (result.httpCode == 200) {
+                    tipDialog("保存成功", 1, 0.8 * 1000, function () {
+                        $state.go('main.party.comment');
+                    });
+                } else {
+                    $scope.btnInfo = '发布';
+                    $scope.btnState = true;
+                    alertDialog(result.msg, 2);
+                }
+                $scope.$apply();
+            })
+        }
+
+    	// 取消
+    	$scope.cancel = function () {
+    		layer.confirm('确认取消吗?', function (index) {
+                layer.close(index);
+    			$state.go('main.party.comment');
+    		})
+    	}
+
+    	// 预览
+    	$scope.showModule = function () {
+            var goNext = appendLevels();
+            if (goNext) {
+                $scope.moduleList = {}; // 预览模板数据
+                $scope.colspan = $scope.info.levels.length;
+                $scope.moduleList.contents = angular.copy($scope.info.contents);
+                $scope.moduleList.levels = [];
+                angular.forEach($scope.info.contents, function (item, i) {
+                    angular.forEach($scope.info.levels, function (value, i) {
+                        $scope.moduleList.levels.push(value);
+                    })
+                    
+                })
+                // console.log($scope.moduleList)
+        		layer.open({
+        			type: 1,
+        			title: '民主评议党员测评表预览',
+        			area: ['80%', '500px'],
+        			content: $('#moduleTable')
+        		})
+            }
+    	}
+
+    	// 下一步
+    	$scope.goNextPage = function () {
+            var goNext = appendLevels();
+            if (goNext) {
+                $scope.isShowContent = false;
+                $scope.isShowNotice = true;
+            }
+    	}
+
+        // 上一步
+        $scope.goSublingPage = function () {
+            $scope.isShowContent = true;
+            $scope.isShowNotice = false;
+        }
+
+        function appendLevels () {
+            var go = true;
+            var elems = $('#level textarea');
+            var levels = [],
+                level = '';
+            angular.forEach(elems, function (item, i) {
+                level = item.value;
+                if (level == '') {
+                    go = false;
+                    tipDialog("评议级别不能为空", 2);
+                }
+                levels.push(level);
+            })
+            $scope.info.levels = levels;
+            angular.forEach($scope.info.contents, function (item, i) {
+                if (item.content == '') {
+                    go = false;
+                    tipDialog("评议内容不能为空", 2);
+                    return;
+                }
+            })
+            return go;
+        }
+    }])
+       

@@ -1,0 +1,314 @@
+<style>
+    .tree-select {
+        width: 220px;
+        background-color: #fff !important;
+        color: #34495e !important;
+    }
+</style>
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="src/app/sys/partyners/baseInfoAddController.js"></script>
+<div ng-controller="baseInfoAddController">
+    <div class="wrapper-md content m-n">
+        <div class="panel panel-default">
+            <!-- 头部 -->
+            <div class="panel-heading font-bold"></div>
+            <!--表单-->
+            <div class="panel-body">
+                <form class="form-horizontal" name="organize_form">
+                    <!-- <div class="form-group m-b-md m-t-sm font-bold" style="font-size: 20px;">
+                        <span class="col-lg-1 col-sm-1 text-right">姓名</span>
+                        <span class="col-sm-2" ng-bind="record.userName"></span>
+                        <span class="col-lg-1 col-sm-2 text-right">党组织：</span>
+                        <span class="col-sm-4" ng-bind="record.deptName"></span>
+                    </div> -->
+
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="userPic">头像</label>
+                        <div class="col-sm-6">
+                            <div class="m-b upload-pic-box inline">
+                                <a href="javascript:void(0);" class="btn btn-default btn-addon">
+                                    <i class="fa fa-upload"></i>上传图片
+                                </a>
+                            </div>
+                            <div class="m-b inline" ng-show="imgSrc!=defaultAvatar" ng-click="img_del($index)">
+                                <a href="javascript:void(0);" class="btn btn-danger btn-addon">删除</a>
+                            </div>
+
+                            <input type="file" id="uploadImg" accept="image/png,image/jpg,image/jpeg" class="fileInput" ng-hide="1" />
+                            <div class="col">
+                                <div class="inline bg-white wrapper-sm b-a">
+                                    <div class="bg-light" style="width: 240px; height: 160px; position: relative; overflow: hidden;">
+                                        <img ng-src="{{imgSrc}}" style="width: 100%; text-align: center;" />
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="help-block m-b-none">党员头像尺寸要求宽度*高度为360px*200px。图片格式支持jpg,png</span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="userCode">党员编号</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="userCode" placeholder="请输入编号" ng-model="record.userCode">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+
+                        <label class="col-lg-2 col-sm-3 control-label" for="userName"><span class="text-danger wrapper-sm">*</span>姓名</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" name="userName" placeholder="请输入姓名" ng-model="record.userName">
+                        </div>
+                        <label class="col-lg-2 col-sm-3 control-label"><span class="text-danger wrapper-sm">*</span>性别</label>
+                        <div class="col-sm-2">
+                            <div class="radio r-inline add-radio">
+                                <label ng-repeat="item in sexList">
+                                    <input type="radio" name="sex" value="{{item.code}}" ng-model="record.sex">
+                                    {{ item.codeText }}
+                                </label>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="birthDay"><span class="text-danger wrapper-sm">*</span>出生日期</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control r-inline add-date laydate-icon" readonly name="birthDay" id="birthDay" ng-model="record.birthDay" placeholder="请选择日期">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                        <label class="col-lg-2 col-sm-3 control-label" for="age">年龄</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" name="age" id="age" placeholder="请输入年龄" ng-model="record.age">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="education">最高学历</label>
+                        <div class="col-sm-2">
+                            <select class="form-control add-select" ng-model="record.education">
+                                <option value="">请选择</option>
+                                <option ng-repeat="item in dropdowmList.educationList" value="{{item.code}}">{{item.codeText}}</option>
+                            </select>
+
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                        <label class="col-lg-2 col-sm-3 control-label" for="degree">最高学位</label>
+                        <div class="col-sm-2">
+                            <select class="form-control add-select" ng-model="record.degree">
+                                <option value="">请选择</option>
+                                <option ng-repeat="item in dropdowmList.degreeList" value="{{item.code}}">{{item.codeText}}</option>
+                            </select>
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="">民族</label>
+                        <div class="col-sm-2">
+                            <select class="form-control add-select" ng-model="record.nation">
+                                <option value="">请选择</option>
+                                <option ng-repeat="item in dropdowmList.nationList" value="{{item.code}}">{{item.codeText}}</option>
+                            </select>
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                        <label class="col-lg-2 col-sm-3 control-label" for="city">籍贯</label>
+                        <div class="col-sm-2">
+                            <select class="form-control add-select" ng-model="record.cityId">
+                                <option value="">请选择</option>
+                                <option ng-repeat="item in dropdowmList.cityList" value="{{item.code}}">{{item.codeText}}</option>
+                            </select>
+                            <span class="help-block m-b-none"></span>
+                        </div>
+
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <!--  <label class="col-lg-2 col-sm-3 control-label" for="">统计年龄</label>
+                        <div class="col-sm-2">
+                             <input type="text" class="form-control" name="age" id="age" placeholder="请输入年龄" ng-model="record.age">
+                            <span class="help-block m-b-none"></span>
+                        </div>-->
+                        <label class="col-lg-2 col-sm-3 control-label" for="">邮箱地址</label>
+                        <div class="col-sm-3">
+                            <input type="email" class="form-control" name="email" id="Email1" placeholder="请输入邮箱" ng-model="record.email">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="phone"><span class="text-danger wrapper-sm">*</span>手机号码</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="phone" placeholder="请输入手机号码" name="phone" ng-model="record.phone">
+                            <span class="m-b-none">注：如不知道用户微信号码，请输入用户绑定微信的手机号码，才能在微信端登录</span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="">微信号码</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="wxNumber" placeholder="请输入微信号码" ng-model="record.wxNumber">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="">身份证号</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="identifiesNumber" placeholder="请输入身份证号" ng-model="record.identifiesNumber">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="hkPolice">户口所在派出所</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="hkPolice" placeholder="请输入所在派出所" ng-model="record.hkPolice">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="">家庭住址</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="address" id="Text1" placeholder="请输入家庭住址" ng-model="record.address">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="deptId"><span class="text-danger wrapper-sm">*</span>所属组织</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control tree-select" name="deptId" ng-model="record.deptName" id="deptId" ng-click="showMenu()" readonly>
+                            <input id="treeids" type="hidden">
+                            <div id="menuContent" class="menuContent" style="display: none; position: absolute; z-index: 10">
+                                <ul id="treeDemo" class="ztree"></ul>
+                            </div>
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                        <label class="col-lg-2 col-sm-3 control-label" for="relationDept">组织关系所在单位</label>
+                        <div class="col-sm-2">
+                            <select class="form-control add-select" ng-model="record.relationDeptId">
+                                <option value="">请选择</option>
+                                <option ng-repeat="item in dropdowmList.relationDeptList" value="{{item.code}}">{{item.codeText}}</option>
+
+                            </select>
+                            <span class="help-block m-b-none"></span>
+                        </div>
+
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="unitDuty">党员单位职务</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" name="unitDuty" placeholder="请输入职务" ng-model="record.unitDuty">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                        <label class="col-lg-2 col-sm-3 control-label" for="">党内职务</label>
+                        <div class="col-sm-2">
+                            <select class="form-control add-select" ng-model="record.dnzw" name="dnzw">
+                                <option value="">请选择</option>
+                                <option ng-repeat="item in dropdowmList.partyDutyList" value="{{item.code}}">{{item.codeText}}</option>
+                                <!--<option ng-repeat="item in dropdowmList.partyDutyList" value="{{item.code}}">{{item.codeText}}</option>-->
+                            </select>
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="">参加工作日期</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control r-inline add-date laydate-icon" id="worktdate" readonly ng-model="record.worktdate" placeholder="请选择日期">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                        <label class="col-lg-2 col-sm-3 control-label" for="partyMoney">月缴纳党费金额（元）</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" name="partyMoney" id="partyMoney" placeholder="请输入月缴纳党费金额（元）" ng-model="record.partyMoney">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="otherParty">其他党团</label>
+                        <div class="col-sm-2">
+
+                            <select class="form-control add-select" ng-model="record.otherParty">
+                                <option value="">请选择</option>
+                                <option ng-repeat="item in dropdowmList.otherPartyList" value="{{item.code}}">{{item.codeText}}</option>
+                            </select>
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                        <label class="col-lg-2 col-sm-3 control-label" for="otherPartyDate">加入其他党团日期</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control r-inline add-date laydate-icon" id="otherPartyDate" readonly ng-model="record.otherPartyDate" placeholder="请选择日期">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="remark1">备注一</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="remark1" id="remark1" placeholder="请输入备注" ng-model="record.remark1">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="remark2">备注二</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="remark2" id="" placeholder="请输入备注" ng-model="record.remark2">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="remark3">备注三</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" name="remark3" placeholder="请输入备注" ng-model="record.remark3">
+                            <span class="help-block m-b-none"></span>
+                        </div>
+                    </div>
+
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-sm-3 control-label" for="">个人简介</label>
+                        <div class="col-sm-6">
+                            <script type="text/javascript" charset="utf-8" src="lib/ueditor/ueditor.config.js"></script>
+                            <script type="text/javascript" charset="utf-8" src="lib/ueditor/ueditor.all.min.js"> </script>
+                            <script type="text/javascript" charset="utf-8" src="lib/ueditor/lang/zh-cn/zh-cn.js"></script>
+                            <textarea id="myEditor" name="myEditor" rows="15" cols="80" style="width: 100%; height: 300px; position: relative; z-index: 0;" ng-model="record.remark"></textarea>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="form-group text-center">
+                        <button class="btn btn-primary m-r-20 p-lr-20" type="submit" ng-click="submitss()">{{btnInfo}}</button>
+                        <button class="btn btn-default p-lr-20" type="button" ng-click="cancel()">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

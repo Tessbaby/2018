@@ -1,0 +1,152 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>路北区直机关党建云管理平台</title>
+    <meta name="description" content="iBase4J." />
+    <meta name="viewport" content="width=1000, initial-scale=1.0, maximum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-store">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="author" content="ShenHuaJie">
+
+    <!-- Loading Bootstrap -->
+    <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/lib/css/animate.css" rel="stylesheet" type="text/css" />
+
+    <link href="/lib/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="/lib/laydate/need/laydate.css" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" href="/lib/layer/skin/default/layer.css" id="layuicss-skinlayercss">
+    <link href="/lib/angular/toaster.css" rel="stylesheet" type="text/css" />
+    <link href="/lib/css/style.min.css" rel="stylesheet">
+    <link href="/lib/flat-ui/css/flat-ui.css" rel="stylesheet" type="text/css" />
+    <link href="/res/css/app.css" rel="stylesheet" type="text/css" />
+    <link href="/res/css/style.css" rel="stylesheet" type="text/css" />
+    <!-- <link rel="stylesheet" href="/res/css/awesome-bootstrap-checkbox.css"> -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+</head>
+<body>
+<div ng-hide="loading" class="wrapper-md content">
+    <!-- 数据显示 -->
+    <div class="wrapper-data">
+        <div class="panel panel-default">
+            <!-- 头部 -->
+            <div class="panel-heading clearfix">
+                <div class="w-lg">
+                    <form ng-submit="search(url, param)" class="ng-pristine ng-valid">
+                        <div class="input-group search-box">
+                            <input type="text" class="form-control" ng-model="param.keyword" placeholder="请输入关键字搜索">
+                            <i ng-show="user.keyword" ng-click="clearSearch()" class="fa fa-times-circle text-muted search-clear"></i>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 数据表格 -->
+            <div class="row org-m-t20 m-l-none m-r-none">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped b-t b-light text-center">
+                            <thead>
+                                <tr>
+									<th>选择</th>
+                                    <th>序号</th>
+                                    <th class="text-left">标题</th>
+                                    <th ng-click="sortData(url, 'send_dept_id', param, $event)" class="sortable both text-left">发布组织</th>
+                                    <th>阅读/发送</th>
+                                    <th ng-click="sortData(url, 'create_time', param, $event)" class="sortable both">发布时间</th>
+                                    <th ng-click="sortData(url, 'enable_', param, $event)" class="sortable both">状态</th>
+                                    <th class="text-left">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in pageInfo.data">
+									<td><input type="checkbox" value="1" /></td>
+                                    <td>1</td>
+                                    <td class="text-left">了个无法 </td>
+                                    <td class="text-left">fwefjo</td>
+                                    <td><a ui-sref="main.party.noticeReadList({id: item.id,title:item.title})">12</a></td>
+                                    <td>2017/1/2</td>
+                                    <td>
+                                        <span ng-show="item.enable==1">正常</span>
+                                        <span ng-show="item.enable==-1" class="text-danger">已删除</span>
+                                    </td>
+                                    <td class="text-left">
+                                        <a ui-sref="main.party.noticeDetail({id: item.id})" class="btn btn-outline blue btn-xs m-r-10">详情</a>
+                                        <button class="btn btn-outline red btn-xs m-r-10" ng-show="item.enable!=-1 && hasUpdate" ng-click="delInfo(item.id)">删除</button>
+                                    </td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="subBtn"> 确定</div>
+        </div>
+    </div>
+
+</div>
+
+<script src="/lib/jquery/jquery.min.js"></script>
+    <script src="/lib/jquery/jquery.validate.min.js"></script>
+    <script src="/lib/jquery/jquery.validate.extend.js"></script>
+
+    <script src="/lib/jquery/additional-methods.min.js"></script>
+    <script src="/lib/flat-ui/js/vendor/video.js"></script>
+    <script src="/lib/flat-ui/js/flat-ui.min.js"></script>
+	
+    <!-- ANGULARJS -->
+    <script src="/lib/angular/angular.min.js"></script>
+    <script src="/lib/angular/ocLazyLoad.min.js"></script>
+    <script src="/lib/angular/angular-animate.min.js"></script>
+    <script src="/lib/angular/angular-sanitize.min.js"></script>
+    <script src="/lib/angular/angular-resource.min.js"></script>
+    <script src="/lib/angular/angular-ui-router.js"></script>
+    <script src="/lib/ui-bootstrap-tpls-0.11.0.js"></script>
+
+    <script src="/lib/angular/toaster.js"></script>
+
+    <!-- layer -->
+    <script src="/lib/layer/layer.js"></script>
+    <script src="/lib/layer/layer.extend.js"></script>
+
+    <script src="/lib/angular/ngStorage.js"></script>
+    <script src="/lib/angular/ui-load.js"></script>
+    <script src="/lib/angular/ui-utils.min.js"></script>
+    <script src="/lib/angular/paging.js"></script>
+    <script src="/lib/angular/ng-img-crop.js"></script>
+    <script src="/lib/angular/angular-cookies.js"></script>
+    <!-- <script src="lib/bootstrap/js/bootstrap.js"></script>
+	<script src="lib/datapicker/bootstrap-datepicker.js"></script> -->
+
+    <script src="/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/lib/laydate/laydate.js"></script>
+	<script src="/lib/ueditor/dialogs/internal.js"></script>
+	
+
+    <script>
+	$("#subBtn").click(function(){
+		selectarticleadmin();
+	});
+	function selectarticleadmin()
+    {
+        
+       
+        var str = '<a href="http://www.baidu.com ">百度链接</a>';
+        editor.execCommand("inserthtml", str);//通知公告
+        dialog.close(true);
+        var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+        parent.layer.close(index);    
+		
+    }
+	</script>
+</body>
+</html>
+    

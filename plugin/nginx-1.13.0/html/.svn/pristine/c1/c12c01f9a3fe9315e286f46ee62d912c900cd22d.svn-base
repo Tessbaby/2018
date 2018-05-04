@@ -1,0 +1,156 @@
+<toaster-container toaster-options="{'position-class': 'toast-center', 'close-button':true}"></toaster-container>
+<script type="text/javascript" charset="utf-8" src="lib/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="lib/ueditor/ueditor.all.min.js"> </script>
+<script type="text/javascript" charset="utf-8" src="lib/ueditor/lang/zh-cn/zh-cn.js"></script>
+
+<div class="bg-white bread-crumb">
+  <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+    <li><a ui-href="main"><i class="fa fa-home"></i>组织生活</a></li>
+    <li><a ui-href="main"><i class="fa fa-home"></i>党群活动</a></li>
+    <li class="active" ng-bind="title"></li>
+  </ul>
+</div>
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+  <!-- 数据显示 -->
+  <div class="wrapper-data">
+    <div class="panel panel-default">
+    	<!-- 头部 -->
+	    <div class="panel-heading font-bold">{{title}}
+				<a class="btn btn-sm btn-icon btn-rounded btn-default pull-right m-t-n-xs" ui-sref="main.life.meeting"><i class="text-md fa fa-times text-muted"></i></a>
+	    </div>
+
+	    <div class="panel-body">
+	    	<form class="form-horizontal"  name="organize_form">
+		    	<h4 style="margin-left: 10%;">志愿者服务活动</h4>
+
+		    	<div class="form-group">
+		    		<div  class="col-sm-5" > 
+			    		<label class="col-sm-5 text-right">发布者：</label>
+			    		<label class="col-sm-7 m-n">路北机关党工委</label>
+		    		</div>
+		    		<div  class="col-sm-4" > 
+			    		<label class="col-sm-4 text-right">发布时间：</label>
+			    		<label class="col-sm-7 m-n">2017-04-25 09：22：13</label>
+		    		</div>
+		    	</div>
+
+		    	<div class="form-group">
+	          <label class="col-lg-2 col-sm-3 control-label" for="coverPic">封面图：</label>
+	          <div class="col-sm-6 p-t-10">
+							<img src="" style="width: 230px; height: 410px">
+	          </div>
+	        </div>
+
+	        <div class="form-group">
+	          <label class="col-lg-2 col-sm-3 control-label" for="listPic">列表宣传图：</label>
+	          <div class="col-sm-6 p-t-10">
+							<img src="" style="width: 697px; height: 260px">
+	          </div>
+	        </div>
+
+	        <div class="form-group">
+	          <label class="col-lg-2 col-sm-3 control-label" for="">活动时间：</label>
+	          <div class="col-sm-6 p-t-10">
+							<span>2017-05-01 09：00   ——   2017-05-10 17：00</span>
+	          </div>
+	        </div>
+
+	        <div class="form-group">
+	          <label class="col-lg-2 col-sm-3 control-label" for="">活动地址：</label>
+	          <div class="col-sm-6 p-t-10">
+							<span>路北区政府大院活动室</span>
+	          </div>
+	        </div>
+
+	        <div class="form-group">
+	          <label class="col-lg-2 col-sm-3 control-label" for="">是否公开活动：</label>
+	          <div class="col-sm-6 p-t-10">
+							<span>公开</span>
+	          </div>
+	        </div>
+
+	        <div class="form-group">
+	          <label class="col-lg-2 col-sm-3 control-label" for="">是否开启报名：</label>
+	          <div class="col-sm-6 p-t-10">
+							<span>开启</span>
+	          </div>
+	        </div>
+					
+					<!-- 开启报名时显示 -->
+					<div ng-show="openSign">
+		        <div class="form-group">
+		          <label class="col-lg-2 col-sm-3 control-label" for="">报名限制：</label>
+		          <div class="col-sm-6 p-t-10">
+								<span>允许群众报名</span>
+		          </div>
+		        </div>
+		        <div class="form-group">
+		          <label class="col-lg-2 col-sm-3 control-label" for="">报名截止时间：</label>
+		          <div class="col-sm-6 p-t-10">
+								<span>2017-05-01 07：00</span>
+		          </div>
+		        </div>
+		        <div class="form-group">
+		          <label class="col-lg-2 col-sm-3 control-label" for="">报名须知：</label>
+		          <div class="col-sm-6 p-t-10">
+								<span>报名时请务必填写真实信息，用于活动结束后的抽奖</span>
+		          </div>
+		        </div>
+					</div>
+					<!-- 开启报名时显示 END -->
+
+					<div class="form-group">
+	          <label class="col-lg-2 col-sm-3 control-label" for="">活动描述：</label>
+	          <div class="col-sm-6 p-t-10">
+							<span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+							tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+							quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+							consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+							cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+							proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span>
+	          </div>
+	        </div>
+
+	        <div class="form-group">
+	          <label class="col-lg-2 col-sm-3 control-label" for="">推荐置顶：</label>
+	          <div class="col-sm-6 p-t-10">
+							<span>是</span>
+	          </div>
+	        </div>
+
+	        <!-- 已结束时显示 -->
+	        <!--  详情时显示 -->
+	        <div class="form-group">
+	          <label class="col-lg-2 col-sm-3 control-label" for="">活动风采：</label>
+	          <div class="col-sm-6 p-t-10">
+							<span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+							tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+							quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+							consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+							cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+							proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span>
+	          </div>
+	        </div>
+	        <!--  详情时显示 END -->
+
+	        <!-- 编辑时显示 -->
+					<div class="form-group" style="height: 360px" ng-show="isEnd">
+						<label for="" class="col-lg-2 col-sm-3 p-r-20 w140 text-right"><span class="text-danger wrapper-sm">*</span>活动风采: </label>
+						<div class="col-sm-8 p-t-10">
+							<textarea id="activeEditor" name="activeEditor" rows="15" cols="80" style="width:100%;height:300px;" ng-model="record.mcontent"></textarea>
+						</div>
+					</div>
+					<!-- 编辑时显示 END-->
+
+					<div class="form-group text-center">
+						<button class="btn btn-primary m-r-20 p-lr-20" id="submit">确定</button>
+						<button class="btn btn-default p-lr-20" id="cancel" ng-click="cancel()">取消</button>
+					</div>
+
+		    </form>
+		  </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,119 @@
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<style type="text/css"></style>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><span><i class="fa fa-home">&nbsp;</i>党务办公</span></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+
+<!-- 加载提醒 -->
+<div ng-show="loading" class="text-center m-t-md text-lg"><i class="fa fa-spin fa-spinner"></i>数据加载中...</div>
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+    <!-- 数据显示 -->
+    <div class="wrapper-data">
+        <div class="panel panel-default">
+            <!-- 头部 -->
+            <div class="panel-heading clearfix">
+                <a ui-sref="main.party.noticeAdd" class="btn btn-info pull-right m-l-xs" ng-show="hasUpdate">
+                    <span class="" style="position: relative; top: 1px;"><i class="fa fa-plus text-md"></i></span>
+                    发布
+                </a>
+                <a ui-sref="main.party.noticeListHead" class="btn btn-info pull-right m-l-xs" ng-show="hasUpdate">
+
+                    <span class="" style="position: relative; top: 1px;"><i class="fa fa-plus text-md"></i></span>
+                    添加文件头&落款
+                </a>
+
+                <div class="w-lg">
+                    <form ng-submit="goSearch()" class="ng-pristine ng-valid">
+                        <div class="input-group search-box">
+                            <input type="text" class="form-control" ng-model="param.keyword" placeholder="请输入关键字搜索">
+                            <i ng-show="param.keyword" ng-click="clearSearch()" class="fa fa-times-circle text-muted search-clear"></i>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 数据表格 -->
+            <div class="row org-m-t20 m-l-none m-r-none">
+                <div class="col-md-2 m-r-50">
+                    <div style="border: 1px solid #000; border-bottom: 0; width: 220px; margin-bottom: -10px; background: #f0f6e4; padding: 10px 15px;">
+                        <span>组织机构</span>
+                        <input type="checkbox" id="sy" class="checkbox first inline" /><span>包含下级</span>
+                    </div>
+                    <ul id="treeDemo" class="ztree"></ul>
+                </div>
+                <div class="col-md-9">
+                    <div class="table-responsive" style="width: 105%;">
+                        <table class="table table-striped b-t b-light text-center">
+                            <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th class="text-left">标题</th>
+                                    <th ng-click="sortData(url, 'send_dept_id', param, $event)" class="sortable both text-left">发布组织</th>
+                                    <th>阅读/发送</th>
+                                    <th ng-click="sortData(url, 'create_time', param, $event)" class="sortable both">发布时间</th>
+                                    <th ng-click="sortData(url, 'enable_', param, $event)" class="sortable both">状态</th>
+                                    <th class="text-left">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in pageInfo.data">
+                                    <td>{{ (pageInfo.current-1)*pageInfo.size+$index+1 }}</td>
+                                    <td class="text-left">{{ item.title | cut:true:12:' ...' }} </td>
+                                    <td class="text-left">{{item.sendDeptName}}</td>
+                                    <td><a ui-sref="main.party.noticeReadList({id: item.id,title:item.title})">{{item.readCount}}/{{item.sendCount}}</a></td>
+                                    <td>{{item.createTime}}</td>
+                                    <td>
+                                        <span ng-show="item.enable==1">正常</span>
+                                        <span ng-show="item.enable==-1" class="text-danger">已删除</span>
+                                    </td>
+                                    <td class="text-left">
+                                        <a ui-sref="main.party.noticeDetail({id: item.id})" class="btn btn-outline blue btn-xs m-r-10">详情</a>
+                                        <button class="btn btn-outline red btn-xs m-r-10" ng-show="item.enable!=-1 && hasDelete && item.allowDel==1" ng-click="delInfo(item.id)">删除</button>
+                                    </td>
+                                </tr>
+                                <!-- <tr ng-repeat="item in pageInfo.data">
+									<td><img class="thumb-lg" ng-src="{{item.avatar || defaultAvatar}}" /></td>
+									<td class="v-middle">{{item.account}}</td>
+									<td class="v-middle">{{item.userName}}</td>
+									<td class="v-middle">{{item.phone}}</td>
+									<td class="v-middle">{{item.deptName}}</td>
+									<td class="v-middle">{{item.userTypeText}}</td>
+									<td class="v-middle">
+										<span ng-hide="item.enable==1" class="text-danger">禁用</span>
+										<span ng-show="item.enable==1" class="text-success">启用</span>
+									</td>
+									<td class="v-middle">
+										<a ui-sref="main.sys.user.update({id: item.id})" class="btn btn-sm btn-default">
+											<i class="fa fa-edit m-r-xs text-sm"></i>编辑</a>
+										<button type="button" ng-show="item.enable==1"  ng-click="disableItem(item.id,0)" class="btn btn-sm btn-default m-l-xs">
+											<i class="fa fa-ban m-r-xs text-sm"></i>禁用</button>
+										<button type="button" ng-hide="item.enable==1"  ng-click="disableItem(item.id,1)" class="btn btn-sm btn-default m-l-xs">
+											<i class="fa fa-check m-r-xs text-sm"></i>启用</button>
+										<button type="button"  class="btn btn-sm btn-default m-l-xs" disabled="disabled">
+											<i class="fa fui-power m-r-xs text-sm"></i>权限</button>
+									</td>
+								</tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- 底部分页 -->
+            <span data-ng-include=" 'src/tpl/pageInfo.html' "></span>
+        </div>
+    </div>
+
+</div>
+

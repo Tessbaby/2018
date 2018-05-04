@@ -1,0 +1,438 @@
+'use strict';
+
+angular.module('app')
+	.controller('baseInfoAddController', ['$rootScope', '$scope', '$http', '$state',
+	  function ($rootScope, $scope, $http, $state) {
+
+	      $scope.record = {};
+	      $scope.record.keyword = '';
+	      $scope.btnInfo = '提交';
+	      $scope.btnState = false;
+	      // var zNodes;
+
+	      // getInfo('SEX', 'sex');
+	      // getInfo('NATION', 'nation');
+	      // // getInfo('KNOWAGE', 'whcd');
+	      // getInfo('DUTYTYPE', 'dnzw');
+
+	      // getTreeList();
+	      // setDate();
+
+	      // if ($state.includes('**.partyners.update')) {
+	      //     $scope.title = '编辑';
+	      //     var id = $state.params.id;
+	      //     $scope.record.keyword = id;
+	      //     activate(id);
+	      //     validate(id);
+	      // } else if ($state.includes('**.partyners.add')) {
+	      //     $scope.title = '添加';
+	      //     $scope.record.sex = '2';
+	      //     validate(null);
+	      // }
+	       function getSexList() {
+	           var infoParam = {
+	               enable: 1,
+	               type: "SEX"
+	           };
+	           $.ajax({
+	               type: 'PUT',
+	               url: '/iBase4J-SYS-Web/dic/read/list',
+	               dataType: 'json',
+	               //async: false,
+	               contentType: 'application/json;charset=UTF-8',
+	               data: angular.toJson(infoParam)
+	           }).then(function (result) {
+	               if (result.httpCode == 200) {
+	                   $scope.sexList = result.data;
+	                   if ($scope.sexList.length > 0) {
+	                       $scope.record.nation = $scope.sexList[0].code;
+	                   }
+	               } else {
+	                   alertDialog(result.msg, 2);
+	               }
+	           });
+
+	       }
+	       getSexList();
+	      // // 获取页面数据
+	      // function getInfo(_type, list) {
+	      //     var infoParam = {
+	      //         enable: 1,
+	      //         keyword: $scope.record.keyword,
+	      //         type: _type
+	      //     };
+	      //     $.ajax({
+	      //         type: 'PUT',
+	      //         url: '/iBase4J-SYS-Web/dic/read/list?' + Math.random(),
+	      //         dataType: 'json',
+	      //         async: false,
+	      //         contentType: 'application/json;charset=UTF-8',
+	      //         data: angular.toJson(infoParam)
+	      //     }).then(function (result) {
+	      //         if (result.httpCode == 200) {
+	      //             if (list == 'sex') { $scope.sexList = result.data; }
+	      //             else if (list == 'nation') {
+	      //                 $scope.nationList = result.data;
+
+	      //             }
+	      //             // else if (list == 'whcd') {
+	      //             //     $scope.whcdList = result.data;
+	      //             // }
+	      //             else if (list == 'dnzw') {
+	      //                 $scope.dnzwList = result.data;
+	      //             }
+	      //         } else {
+	      //             alertDialog(result.msg, 2);
+	      //         }
+
+	      //         //$scope.$apply();
+	      //     });
+	      // }
+	      // //百度编辑器
+	      // var myEditor = UE.getEditor("myEditor", {
+	      //     topOffset: 0,
+	      //     autoFloatEnabled: false,
+	      //     autoHeightEnabled: false,
+	      //     wordCount: false,
+	      //     autotypeset: {
+	      //         removeEmptyline: true
+	      //     },
+	      //     toolbars: [
+       //            [
+       //                //'source', //源代码
+       //                'bold', //加粗
+       //                'forecolor', //字体颜色
+       //                'indent', //首行缩进
+       //                'italic', //斜体
+       //                'underline', //下划线
+       //                  'insertvideo', //视频                          
+       //                       'simpleupload', //单图上传
+       //                       'insertimage', //多图上传
+       //                //'inserttable', //插入表格
+       //                'link', //超链接
+       //                'removeformat',//清除格式
+       //                'huodong',
+
+       //            ]
+	      //     ]
+	      // });
+	      // var setting = {
+	      //     view: {
+	      //         dblClickExpand: false,
+	      //         showIcon: false
+	      //     },
+	      //     data: {
+	      //         key: {
+	      //             name: "deptName"
+	      //         },
+	      //         simpleData: {
+	      //             enable: true,
+	      //             idKey: "id",
+	      //             pIdKey: "parentId",
+	      //             rootPId: 0
+	      //         }
+	      //     },
+	      //     callback: {
+	      //         onClick: onClick
+	      //     }
+	      // };
+
+	      // // 获取党组织树 dept/read/treelist
+	      // function getTreeList() {
+	      //     $.ajax({
+	      //         type: 'PUT',
+	      //         url: '/iBase4J-SYS-Web/dept/read/treelist2',
+	      //         dataType: 'json',
+	      //         contentType: 'application/json;charset=UTF-8',
+	      //         data: angular.toJson({}),
+	      //         // async: false,
+	      //     }).then(function (result) {
+	      //         zNodes = result.data;
+	      //         $.fn.zTree.init($('#treeDemo'), setting, zNodes);
+	      //         // console.log(result);
+	      //     });
+	      // }
+
+	      // function onClick(e, treeId, treeNode) { // 选择元素触发
+	      //     var zTree = $.fn.zTree.getZTreeObj('treeDemo'),
+       //        nodes = zTree.getSelectedNodes(),
+       //        v = '',
+       //        ids = '';
+	      //     nodes.sort(function compare(a, b) { return a.id - b.id; });
+
+	      //     for (var i = 0, l = nodes.length; i < l; i++) {
+	      //         v += nodes[i].deptName + ',';
+	      //         ids += nodes[i].id + ',';
+	      //     }
+
+	      //     if (v.length > 0) v = v.substring(0, v.length - 1);
+	      //     var idObj = $('#deptId');
+	      //     idObj.attr('value', v);
+
+	      //     // 将选中的id放到隐藏的文本域中
+	      //     if (ids.length > 0) {
+	      //         ids = ids.substring(0, ids.length - 1);
+	      //     }
+	      //     var treeids = $('#treeids');
+	      //     treeids.attr('value', ids);
+	      //     $scope.record.deptId = ids;
+	      // }
+
+	      // $scope.showMenu = function () {
+	      //     var idObj = $('#deptId');
+	      //     var idOffset = $('#deptId').offset();
+	      //     $('#menuContent').slideDown('fast');
+	      //     $('body').bind('mousedown', onBodyDown);
+	      // }
+
+	      // $scope.hideMenu = function () {
+	      //     $('#menuContent').fadeOut('fast');
+	      //     $('body').unbind('mousedown', onBodyDown);
+	      // }
+
+	      // function onBodyDown(event) {
+	      //     if (!event.target.id == 'menuContent' || $(event.target).parents('#menuContent').length == 0) {
+	      //         if (event.target.id != 'deptId') {
+	      //             $scope.hideMenu();
+	      //         }
+	      //     }
+	      // }
+	      // // 获取党组织树 END
+
+	      // var dateState = true;
+
+	      // // 日期
+	      // function setDate() {
+	      //     laydate({
+	      //         elem: '#birthDay',
+	      //         format: 'YYYY-MM-DD',
+	      //         choose: function (dates) {
+	      //             console.log($(this.elem).val());
+	      //             var _date = dates;
+	      //             curCompare(_date);
+	      //             if ($scope.record.worktdate) {
+	      //                 diffCompare(_date, '出生日期', $scope.record.worktdate, '参加工作时间');
+	      //             } else if ($scope.record.otherPartyDate) {
+	      //                 diffCompare(_date, '出生日期', $scope.record.rddate, '入党时间');
+	      //             }
+	      //             if (!dateState) {
+	      //                 $(this.elem).val(''); dateState = true
+	      //             } else {
+	      //                 $scope.record.birthDay = dates;
+	      //             }
+	      //         }
+	      //     });
+	      //     laydate({
+	      //         elem: '#worktdate',
+	      //         format: 'YYYY-MM-DD',
+	      //         choose: function (dates) {
+	      //             var _date = dates;
+	      //             curCompare(_date);
+	      //             if ($scope.record.birthDay) {
+	      //                 diffCompare($scope.record.birthDay, '出生日期', _date, '参加工作时间');
+	      //             }
+	      //             if (!dateState) {
+	      //                 $(this.elem).val(''); dateState = true
+	      //             } else {
+	      //                 $scope.record.worktdate = dates;
+	      //             }
+	      //         }
+	      //     });
+	      //     // laydate({
+	      //     //     elem: '#rddate',
+	      //     //     format: 'YYYY-MM-DD',
+	      //     //     choose: function (dates) {
+	      //     //         var _date = dates;
+	      //     //         curCompare(_date);
+	      //     //         if ($scope.record.zzdate) {
+	      //     //             diffCompare(_date, '入党时间', $scope.record.zzdate, '转正时间');
+	      //     //         } else if ($scope.record.birthDay) {
+	      //     //             diffCompare($scope.record.birthDay, '出生日期', _date, '入党时间');
+	      //     //         }
+	      //     //         if (!dateState) {
+	      //     //             $(this.elem).val(''); dateState = true
+	      //     //         } else {
+	      //     //             $scope.record.rddate = dates;
+	      //     //         }
+	      //     //     }
+	      //     // });
+	      //     laydate({otherPartyDate
+	      //         elem: '#otherPartyDate',
+	      //         format: 'YYYY-MM-DD',
+	      //         choose: function (dates) {
+	      //             var _date = dates;
+	      //             curCompare(_date);
+	      //             if ($scope.record.birthDay) {
+	      //                 diffCompare($scope.record.birthDay, '出生日期', _date, '入党时间');
+	      //             }
+	      //             if (!dateState) {
+	      //                 $(this.elem).val(''); dateState = true
+	      //             } else {
+	      //                 $scope.record.rddate = dates;
+	      //             }
+	      //         }
+	      //     });
+	      // }
+
+	      // var submit = function () {
+	      //     $scope.record.remark = myEditor.getContent();
+	      //     var m = angular.copy($scope.record);
+	      //     m.deptId = parseInt(m.deptId);
+	      //     m.sex = parseInt(m.sex);
+	      //     if (id) m.id = id;
+	      //     if (!m.deptId) {
+	      //         alertDialog("所属组织不能为空", 2);
+
+	      //         return;
+	      //     } else if (!m.birthDay) {
+	      //         alertDialog("出生日期不能为空", 2);
+	      //         return;
+	      //     } else if (!m.rddate) {
+	      //         alertDialog("入党日期不能为空", 2);
+	      //         return;
+	      //     }
+	      //     // console.log(m);
+	      //     $scope.btnInfo = '提交中...';
+	      //     $scope.btnState = true;
+	      //     $.ajax({
+	      //         type: 'post',
+	      //         url: '/iBase4J-SYS-Web/user',
+	      //         dataType: 'json',
+	      //         contentType: 'application/json;charset=UTF-8',
+	      //         data: angular.toJson(m)
+	      //     }).then(function (result) {
+	      //         // console.log(result);
+	      //         if (result.httpCode == 200) {
+	      //             tipDialog("保存成功", 1, 0.8 * 1000, function () {
+	      //                 $state.go('main.partyner');
+	      //             });
+	      //         } else {
+	      //             alertDialog(result.msg, 2);
+	      //         }
+	      //         $scope.btnInfo = '添加';
+	      //         $scope.btnState = false;
+	      //         $scope.$apply();
+	      //     });
+	      // }
+
+
+
+	      // // 表单验证
+	      // function validate(userId) {
+	      //     var validator = jQuery('form').validate({
+	      //         ignore: "",
+	      //         rules: {
+	      //             userName: { required: true, maxlength: 60 },
+	      //             birthDay: { required: true, date: true },
+	      //             worktdate: { date: true },
+	      //             zzdate: { date: true },
+	      //             deptId: { required: true, },
+	      //             phone: { required: true, isMobile: true }, // 手机号
+	      //             rddate: { required: true, date: true },
+	      //             sex: { required: true },
+	      //             staff: { maxlength: 60 },
+	      //             wxNumber: { maxlength: 60 },
+	      //             identifienumber: { isIdCardNo: true }, // 身份证号
+	      //             address: { maxlength: 60 },
+	      //             email: { email: true },
+	      //             remark: { maxlength: 60 },
+	      //             myEditor: {
+	      //                 maxLengthB: [1024]
+
+	      //             }
+	      //         },
+	      //         messages: {
+	      //             userName: { required: '请填写姓名', maxlength: '长度不能超过60个字符' },
+	      //             birthDay: { required: '出生日期为必填', date: '日期格式不正确' },
+	      //             worktdate: { date: '日期格式不正确' },
+	      //             zzdate: { date: '日期格式不正确' },
+	      //             deptId: { required: '请选择部门' },
+	      //             phone: { required: '请填写手机号码' },
+	      //             rddate: { required: '入党时间为必填', date: '日期格式不正确' },
+	      //             sex: { required: '请选择性别' },
+	      //             staff: { maxlength: '长度不能超过60个字符' },
+	      //             wxNumber: { maxlength: '长度不能超过60个字符' },
+	      //             address: { maxlength: '长度不能超过60个字符' },
+	      //             email: { email: '请输入正确的邮箱' },
+	      //             remark: { maxlength: '长度不能超过60个字符' },
+	      //             myEditor: {
+	      //                 maxLengthB: "简介不得超过{0}个字符"
+
+	      //             }
+	      //         },
+	      //         submitHandler: function () {
+	      //             submit();
+	      //         }
+	      //     })
+	      //     validator.focusInvalid = function () {
+	      //         if (this.settings.focusInvalid) {
+	      //             try {
+	      //                 var toFocus = $(this.findLastActive() || this.errorList.length && this.errorList[0].element || []);
+	      //                 if (toFocus.is("textarea")) {
+	      //                     UE.getEditor('myEditor').focus()
+	      //                 } else {
+	      //                     toFocus.filter(":visible").focus();
+	      //                 }
+	      //             } catch (e) {
+	      //             }
+	      //         }
+	      //     }
+	      // }
+
+	      // // 编辑时获取详情
+	      // function activate(userId) {
+	      //     var id = parseInt(userId)
+	      //     $.ajax({
+	      //         type: 'put',
+	      //         url: '/iBase4J-SYS-Web/user/read/detail',
+	      //         dataType: 'json',
+	      //         contentType: 'application/json;charset=UTF-8',
+	      //         data: angular.toJson({ id: id })
+	      //     }).then(function (result) {
+	      //         console.log(result);
+	      //         if (result.httpCode == 200) {
+	      //             $scope.record = result.data;
+	      //             if ($scope.record.remark != "") {
+	      //                 myEditor.ready(function () {//编辑器初始化完成再赋值  
+	      //                     myEditor.setContent($scope.record.remark);  //赋值给UEditor  
+	      //                 });
+	      //             }
+	      //             $('#deptId').attr('value', $scope.record.deptName);
+	      //             $('#treeids').attr('value', $scope.record.deptId);
+	      //             // console.log($scope.record.sex)
+	      //         } else {
+	      //             alertDialog(result.msg, 2);
+	      //         }
+	      //         $scope.$apply();
+	      //     });
+	      // }
+
+	      // $scope.cancel = function () {
+	      // 	layer.confirm('您确认放弃本次编辑吗？' ,function (index) {
+		     // 		layer.close(index);
+		     // 		$state.go('main.partyner');
+		     // 	})
+	      // }
+
+	      // // 比较时间先后 a > b;
+	      // function diffCompare(aTime, aTxt, bTime, bTxt) {
+	      //     var d1 = new Date(aTime.replace(/\-/g, "\/"));
+	      //     var d2 = new Date(bTime.replace(/\-/g, "\/"));
+	      //     if (aTime != '' && bTime != '' && d1 >= d2) {
+	      //         layer.alert(aTxt + '不能超过' + bTxt + '或与' + bTxt + '相同', { icon: -1 })
+	      //         // return false;
+	      //         dateState = false;
+	      //     }
+	      // }
+	      // // 与现在比较
+	      // function curCompare(time) {
+	      //     var current = new Date();
+	      //     var _time = time;
+	      //     var d1 = new Date(_time.replace(/\-/g, "\/"));
+	      //     if (_time != "" && current != "" && d1 > current) {
+	      //         layer.alert('不能超过今天', { icon: -1 })
+	      //         // return false;
+	      //         dateState = false;
+	      //     }
+	      // }
+	  }]);

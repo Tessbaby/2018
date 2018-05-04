@@ -1,0 +1,69 @@
+<toaster-container toaster-options="{'position-class': 'toast-center', 'close-button':true}"></toaster-container>
+<!-- <script type="text/javascript" src="./lib/bootstrap-table.js"></script>
+<script type="text/javascript" src="./lib/bootstrap-table-zh-CN.js"></script> -->
+<style>
+    .img-sm {
+        width: 50px;
+        height: 50px;
+    }
+</style>
+
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><a ui-href="main"><i class="fa fa-home"></i>系统设置</a></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+
+<!-- 加载提醒
+<div ng-show="loading" class="text-center m-t-md text-lg"><i class="fa fa-spin fa-spinner"></i> 数据加载中...</div> -->
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+    <!-- 数据显示 -->
+    <div class="wrapper-data">
+        <div class="panel panel-default">
+            <!-- 头部 -->
+            <div class="panel-heading clearfix">
+                <a class="btn btn-info pull-right m-l-xs" ng-show="hasUpdate" ui-sref="main.setting.setImageAdd()">
+                    <i class="icon-user-follow m-r-sm text-md"></i>
+                    添加宣传图
+                </a>
+
+                <!-- 数据表格 -->
+                <div class="row org-m-t20 m-l-none m-r-none" style="margin-top: 50px;">
+                    <div class="table-responsive">
+                        <table class="table table-striped b-t b-light text-center">
+                            <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th>缩略图</th>
+                                    <th>描述</th>
+                                    <th ng-click="sortData(url, 'create_time', param,$event)" class="sortable both">上传时间</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in pageInfo.data">
+                                    <td class="text-left">{{ item.id }}
+                                    </td>
+                                    <td>
+                                        <img ng-src="{{item.imgs}}" class="img-sm" ng-click="boostImg(item.imgs)" />
+                                    </td>
+                                    <td title="{{item.remark}}">{{ item.remark.length > 20 ? item.remark.substr(0, 20) + '...' : item.remark }}</td>
+                                    <td>{{ item.createTime }}</td>
+                                    <td>
+                                        <button class="btn btn-outline blue btn-xs m-r-10" ui-sref="main.setting.setImageAdd({id: item.id})"  ng-show="hasUpdate">编辑</button>
+                                        <button class="btn btn-outline red btn-xs m-r-10" ng-click="cancelImg(item.id) "  ng-show="hasDelete">删除</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- 底部分页 -->
+                <span data-ng-include=" 'src/tpl/pageInfo.html' "></span>
+            </div>
+        </div>
+    </div>

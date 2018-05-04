@@ -1,0 +1,134 @@
+'use strict';
+
+	angular.module('app')
+		.controller('topicController', [ '$rootScope', '$scope', '$http', '$state', 'toaster',
+										function($rootScope, $scope, $http, $state, toaster) {
+					
+		/*初始化页面*/
+		//console.log($state.params.typeCode);return;
+		$scope.param = {};
+		
+		$scope.imgData = [];
+		$scope.imgUpFlag = true;
+		$scope.fileUpFlag = true;
+		$scope.thumb = [];
+		$scope.thumbLength = 0;
+		
+		$scope.title = "编辑";
+		
+		$scope.loading = true;
+		$scope.record = {};
+		//$scope.record.id = $state.params.id;
+		$scope.param.typeCode = $state.params.typeCode;
+		console.log($scope.param.typeCode);
+		
+		
+		
+		//初始化编辑数据
+		
+		$.ajax({
+			 type: 'put',
+			 url: $rootScope.baseUrl+'/articleType/queryDetail',
+			 dataType: 'json',
+			 contentType: 'application/json;charset=UTF-8',
+			 data: angular.toJson({ 'id': $scope.param.typeCode })
+		}).then(function (result) {
+			 console.log(result);
+			 $scope.loading = false;
+			 if (result.httpCode == 200) {
+				 $scope.record = result.data;
+			 } else {
+				 $scope.msg = result.msg;
+			 }
+			 $scope.$apply();
+
+		});
+		
+		
+		
+		//自定义上传附件
+		$scope.reader2 = new FileReader();  //创建一个FileReader接口 
+		$scope.file_upload = function(evt) {    //单次提交图片的函数
+			var fileInfo2=evt.currentTarget.files[0];
+			$scope.guid = (new Date()).valueOf();
+			$scope.reader2.readAsDataURL(fileInfo2); //FileReader的方法，把图片转成base64
+			
+			$scope.reader2.onload = function(ev) {
+				$scope.$apply(function(){
+					//$scope.imgSrc = ev.target.result;
+					$scope.thumb.push({
+						file:ev.target.result,
+						filename:fileInfo2.name
+					});
+					$scope.thumbLength = $scope.thumb.length;
+				});
+			};
+		};
+		angular.element(document.querySelector('#uploadFiles')).on('change',$scope.file_upload);
+		$('.upload-file-box a').click(function() {
+			$('#uploadFiles').click();
+		});		
+ 
+		$scope.file_del = function(key) {  //删除，删除的时候thumb和form里面的图片数据都要删除，避免提交不必要的
+			$scope.thumb.splice(key,1);
+			$scope.thumbLength = $scope.thumb.length;
+		};
+		
+		//提交表单
+        $scope.submit= function(){
+            $scope.loading = true;
+			
+			if($scope.thumb.length > 0){
+				$scope.fileUpFlag = false;
+				$.ajax({
+					type: 'POST',
+					url : 'http://118.190.172.83:8011/wx/djuploadFile',
+					async: false,
+					contentType:'application/json;charset=UTF-8',
+					data:angular.toJson($scope.thumb)
+				}).then(function(result){
+						//var resultNew = $.parseJSON(result);
+						var resultNew = result;
+						if(resultNew && resultNew.httpCode ==200){//成功
+							
+							$scope.record.filePath = resultNew.data;
+							$scope.fileUpFlag = true;
+						}else if(resultNew && resultNew.httpCode ==400){
+							//saveData();
+						}
+				});
+			}
+			if ($scope.imgUpFlag && $scope.fileUpFlag){
+				saveData();
+			}
+        };
+
+        function saveData(){
+            var m = $scope.record;
+			console.log(m);
+            if(m){
+                $scope.isDisabled = true;//提交disabled
+                $.ajax({
+                	type: 'POST',
+    				url : $rootScope.baseUrl+'/article/update',
+    	            dataType: 'json',
+    				contentType:'application/json;charset=UTF-8',
+    				data: angular.toJson(m)
+    			}).then(callback);
+            }
+            function callback(result){
+                if(result.httpCode ==200){//成功
+                	toaster.clear('*');
+                    toaster.pop('success', '', "保存成功");
+                    $state.go('main.article.list',{typeCode:$scope.record.typeCode});
+                }else{
+                    toaster.clear('*');
+                    toaster.pop('error', '', result.msg);
+                    $scope.isDisabled = false;
+                }
+                $scope.loading = false;
+            }
+        }
+		
+	
+} ]);

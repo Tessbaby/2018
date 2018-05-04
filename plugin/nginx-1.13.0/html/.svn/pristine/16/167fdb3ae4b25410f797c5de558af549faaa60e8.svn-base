@@ -1,0 +1,8 @@
+'use strict';
+
+angular.module('app')
+	.controller('signListController', [ '$rootScope', '$scope', '$http', '$state','toaster',
+	  function($rootScope, $scope, $http, $state,toaster) {
+	  	$scope.title = '报名详情';
+	  	$scope.pageInfo = [];
+	  }])

@@ -1,0 +1,84 @@
+'use strict';
+
+angular.module('app')
+	.controller('listHeadController', [ '$rootScope', '$scope', '$http', '$state',
+	                                function($rootScope, $scope, $http, $state) {
+		$scope.title = '文件头&落款';
+		$scope.param = {};
+        $scope.loading = false;
+        
+		$scope.search = function () {
+	        $scope.loading = true;
+			$.ajax({
+				type: 'PUT',
+	            dataType: 'json',
+				contentType:'application/json;charset=UTF-8',
+				url : '/iBase4J-SYS-Web/noticeHeader/header/list',
+				data: angular.toJson($scope.param)
+			}).then(function(result) {
+		        $scope.loading = false;
+				if (result.httpCode == 200) {
+					$scope.pageInfo = result;
+				} else {
+					$scope.msg = result.msg;
+				}
+				$scope.$apply();
+			});
+		}
+		
+		$scope.search();
+		
+		// 翻页
+        $scope.pagination = function (page) {
+            $scope.param.pageNum=page;
+            $scope.search();
+        };
+		
+		//设置默认值
+		$scope.setDefault = function(id) {
+			$.ajax({
+				type: 'post',
+	            dataType: 'json',
+				contentType:'application/json;charset=UTF-8',
+				url : '/iBase4J-SYS-Web/noticeHeader/header/updateDefault',
+				data: angular.toJson({"id":id})
+			}).then(function(result) {
+		        $scope.loading = false;
+				console.log(result);
+				if (result.httpCode == 200) {
+					//$scope.pageInfo = result;
+					$scope.search();
+				} else {
+					$scope.msg = result.msg;
+				}
+				$scope.$apply();
+			});
+		}
+		//删除
+		$scope.delInfo = function(id) {
+			if(confirm('确认要删除？')){
+				$.ajax({
+					type: 'post',
+					dataType: 'json',
+					contentType:'application/json;charset=UTF-8',
+					url : '/iBase4J-SYS-Web/noticeHeader/header/delete',
+					data: angular.toJson({"id":id,"enable":"-1"})
+				}).then(function(result) {
+					$scope.loading = false;
+					console.log(result);
+					if (result.httpCode == 200) {
+						$scope.search();
+					} else {
+						$scope.msg = result.msg;
+					}
+					$scope.$apply();
+				});
+			}
+		}
+		
+		
+		
+		
+		
+		
+} ]);

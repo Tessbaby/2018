@@ -1,0 +1,125 @@
+'use strict';
+
+angular.module('app')
+	.controller('detailHeadController', ['$rootScope', '$scope', '$http', '$state',
+	    function ($rootScope, $scope, $http, $state) {
+	        $scope.title = "详情";
+	        $scope.loading = true;
+	        $scope.id = $state.params.id;
+
+	        //党组织结构设置
+	        var setting = {
+	            check: {
+	                enable: true
+	            },
+	            data: {
+	                key: {
+	                    id: "id",
+	                    children: "children",
+	                    name: "deptName"
+	                }
+	            },
+	            callback: {
+	                onCheck: onCheck
+	            }
+	        };
+	        //包含下级
+	        function setCheck() {
+	            var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+                sy = $("#sy").prop("checked");
+	            var type;
+	            if (sy) {
+	                type = { "Y": "s", "N": "s" };
+	            } else {
+	                type = { "Y": "", "N": "" };
+	            }
+	            //console.log(type);
+	            zTree.setting.check.chkboxType = type;
+	        }
+	        //获取选中子级
+	        function onCheck(e, treeId, treeNode) {
+	            var arrNodes = new Array();
+	            var treeObj = $.fn.zTree.getZTreeObj("treeDemo"),
+                nodes = treeObj.getCheckedNodes(true);
+	            for (var i = 0; i < nodes.length; i++) {
+	                arrNodes.push(nodes[i].id);
+	            }
+	            $scope.param.sendDeptId = arrNodes.join(",");
+	            //console.log($scope.param.sendDeptId);
+	            $scope.search();
+	        }
+	        //党组织结构树
+	        $.ajax({
+	            type: 'PUT',
+	            dataType: 'json',
+	            contentType: 'application/json;charset=UTF-8',
+	            url: '/iBase4J-SYS-Web/dept/read/treelist2',
+	            data: ''
+	        }).then(function (result) {
+	            $scope.loading = false;
+	            if (result.httpCode == 200) {
+	                //console.log(result);
+	                var zNodes = result.data;
+	                var treeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+	                treeObj.expandAll(true);
+	                setCheck();
+	                $("#sy").bind("change", setCheck);
+	            } else {
+	                // $scope.msg = result.msg;
+	                alertDialog(result.msg, 2);
+	            }
+	            $scope.$apply();
+	        });
+
+	        //通知公告内容
+	        $.ajax({
+	            type: 'PUT',
+	            dataType: 'json',
+	            contentType: 'application/json;charset=UTF-8',
+	            url: '/iBase4J-SYS-Web/notice/detail',
+	            data: angular.toJson({ "id": $scope.id })
+	        }).then(function (result) {
+	            $scope.loading = false;
+	            console.log(result);
+	            if (result.httpCode == 200) {
+	                $scope.data = result.data;
+	                $scope.filePath = $.parseJSON(result.data.filePath);
+	            } else {
+	               
+	                alertDialog(result.msg, 2);
+	            }
+	            $scope.$apply();
+	        });
+
+
+
+
+
+	        /*var setting = {
+                check: {
+                    enable: true,
+                    chkDisabledInherit: true
+                },
+                data: {
+                    simpleData: {
+                        enable: true
+                    }
+                }
+            };
+    
+            var zNodes =[
+                { id:1, pId:0, name:"区委办公室",chkDisabled:true, open:true},
+                { id:11, pId:1, name:"第一组"},
+                { id:12, pId:1, name:"第二组"},
+                { id:12, pId:1, name:"第二组"},
+                { id:2, pId:0, name:"区政府办公室",chkDisabled:true,},
+                { id:21, pId:2, name:"第一小组"},
+                { id:3, pId:0, name:"区人大办公室", chkDisabled:true,checked:true}
+            ];
+            
+            $(document).ready(function(){
+                $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+                
+            });*/
+
+	    }]);

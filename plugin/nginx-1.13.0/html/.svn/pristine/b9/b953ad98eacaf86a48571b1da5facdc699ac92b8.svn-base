@@ -1,0 +1,271 @@
+'use strict';
+
+angular.module('app')
+	.controller('articleList2Controller', ['$rootScope', '$scope', '$http', '$state',
+	     function ($rootScope, $scope, $http, $state) {
+
+
+	         $scope.param = {};
+	         $scope.param.typeCode = $state.params.typeCode;
+	         //=======================================验证权限 statr===================================
+	         //权限模块代码
+	         /*$scope.permissionCode = $state.$current.name + '.' + $scope.param.typeCode;
+	         $scope.hasQuery = $.inArray($scope.permissionCode + '.query', $rootScope.permissionList) != -1;
+	         $scope.hasUpdate = $.inArray($scope.permissionCode + '.update', $rootScope.permissionList) != -1;
+	         $scope.hasDelete = $.inArray($scope.permissionCode + '.delete', $rootScope.permissionList) != -1;
+
+	         $scope.HasQureyType = $.inArray($scope.permissionCode + '.qureyType', $rootScope.permissionList) != -1;
+	         $scope.HasUpdateType = $.inArray($scope.permissionCode + '.deleteType', $rootScope.permissionList) != -1;
+	         $scope.HasDeleteType = $.inArray($scope.permissionCode + '.updateType', $rootScope.permissionList) != -1;
+
+	         if (!$scope.hasQuery) {
+	             layer.alert("未经授权，禁止访问！", { icon: 2 });
+	             history.go(-1);
+	             return false;
+	         }*/
+
+	         //=======================================验证权限 end===================================
+
+	         $scope.url = $rootScope.baseUrl + '/article/list';
+	         $scope.categoryId = '0';
+	         console.log($state.$current.name);
+	         //$scope.mId = '';
+	         switch ($scope.param.typeCode) {
+	             case '1':
+	                 $scope.title = '作风建设';
+	                 break;
+	             case '2':
+	                 $scope.title = '';
+	                 break;
+	             case '3':
+	                 $scope.title = '文明创建';
+	                 break;
+	             default:
+	                 $scope.title = '党建快报';
+	                 break;
+
+	         }
+
+	         //判断是否有专题与分类
+	         $.ajax({
+	             type: 'PUT',
+	             dataType: 'json',
+	             async: false,
+	             contentType: 'application/json;charset=UTF-8',
+	             url: $rootScope.baseUrl + '/articleType/query',
+	             data: angular.toJson({ "code": $scope.param.typeCode })
+	         }).then(function (result) {
+	             if (result.httpCode == 200) {
+	                 console.log(result.data);
+	                 $scope.cateAndImg = result.data;
+	                 //$scope.mId = $scope.cateAndImg.isSpecial == 1?$scope.cateAndImg.id:'';
+
+	             } else {
+	                 alertDialog(result.msg, 2);
+	             }
+	             //$scope.$apply();
+	         });
+
+	         //分类		
+	         if ($scope.cateAndImg.isCategory == 1) {
+	             $.ajax({
+	                 type: 'PUT',
+	                 dataType: 'json',
+	                 async: false,
+	                 contentType: 'application/json;charset=UTF-8',
+	                 url: $rootScope.baseUrl + '/articleCategory/list',
+	                 data: angular.toJson({ "typeId": $scope.param.typeCode })
+	             }).then(function (result) {
+	                 if (result.httpCode == 200) {
+	                     $scope.typeList = result.data;
+	                 } else {
+	                     alertDialog(result.msg, 2);
+	                 }
+	                 //$scope.$apply();
+	             });
+	         }
+
+
+
+	         $scope.clearSearch = function () {
+	             $scope.param.keyword = null;
+	             $rootScope.search($scope.url, $scope.param);
+	         }
+
+	         // 翻页 - 排序翻页数据与此一致
+	         $scope.pagination = function (page) {
+	             $scope.param.pageNum = page;
+	             $scope.param.asc = $rootScope.changeAsc();
+	             $rootScope.search($scope.url, $scope.param);
+	         };
+
+	         $rootScope.pageInfo = []; // 请求数据前清空
+	         $rootScope.search($scope.url, $scope.param);
+	         console.log($rootScope.pageInfo);
+
+	         //删除
+	         $scope.delete = function (id) {
+
+	             if (confirm('确认要删除？')) {
+	                 $scope.loading = true;
+	                 $.ajax({
+	                     type: 'delete',
+	                     url: '/iBase4J-SYS-Web/article',
+	                     data: angular.toJson({ "id": id })
+	                 }).then(function (result) {
+	                     $scope.loading = false;
+	                     //console.log(result);
+	                     if (result.httpCode == 200) {
+	                         tipDialog("删除成功", 1, 0.8 * 1000, function () {
+	                             //如果当前删除数据是第11条，意味着当前页码为2，删除后继续请求第二页数据会返回空数据
+	                             if ($rootScope.pageInfo.data.length == 1 && $scope.param.pageNum > 1) {
+	                                 $scope.param.pageNum = $scope.param.pageNum - 1;
+	                             }
+	                             $rootScope.search($scope.url, $scope.param);
+	                         });
+	                     } else {
+	                         alertDialog(result.msg, 2);
+	                     }
+	                     $scope.$apply();
+	                 });
+	             }
+	         }
+
+
+	         $scope.changeType = function (categoryId) {
+	             if (categoryId == '0') {
+	                 $scope.param.categoryId = '';
+	             } else {
+	                 $scope.param.categoryId = categoryId;
+	             }
+	             $rootScope.search($scope.url, $scope.param);
+	         }
+
+	         //置顶
+	         $scope.changeIsTop = function (id, topId) {
+	             var isTopFlag = false;
+	             if (topId == 1) {
+	                 var confirmInfo = '确认要置顶吗？';
+	             } else {
+	                 var confirmInfo = '确认要取消置顶吗？';
+	             }
+	             if (confirm(confirmInfo)) {
+	                 isTopFlag = true;
+	             }
+	             if (isTopFlag) {
+	                 $.ajax({
+	                     type: 'post',
+	                     dataType: 'json',
+	                     async: false,
+	                     contentType: 'application/json;charset=UTF-8',
+	                     url: $rootScope.baseUrl + '/article/top',
+	                     data: angular.toJson({ "id": id, "isTop": topId, "typeCode": $scope.param.typeCode })
+	                 }).then(function (result) {
+	                     //console.log(result);
+	                     if (result.httpCode == 200) {
+	                         tipDialog("操作成功", 1, 0.8 * 1000, function () {
+	                             //console.log("ss");
+	                             $rootScope.search($scope.url, $scope.param);
+	                         });
+	                     }
+	                         //else if (result.httpCode == 20510) {
+	                         // alertDialog(result.msg, 2);
+	                         //}
+	                     else {
+	                         alertDialog(result.msg, 2);
+	                     }
+	                     //$scope.$apply();
+	                 });
+	             }
+	         }
+
+	         //添加提示
+	         $scope.addInfo = function () {
+	             if ($scope.cateAndImg.isCategory == 1) {//有分类
+	                 var typeLength = $scope.typeList.length;
+	                 if (typeLength > 0) {
+	                     $state.go('main.article2.form', { typeCode: $scope.param.typeCode, id: '', mId: $scope.cateAndImg.id });
+	                 } else {
+	                     alertDialog("请先添加分类", 2);
+	                  
+	                 }
+	             } else {
+	                 $state.go('main.article2.form', { typeCode: $scope.param.typeCode, id: '', mId: '' });
+	             }
+	         }
+
+	         //党组织结构设置
+	        var setting = {
+	            check: {
+	                enable: true,
+	                chkboxType: { "Y": "", "N": "" }
+	            },
+	            data: {
+	                key: {
+	                    name: "deptName"
+	                },
+	                simpleData: {
+	                    enable: true,
+	                    idKey: "id",
+	                    pIdKey: "parentId",
+	                    rootPId: 0
+	                }
+	            },
+	            callback: {
+	                //beforeClick: beforeClick,
+	                onCheck: onCheck
+	            }
+	        };
+	        //包含下级
+	        function setCheck() {
+	            var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+	              sy = $("#sy").prop("checked");
+	            var type;
+	            if (sy) {
+	                type = { "Y": "s", "N": "s" };
+	            } else {
+	                type = { "Y": "", "N": "" };
+	            }
+	            //console.log(type);
+	            zTree.setting.check.chkboxType = type;
+	        }
+	        //获取选中子级
+	        function onCheck(e, treeId, treeNode) {
+	            var arrNodes = new Array();
+	            var treeObj = $.fn.zTree.getZTreeObj("treeDemo"),
+	              nodes = treeObj.getCheckedNodes(true);
+	            for (var i = 0; i < nodes.length; i++) {
+	                arrNodes.push(nodes[i].id);
+	            }
+	            $scope.param.deptId = arrNodes.join(",");
+	            //console.log($scope.param.sendDeptId);
+	            $rootScope.search($scope.url, $scope.param);
+	        }
+	        //点击文字选中复选框
+	        function beforeClick(treeId, treeNode) {
+	            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+	            zTree.checkNode(treeNode, !treeNode.checked, null, true);
+	            return false;
+	        }
+	        //党组织结构树
+	        $.ajax({
+	            type: 'PUT',
+	            dataType: 'json',
+	            contentType: 'application/json;charset=UTF-8',
+	            url: '/iBase4J-SYS-Web/dept/read/treelist2',
+	            data: ''
+	        }).then(function (result) {
+	            $scope.loading = false;
+	            if (result.httpCode == 200) {
+	                //console.log(result);
+	                var zNodes = result.data;
+	                var treeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+	                treeObj.expandAll(true);
+	                setCheck();
+	                $("#sy").bind("change", setCheck);
+	            } else {
+	                alertDialog(result.msg, 2);
+	            }
+	            $scope.$apply();
+	        });
+	     }]);

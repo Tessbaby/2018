@@ -1,0 +1,88 @@
+<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<style type="text/css"></style>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><span><i class="fa fa-home"></i> 党务办公</span></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+
+<!-- 加载提醒 -->
+<div ng-show="loading" class="text-center m-t-md text-lg"><i class="fa fa-spin fa-spinner"></i> 数据加载中...</div>
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+    <!-- 数据显示 -->
+    <div class="wrapper-data">
+        <div class="panel panel-default">
+            <!-- 头部 -->
+            <div class="panel-heading clearfix">
+                <a ui-sref="main.party.filesAdd" class="btn btn-info pull-right m-l-xs">
+                    <i class="icon-user-follow m-r-sm text-md"></i>上传文件
+				</a>				
+                <div class="w-lg">
+                    <form ng-submit="search(url, param)" class="ng-pristine ng-valid">
+                        <div class="input-group search-box">
+                            <input type="text" class="form-control" ng-model="param.keyword" placeholder="账户名、用户名、联系方式">
+                            <i ng-show="user.keyword" ng-click="clearSearch()" class="fa fa-times-circle text-muted search-clear"></i>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 数据表格 -->
+			<div class="row org-m-t20 m-l-none m-r-none">
+				<div class="col-md-2">
+					<div style="border:1px solid #000;border-bottom:0;width:220px;margin-bottom:-10px;background:#f0f6e4;padding:10px 15px;">
+						<span>组织信息</span>
+						<input type="checkbox" id="sy" class="checkbox first inline" /><span>包含下级</span>
+					</div>
+					<ul id="treeDemo" class="ztree"></ul>
+				</div>
+				<div class="col-md-10">
+					<div class="table-responsive">
+						<table class="table table-striped b-t b-light text-center">
+							<thead>
+								<tr>
+									<th></th>
+									<th ng-click="sortData(url, 'create_time', param, $event)" class="sortable both">上传时间</th>
+									<th  class="text-left">文件列表</th>
+									<th ng-click="sortData(url, 'send_user_name', param, $event)" class="sortable both">上传者</th>
+									<th  class="text-left">可见人员</th>
+									<th>操作</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="item in pageInfo.data">
+									<td></td>
+									<td>{{item.createTime}}</td>
+									<td class="text-left"><a href="{{item.filePath}}" >{{item.fileName|limitTo:10}}...</a></td>
+									<td>{{item.sendUserName}}</td>
+									<td class="text-left">{{item.userNameList.split(",").length > 3?item.userNameList.substring(0,item.userNameList.indexOf(item.userNameList.split(",")[3])-1)+"...":item.userNameList}}</td>
+									<td  class="text-left">
+										<a ui-sref="main.party.filesDetail({id: item.id})" class="btn btn-outline blue btn-xs m-r-10" >详情</a>
+										<a ui-sref="main.party.filesForward({id: item.id})" ng-hide="item.isPublic == 1" class="btn btn-outline blue btn-xs m-r-10" >转发</a>
+										<button class="btn btn-outline red btn-xs m-r-10" ng-show="item.allowDel==1" ng-click="delInfo(item.id)">删除</button>
+									</td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+            <!-- 底部分页 -->
+			<span data-ng-include=" 'src/tpl/pageInfo.html' "></span>
+        </div>
+    </div>
+
+</div>
+

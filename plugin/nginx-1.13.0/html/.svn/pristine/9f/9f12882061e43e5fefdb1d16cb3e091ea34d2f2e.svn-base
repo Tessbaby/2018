@@ -1,0 +1,97 @@
+﻿<toaster-container toaster-options="{'position-class': 'toast-center', 'close-button':true}"></toaster-container>
+<style>
+    #edui1_iframeholder {
+        height: 300px !important;
+    }
+
+    #edui1 {
+        z-index: 0!important;
+    }
+</style>
+<!-- 导航条 -->
+<div class="bg-white bread-crumb">
+    <ul class="breadcrumb b-a m-b-n-xs lter b-b wrapper-md">
+        <li><a><i class="fa fa-home"></i>组织生活</a></li>
+        <li><a ui-sref="main.life.meeting">会议管理</a></li>
+        <li class="active" ng-bind="title"></li>
+    </ul>
+</div>
+
+<!-- 内容区域 -->
+<div ng-hide="loading" class="wrapper-md content">
+    <!-- 数据显示 -->
+    <div class="wrapper-data">
+        <div class="add-content white-bg">
+            <!-- 详情时显示 -->
+            <a ng-show="{{meetingInfo.allowEdit == 1}}" style="position: relative; z-index: 1000;" ui-sref="main.lifes.meetingUpdate({id: id})" class="btn btn-info pull-right m-l-xs" ng-show="hasUpdate">
+                <i class="icon-user-follow m-r-sm text-md"></i>
+                编辑
+            </a>
+            <!-- 详情时显示 END -->
+
+            <form class="form-horizontal" name="organize_form">
+                <div class="form-group">
+                    <label for="" class="p-r-20 m-b-10 w140 text-right">会议主题: </label>
+                    <span ng-model="record.mname">{{ meetingInfo.mname }}</span>
+                </div>
+                <div class="form-group">
+                    <label for="" class="p-r-20 m-b-10 w140 text-right">发布组织: </label>
+                    <span ng-model="record.username">{{ meetingInfo.deptname }}</span>
+                </div>
+                <div class="form-group">
+                    <label for="" class="p-r-20 m-b-10 w140 text-right">会议类型: </label>
+                    <span ng-model="record.mtypeText">{{ meetingInfo.mtypeText }}</span>
+                </div>
+                <div class="form-group">
+                    <label for="" class="p-r-20 m-b-10 w140 text-right">开始时间: </label>
+                    <span>{{  meetingInfo.startdate }} 
+                    </span>
+                </div>
+                <div class="form-group">
+                    <label for="" class="p-r-20 m-b-10 w140 text-right">结束时间: </label>
+                    <span>{{ meetingInfo.enddate}}</span>
+                </div>
+                <div class="form-group">
+                    <label for="" class="p-r-20 m-b-10 w140 text-right">会议地点: </label>
+                    <span ng-model="record.mplace">{{ meetingInfo.mplace }}</span>
+                </div>
+                <div class="form-group" style="height: 360px">
+                    <label for="" class="col-lg-2 col-sm-3 p-r-20 w140 text-right">会议内容: </label>
+                    <div class="col-sm-8">
+                        <script type="text/javascript" charset="utf-8" src="lib/ueditor/ueditor.config.js"></script>
+                        <script type="text/javascript" charset="utf-8" src="lib/ueditor/ueditor.all.min.js"> </script>
+                        <script type="text/javascript" charset="utf-8" src="lib/ueditor/lang/zh-cn/zh-cn.js"></script>
+                        <textarea id="myEditor" name="myEditor" rows="15" cols="80" style="width: 100%; height: 300px;" ></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="p-r-20 m-b-10 w140 text-right">与会人员: </label>
+                    <span>(共 {{ meetingInfo.allhere }} 人: 已签 {{ meetingInfo.hashere }} 人/未签{{ meetingInfo.nothere }}人 )
+                    </span>
+                    <a href="javascript:;" ng-click="showDetail()">查看签到详情</a>
+                </div>
+
+                <!-- 编辑时显示 -->
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label p-r-20 w140 text-right" for="">议定事项:</label>
+                    <div class="col-sm-8">
+                        <textarea class="form-control r-inline" id="missue" name="missue" rows="5" ng-model="record.missue"></textarea>
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label p-r-20 w140 text-right" for="">会议备注:</label>
+                    <div class="col-sm-8">
+                        <textarea class="form-control r-inline" id="remark" name="remark" rows="5" ng-model="record.remark"></textarea>
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                </div>
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary m-r-20 p-lr-20" ng-disabled="btnState">{{btnInfo}}</button>
+                    <button type="button" class="btn btn-default p-lr-20" ng-click="cancel()">取消</button>
+                </div>
+                <!-- 编辑时显示 END -->
+            </form>
+        </div>
+    </div>
+</div>

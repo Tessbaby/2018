@@ -1,0 +1,142 @@
+﻿'use strict';
+
+angular.module('app')
+	.controller('trainingController', ['$rootScope', '$scope', '$http', '$state',
+	  function ($rootScope, $scope, $http, $state) {
+
+
+	      var id = $state.params.id;
+	      console.log("培养发展 id=" + id);
+
+	      $scope.model = {};
+	      getDropdowmList();
+	      setDate();
+	      // 日期
+	      function setDate() {
+	          //入党申请日期
+	          laydate({
+	              elem: '#joinApplyDate',
+	              format: 'YYYY-MM-DD',
+	              choose: function (datas) {
+	                  $scope.model.joinApplyDate = datas;
+	              }
+
+	          });
+	          //列为积极分子日期
+	          laydate({
+	              elem: '#setAcitveDate',
+	              format: 'YYYY-MM-DD',
+	              choose: function (datas) {
+	                  $scope.model.setAcitveDate = datas;
+	              }
+
+	          });
+	          //列为发展对象日期
+	          laydate({
+	              elem: '#setDevelopDate',
+	              format: 'YYYY-MM-DD',
+	              choose: function (datas) {
+	                  $scope.model.setDevelopDate = datas;
+	              }
+
+	          });
+	          //上级批准日期
+	          laydate({
+	              elem: '#approvalDate',
+	              format: 'YYYY-MM-DD',
+	              choose: function (datas) {
+	                  $scope.model.approvalDate = datas;
+	              }
+
+	          });
+	          //支部大会通过日期
+	          laydate({
+	              elem: '#meetingApprovalDate',
+	              format: 'YYYY-MM-DD',
+	              choose: function (datas) {
+	                  $scope.model.meetingApprovalDate = datas;
+	              }
+
+	          });
+	          //最近培训日期
+	          laydate({
+	              elem: '#trainLastDate',
+	              format: 'YYYY-MM-DD',
+	              choose: function (datas) {
+	                  $scope.model.trainLastDate = datas;
+	              }
+
+	          });
+
+	      }
+
+
+	      //获取页面下拉框配置
+	      function getDropdowmList() {
+	          $.ajax({
+	              type: "get",
+	              url: '/iBase4J-SYS-Web/userDevelop/getAllSelect',
+	          }).then(function (result) {
+	              if (result.httpCode == 200) {
+	                  debugger;
+	                  $scope.dropdowmList = result.data;
+	                  //console.log(result);
+	                  //党员所在支部
+	                  var depNodes = $scope.dropdowmList.deptList;
+	                  $.fn.zTree.init($('#depTree'), setting, depNodes);
+
+
+	                  $scope.$apply();
+	              } else {
+	                  alertDialog(result.msg, 2);
+	              }
+	          });
+	      }
+	      var setting = {
+	          view: {
+	              dblClickExpand: false,
+	              showIcon: false
+	          },
+	          data: {
+	              key: {
+	                  name: "deptName"
+	              },
+	              simpleData: {
+	                  enable: true,
+	                  idKey: "code",
+	                  pIdKey: "parentId",
+	                  rootPId: 0
+	              }
+	          },
+	          callback: {
+	              onClick: onClick
+	          }
+	      };
+	      function onClick(e, treeId, treeNode) { // 选择元素触发
+
+	          var idObj = $('#deptName');
+	          idObj.attr('value', treeNode.deptName);	       
+	          $scope.model.deptId = treeNode.id;
+	      }
+
+	      $scope.showMenu = function () {
+	          var idObj = $('#deptId');
+	          var idOffset = $('#deptId').offset();
+	          $('#depContent').slideDown('fast');
+	          $('body').bind('mousedown', onBodyDown);
+	      }
+
+	      $scope.hideMenu = function () {
+	          $('#depContent').fadeOut('fast');
+	          $('body').unbind('mousedown', onBodyDown);
+	      }
+
+	      function onBodyDown(event) {
+	          if (!event.target.id == 'depContent' || $(event.target).parents('#depContent').length == 0) {
+	              if (event.target.id != 'deptId') {
+	                  $scope.hideMenu();
+	              }
+	          }
+	      }
+
+	  }])

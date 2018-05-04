@@ -1,0 +1,79 @@
+<style>
+    .tree-select {
+        width: 220px;
+        background-color: #fff !important;
+        color: #34495e !important;
+    }
+</style>
+<link rel="stylesheet" href="lib/ztree/demo.css" type="text/css">
+<link rel="stylesheet" href="lib/ztree/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="lib/ztree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="lib/ztree/jquery.ztree.excheck.js"></script>
+<!--民主评议信息-->
+<div class="wrapper-md content m-n">
+    <div class="panel panel-default">
+
+        <!--表单-->
+        <div class="panel-body">
+            <form class="form-horizontal" name="organize_form">
+
+
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for=""><span class="text-danger wrapper-sm">*</span>开展评议日期</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control r-inline add-date laydate-icon" readonly name="commentBeginDate" id="commentBeginDate" ng-model="model.commentBeginDate" placeholder="请选择日期">
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="">结束评议日期</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control r-inline add-date laydate-icon" readonly name="commentEndDate" id="commentEndDate" ng-model="model.commentEndDate" placeholder="请选择日期">
+                        <span class="help-block m-b-none"></span>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="">评议结果</label>
+                    <div class="col-sm-6">
+                        <select class="form-control add-select" ng-model="model.commentResult" name="commentResult">
+                            <option value="">请选择</option>
+                            <option ng-repeat="item in dropdowmList.commentResultList" value="{{item.code}}">{{item.codeText}}</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="">评议奖惩情况</label>
+                    <div class="col-sm-6">
+
+                        <input type="text" class="form-control tree-select" name="commentReward" ng-model="model.commentRewardText" ng-click="showCommentReward()" readonly>
+                        <div id="commentRewardContent" style="display: none; position: absolute; z-index: 10">
+                            <ul id="treeCommentReward" class="ztree"></ul>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-sm-3 control-label" for="">评议奖惩原因</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control tree-select" name="trainingNames" ng-model="model.commentRewardReasonText" ng-click="showRewardReason()" readonly>
+                        <div id="rewardReasonContent" class="RewardReason" style="display: none; position: absolute; z-index: 10">
+                            <ul id="treeRewardReason" class="ztree"></ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <div class="form-group text-center">
+                    <button class="btn btn-primary m-r-20 p-lr-20" type="submit">{{btnInfo}}</button>
+
+                </div>
+            </form>
+        </div>
+    </div>

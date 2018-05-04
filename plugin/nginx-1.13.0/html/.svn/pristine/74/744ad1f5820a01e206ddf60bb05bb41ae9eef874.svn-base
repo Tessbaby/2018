@@ -1,0 +1,46 @@
+'use strict';
+
+angular.module('app')
+	.controller('organizeController', [ '$rootScope', '$scope', '$http', '$state','toaster', function($rootScope, $scope, $http, $state, toaster) {
+
+		$scope.param = {};  // 列表请求传入的参数
+		$scope.param.enable = 1;
+		$scope.title = '组织信息';
+		$scope.url = '/iBase4J-SYS-Web/dept/read/list';
+		$rootScope.pageInfo = []; // 请求数据前清空
+		$rootScope.search($scope.url, $scope.param);
+
+		// 撤销数据
+		$scope.cancelData = function (id, children) {
+			
+			var _id = id - 0;
+			var m = {id: id};
+			if(confirm('确认要删除？')) {
+				$scope.loading = true;
+				$.ajax({
+					url: '/iBase4J-SYS-Web/dept',
+					type: 'delete',
+					dataType: 'json',
+					contentType:'application/json;charset=UTF-8',
+					data: angular.toJson(m)					
+				}).then(function (result) {
+					$scope.loading = false;
+					if (result.httpCode == 200) {
+						toaster.clear('*');
+						toaster.pop('success', '', "删除成功");
+						$rootScope.search($scope.url, $scope.param);
+					} else {
+						toaster.clear('*');
+						toaster.pop('error', '', result.msg);
+					}
+					$scope.$apply();
+				})
+			}
+		}
+
+		$scope.clearSearch = function() {
+			$scope.param.keyword= null;
+			$rootScope.search($scope.url, $scope.param);
+		}
+	
+}]);

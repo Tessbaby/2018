@@ -1,0 +1,56 @@
+'use strict';
+
+angular.module('app')
+	.controller('detailController', ['$rootScope', '$scope', '$http', '$state', 'toaster', '$timeout',
+	                                function ($rootScope, $scope, $http, $state, toaster, $timeout) {
+	                                    $scope.title = "详情";
+	                                    $scope.loading = true;
+	                                    var id = $state.params.id;
+	                                    $scope.typeId = $state.params.typeId;
+
+	                                    getTypeName();
+	                                    initVoteInfo(id);
+	                                    // 初始化页面 - 编辑时
+	                                    function initVoteInfo(id) {
+	                                        $scope.loading = true;
+	                                        $.ajax({
+	                                            type: 'PUT',
+	                                            url: '/iBase4J-SYS-Web/question/listAnswers',
+	                                            data: angular.toJson({ 'id': id })
+	                                        }).then(function (result) {
+
+	                                            $scope.loading = false;
+	                                            if (result.httpCode == 200) {
+	                                                $scope.record = result.data;
+
+	                                            } else {
+	                                                // $scope.msg = result.msg;
+	                                                toaster.clear('*');
+																					        toaster.pop('error', '', result.msg);
+	                                            }
+	                                            $scope.$apply();
+
+	                                        });
+	                                    }
+	                                    //获取投票栏目名称（每月一星）
+	                                    function getTypeName() {
+	                                        $scope.loading = true;
+	                                        $.ajax({
+	                                            type: 'PUT',
+	                                            url: '/iBase4J-SYS-Web/questionType/questionType',
+	                                            data: angular.toJson({ 'type': $scope.typeId })
+	                                        }).then(function (result) {
+	                                            $scope.loading = false;
+	                                            if (result.httpCode == 200) {
+	                                                $scope.typeName = result.data.name;
+
+	                                            } else {
+	                                                // $scope.msg = result.msg;
+	                                                toaster.clear('*');
+																					        toaster.pop('error', '', result.msg);
+	                                            }
+
+	                                        });
+	                                    }
+
+	                                }]);

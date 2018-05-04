@@ -1,0 +1,54 @@
+'use strict';
+
+angular.module('app')
+	.controller('detailController', [ '$rootScope', '$scope', '$http', '$state','toaster','$timeout',
+	                                function($rootScope, $scope, $http, $state,toaster,$timeout) {
+		$scope.title = "详情";
+        $scope.loading = true;
+		$scope.id = $state.params.id;
+		
+		// 文件流转详情
+	 	$.ajax({
+			type: 'PUT',
+			dataType: 'json',
+			contentType:'application/json;charset=UTF-8',
+			url : '/iBase4J-SYS-Web/report/detail',
+			data: angular.toJson({"id":$scope.id})
+		}).then(function(result) {
+			$scope.loading = false;
+			if (result.httpCode == 200) {
+				$scope.data = result.data;
+			} else {
+				$scope.msg = result.msg;
+			}
+			$scope.$apply();
+		});
+		
+		$scope.del=function(id){			
+			
+			var m = {meetid: id};
+			if(confirm('确认要删除？')) {
+				$scope.loading = true;
+				$.ajax({
+					url: '/iBase4J-SYS-Web/report/delete',
+					type: 'post',
+					dataType: 'json',
+					contentType:'application/json;charset=UTF-8',
+					data: angular.toJson(m)					
+				}).then(function (result) {
+					$scope.loading = false;
+					if (result.httpCode == 200) {
+						toaster.clear('*');
+						toaster.pop('success', '', "删除成功");
+						$timeout(function(){						
+							$state.go('main.party.hb');
+						},800);
+					} else {
+						toaster.clear('*');
+						toaster.pop('error', '', result.msg);
+					}
+					$scope.$apply();
+				})
+			}
+		}
+} ]);

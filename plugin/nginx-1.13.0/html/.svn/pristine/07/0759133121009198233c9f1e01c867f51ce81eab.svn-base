@@ -1,0 +1,134 @@
+'use strict';
+
+angular.module('app')
+	.controller('setImageAddController', [ '$rootScope', '$scope', '$http', '$state','toaster',
+	 function($rootScope, $scope, $http, $state, toaster) {
+
+	 	$scope.title = '宣传图设置';
+
+	 	//图片处理所需
+		$scope.imgData = [];
+		$scope.imgUpFlag = true;
+		$scope.record = {};
+		$scope.btnInfo='添加';
+		$scope.btnState=false;
+
+	 	var id = $state.params.id;
+	 	if (id) {
+	 		$scope.title = '编辑';
+	 		$scope.record.id = id;
+	 		getData(id);
+
+	 	} else {
+	 		$scope.title = '添加';
+	 		$scope.imgSrc = 'res/img/np.png';
+	 	}
+
+	 	// 编辑获取数据
+	 	function getData(id) {
+			$.ajax({
+        type: 'put',
+		  	url : '/iBase4J-SYS-Web/sysImgsSetting/read/detail',
+        dataType: 'json',
+	      contentType:'application/json;charset=UTF-8',
+	      data: angular.toJson({id: id})
+	    }).then(function(result){
+	    	if (result.httpCode == 200) {
+	    		console.log(result);
+	    		$scope.imgSrc = result.data.imgs;
+	    		$scope.record.remark = result.data.remark;
+	    		$scope.record.imgs = result.data.imgs;
+	    	} else {
+	    		toaster.clear('*');
+          toaster.pop('error', '', result.msg);
+	    	}
+	    });
+	 	}
+
+	 	$scope.reader = new FileReader();  //创建一个FileReader接口
+		$scope.img_upload = function(evt) {    //单次提交图片的函数
+			var fileInfo=evt.currentTarget.files[0];
+			var index = fileInfo.name.indexOf('.') + 1;
+			var imgType = fileInfo.name.substr(index,fileInfo.name.length-1 );
+			if (imgType.toUpperCase() == 'PNG' || imgType.toUpperCase() == 'JPG' || imgType.toUpperCase() == 'JPEG') {
+				$scope.guid = (new Date()).valueOf();
+				$scope.reader.readAsDataURL(fileInfo); //FileReader的方法，把图片转成base64
+				$scope.reader.onload = function(ev) {
+					$scope.$apply(function(){
+						$scope.imgSrc = ev.target.result;
+						$scope.imgData.push({
+							file:ev.target.result,
+							filename:fileInfo.name
+						});
+					});
+				};
+			} else {
+				layer.msg('文件格式错误');
+				return false;
+			}
+		};
+		angular.element(document.querySelector('#uploadImg')).on('change',$scope.img_upload);
+		$('.upload-pic-box a').click(function() {
+			$('#uploadImg').click();
+		});
+
+		$scope.img_del = function(key) {  //删除，删除的时候thumb和form里面的图片数据都要删除，避免提交不必要的
+			$scope.imgData = [];
+			$scope.imgSrc = 'res/img/np.png';
+		};
+
+		$scope.submit = function () {
+			if($scope.imgData.length > 0){
+				$scope.imgUpFlag = false;
+				$.ajax({
+					type: 'POST',
+					url : 'http://118.190.172.83:8011/wx/djuploadFile',
+					async: false,
+					contentType:'application/json;charset=UTF-8',
+					data:angular.toJson($scope.imgData)
+				}).then(function(result){
+						var resultNew = $.parseJSON(result);
+						if(resultNew && resultNew.httpCode ==200){//成功
+							$scope.record.imgs = resultNew.data[0].fileUrlPath;
+							console.log(resultNew);
+							$scope.imgUpFlag = true;
+						}else if(resultNew && resultNew.httpCode ==400){
+							//saveData();
+						}
+				});
+			}
+			if ($scope.imgUpFlag ){
+				saveData();
+			}
+		}
+
+		function saveData () {
+			$scope.btnInfo='提交中...';
+			$scope.btnState=true;
+      $.ajax({
+        type: 'POST',
+		  	url : '/iBase4J-SYS-Web/sysImgsSetting',
+        dataType: 'json',
+	      contentType:'application/json;charset=UTF-8',
+	      data: angular.toJson($scope.record)
+	    }).then(function(result){
+	    	if (result.httpCode == 200) {
+	    		toaster.clear('*');
+          toaster.pop('success', '', '添加成功');
+          $state.go('main.setting.banner');
+	    	} else {
+	    		toaster.clear('*');
+          toaster.pop('error', '', result.msg);
+          $scope.btnInfo='添加';
+					$scope.btnState=false;
+	    	}
+	    });
+		}
+
+		$scope.cancel = function () {
+			if(confirm('确定退出编辑？')) {
+				$state.go('main.setting.banner');
+			}
+		}
+
+	}])
